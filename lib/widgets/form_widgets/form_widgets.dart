@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
 
+TextEditingController _makeController = TextEditingController();
+TextEditingController _modelController = TextEditingController();
+TextEditingController _yearController = TextEditingController();
+TextEditingController _odometerController = TextEditingController();
+TextEditingController _priceController = TextEditingController();
+
 final _formKey = GlobalKey<FormState>();
 Widget formWidget() {
   return Form(
@@ -17,6 +23,7 @@ Widget formWidget() {
 
 Widget makeInput() {
   return TextFormField(
+    controller: _makeController,
     decoration: const InputDecoration(
       hintText: 'Make',
     ),
@@ -31,6 +38,7 @@ Widget makeInput() {
 
 Widget modelInput() {
   return TextFormField(
+    controller: _modelController,
     decoration: const InputDecoration(
       hintText: 'Model',
     ),
@@ -45,6 +53,7 @@ Widget modelInput() {
 
 Widget yearInput() {
   return TextFormField(
+    controller: _yearController,
     decoration: const InputDecoration(
       hintText: 'Year',
     ),
@@ -59,6 +68,7 @@ Widget yearInput() {
 
 Widget odometerInput() {
   return TextFormField(
+    controller: _odometerController,
     decoration: const InputDecoration(
       hintText: 'Odometer',
     ),
@@ -73,6 +83,7 @@ Widget odometerInput() {
 
 Widget priceInput() {
   return TextFormField(
+    controller: _priceController,
     decoration: const InputDecoration(
       hintText: 'Price',
     ),
@@ -86,5 +97,9 @@ Widget priceInput() {
 }
 
 Widget addCarButton() {
-  return ElevatedButton(onPressed: () {}, child: const Text('Add Car'));
+  return ElevatedButton(
+      onPressed: () {
+        print(_makeController.text);
+      },
+      child: Text('Add Car'));
 }
