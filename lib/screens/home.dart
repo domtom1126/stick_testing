@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+// todo this page will get the most recent listings. Wrap with BlocBuilder
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 

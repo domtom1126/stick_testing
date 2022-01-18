@@ -96,6 +96,7 @@ Widget priceInput() {
   );
 }
 
+// todo I am probably going to need to wrap this with a BlocBuilder or something
 Widget addCarButton() {
   return ElevatedButton(
       onPressed: () {
