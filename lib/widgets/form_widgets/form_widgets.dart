@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
-CollectionReference add_post = FirebaseFirestore.instance.collection('posts');
+import 'package:testing/firebase_functions/post_listing.dart';
 
 TextEditingController _makeController = TextEditingController();
 TextEditingController _modelController = TextEditingController();
@@ -103,21 +102,26 @@ Widget priceInput() {
 Widget addCarButton() {
   return ElevatedButton(
       onPressed: () {
-        addCar();
+        if (_formKey.currentState!.validate()) {
+          addCar();
+        }
       },
       child: Text('Add Car'));
 }
 
 Future addCar() async {
+  CollectionReference addPost = FirebaseFirestore.instance.collection('posts');
   if (_formKey.currentState!.validate()) {
-    await add_post.add({
+    await addPost.add({
       'make': _makeController.text,
       'model': _modelController.text,
       'year': _yearController.text,
       'odometer': _odometerController.text,
       'price': _priceController.text,
+      'date_added': DateTime.now(),
     });
   } else {
+    // todo check is user has filled all fields
     print('invalid');
   }
 }
