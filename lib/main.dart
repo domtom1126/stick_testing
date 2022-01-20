@@ -5,6 +5,7 @@ import 'package:testing/screens/profile.dart';
 import 'package:testing/widgets/bottom_bar.dart';
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(const MyApp());
 }
