@@ -1,12 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../listing.dart';
 import '../listing_cubit.dart';
 
 class ListingsView extends StatelessWidget {
-  const ListingsView({Key? key}) : super(key: key);
+  ListingsView({Key? key}) : super(key: key);
+  final cars = FirebaseFirestore.instance
+      .collection('posts')
+      .orderBy('date_added', descending: true)
+      .snapshots();
 
   @override
   Widget build(BuildContext context) {
@@ -14,22 +17,23 @@ class ListingsView extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Find a Stick'),
       ),
-      body: BlocBuilder<ListingCubit, List<Listing>>(
-          builder: (context, listings) {
-        return ListView.builder(
-          itemCount: listings.length,
-          itemBuilder: (context, index) {
-            final listing = listings[index];
-            return ListTile(
-              title: Text(listing.make),
-              subtitle: Text(listing.model),
-              onTap: () {
-                null;
-              },
-            );
-          },
-        );
-      }),
+      body: StreamBuilder(
+        stream: cars,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return ListView(
+                children: snapshot.data!.docs.map((publicList) {
+              return ListTile(
+                title: Text('${publicList['make']}'),
+                subtitle: Text('${publicList['model']}'),
+                onTap: () {},
+              );
+            }).toList());
+          } else {
+            return Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
     );
   }
 }
