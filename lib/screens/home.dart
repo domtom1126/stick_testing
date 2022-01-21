@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing/firebase_functions/get_listings.dart';
 
 import '../listing.dart';
@@ -18,10 +17,7 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: BlocProvider<ListingCubit>(
-        create: (context) => ListingCubit()..getListing(),
-        child: const ListingsView(),
-      ),
+      body: ListingsView(),
     );
   }
 }
