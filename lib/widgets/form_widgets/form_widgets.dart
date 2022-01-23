@@ -110,16 +110,25 @@ Widget addCarButton() {
 }
 
 Future addCar() async {
+  final postListing = PostListing(
+      make: _makeController.text,
+      model: _modelController.text,
+      year: _yearController.text,
+      odometer: _odometerController.text,
+      price: _priceController.text,
+      dateAdded: DateTime.now().toString());
   CollectionReference addPost = FirebaseFirestore.instance.collection('posts');
   if (_formKey.currentState!.validate()) {
-    await addPost.add({
-      'make': _makeController.text,
-      'model': _modelController.text,
-      'year': _yearController.text,
-      'odometer': _odometerController.text,
-      'price': _priceController.text,
-      'date_added': DateTime.now(),
-    });
+    postListing.addPost();
+    // await addPost.add({
+    //   'make': _makeController.text,
+    //   'model': _modelController.text,
+    //   'year': _yearController.text,
+    //   'odometer': _odometerController.text,
+    //   'price': _priceController.text,
+    //   'date_added': DateTime.now(),
+    // });
+
   } else {
     // todo check is user has filled all fields
     print('invalid');
