@@ -3,13 +3,13 @@ import 'package:testing/listing.dart';
 
 // * This would be like data_service.dart
 class PostListing {
-  late final String id;
-  late final String make;
-  late final String model;
-  late final String year;
-  late final String odometer;
-  late final String price;
-  late final String dateAdded;
+  String id = '';
+  String make = '';
+  String model = '';
+  String year = '';
+  String odometer = '';
+  String price = '';
+  String dateAdded = '';
 
   PostListing({
     // required this.id,
