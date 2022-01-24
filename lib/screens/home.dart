@@ -7,17 +7,19 @@ import 'listings_view.dart';
 
 // todo this page will get the most recent listings. Wrap with BlocBuilder
 class Home extends StatefulWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
 
   @override
   _HomeState createState() => _HomeState();
 }
 
 class _HomeState extends State<Home> {
+  final listingView = ListingView();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: ListingsView(),
+      body: listingView.getListings(),
     );
   }
 }
