@@ -31,7 +31,7 @@ Widget makeInput() {
     ),
     validator: (value) {
       if (value!.isEmpty) {
-        return 'Please enter some text';
+        return 'Enter make (Ford, Honda, etc)';
       }
       return null;
     },
@@ -46,7 +46,7 @@ Widget modelInput() {
     ),
     validator: (value) {
       if (value!.isEmpty) {
-        return 'Please enter some text';
+        return 'Enter model (Focus, Civic, etc)';
       }
       return null;
     },
@@ -61,7 +61,7 @@ Widget yearInput() {
     ),
     validator: (value) {
       if (value!.isEmpty) {
-        return 'Please enter some text';
+        return 'Enter year (2020, 1994, etc)';
       }
       return null;
     },
@@ -76,7 +76,7 @@ Widget odometerInput() {
     ),
     validator: (value) {
       if (value!.isEmpty) {
-        return 'Please enter some text';
+        return 'Enter odometer';
       }
       return null;
     },
@@ -91,7 +91,7 @@ Widget priceInput() {
     ),
     validator: (value) {
       if (value!.isEmpty) {
-        return 'Please enter some text';
+        return 'Enter price';
       }
       return null;
     },
@@ -106,7 +106,7 @@ Widget addCarButton() {
           addCar();
         }
       },
-      child: Text('Add Car'));
+      child: const Text('Add Car'));
 }
 
 Future addCar() async {
@@ -117,20 +117,8 @@ Future addCar() async {
       odometer: _odometerController.text,
       price: _priceController.text,
       dateAdded: DateTime.now().toString());
-  CollectionReference addPost = FirebaseFirestore.instance.collection('posts');
   if (_formKey.currentState!.validate()) {
     postListing.addPost();
-    // await addPost.add({
-    //   'make': _makeController.text,
-    //   'model': _modelController.text,
-    //   'year': _yearController.text,
-    //   'odometer': _odometerController.text,
-    //   'price': _priceController.text,
-    //   'date_added': DateTime.now(),
-    // });
-
-  } else {
-    // todo check is user has filled all fields
-    print('invalid');
+    // check if user has filled all fields
   }
 }
