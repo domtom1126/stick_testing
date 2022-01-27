@@ -14,8 +14,25 @@ class ListingView {
           return ListView(
               children: snapshot.data!.docs.map((publicList) {
             return ListTile(
-              title: Text('${publicList['make']}'),
-              subtitle: Text('${publicList['model']}'),
+              // leading: Text('hello'),
+              title: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Placeholder(
+                    fallbackHeight: 250,
+                  ),
+                  Text(
+                    '${publicList['price']}',
+                    style: const TextStyle(fontSize: 18),
+                  ),
+                  Text(
+                    '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+                    style: const TextStyle(
+                        fontSize: 18, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              subtitle: Text('${publicList['odometer']} Miles'),
               onTap: () {},
             );
           }).toList());
