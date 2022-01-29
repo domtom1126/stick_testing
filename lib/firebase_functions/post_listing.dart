@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 import 'package:testing/listing.dart';
 
 // * This would be like data_service.dart
+
 class PostListing {
   String id = '';
   String make = '';
@@ -25,7 +27,7 @@ class PostListing {
     CollectionReference addPost =
         FirebaseFirestore.instance.collection('posts');
     await addPost.add({
-      // 'id': id,
+      'id': id,
       'make': make,
       'model': model,
       'year': year,
@@ -33,6 +35,17 @@ class PostListing {
       'price': price,
       'date_added': dateAdded,
     });
-    return addPost;
+    return AlertDialog(
+      title: Text('Post Added'),
+      content: Text('Your post has been added'),
+      actions: <Widget>[
+        ElevatedButton(
+          child: Text('Ok'),
+          onPressed: () {
+            // Navigator.of().pop();
+          },
+        ),
+      ],
+    );
   }
 }
