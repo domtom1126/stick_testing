@@ -1,6 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing/firebase_functions/post_listing.dart';
+import 'package:testing/listing_bloc.dart';
 
 TextEditingController _makeController = TextEditingController();
 TextEditingController _modelController = TextEditingController();
@@ -8,23 +10,9 @@ TextEditingController _yearController = TextEditingController();
 TextEditingController _odometerController = TextEditingController();
 TextEditingController _priceController = TextEditingController();
 
-final _formKey = GlobalKey<FormState>();
-Widget formWidget() {
-  return Form(
-    key: _formKey,
-    child: Column(children: [
-      makeInput(),
-      modelInput(),
-      yearInput(),
-      odometerInput(),
-      priceInput(),
-      addCarButton(),
-    ]),
-  );
-}
-
 Widget makeInput() {
   return TextFormField(
+    maxLength: 25,
     controller: _makeController,
     decoration: const InputDecoration(
       hintText: 'Make',
@@ -100,16 +88,16 @@ Widget priceInput() {
 
 // todo I am probably going to need to wrap this with a BlocBuilder or something
 Widget addCarButton() {
+  // final _postingBloc = BlocProvider.of<PostingBloc>(context);
   return ElevatedButton(
-      onPressed: () {
-        if (_formKey.currentState!.validate()) {
-          addCar();
-        }
-      },
-      child: const Text('Add Car'));
+    onPressed: () => addCar(),
+    child: Text('Add Car'),
+  );
 }
 
 Future addCar() async {
+  final _formKey = GlobalKey<FormState>();
+
   final postListing = PostListing(
       make: _makeController.text,
       model: _modelController.text,
@@ -118,7 +106,9 @@ Future addCar() async {
       price: _priceController.text,
       dateAdded: DateTime.now().toString());
   if (_formKey.currentState!.validate()) {
-    postListing.addPost();
-    // check if user has filled all fields
+    // await Firestore.instance.collection('cars').add(postListing.toMap());
+    // _postingBloc.add(PostingEvent.postingSuccess());
+    // Navigator.pop(context);
+
   }
 }
