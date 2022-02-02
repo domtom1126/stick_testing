@@ -8,12 +8,21 @@ import 'package:testing/widgets/bottom_bar.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
 
+  final appBarBackgroundColor = Colors.transparent;
+  final appBarTextColor = HexColor('ffffff');
+  final scaffoldBackgroundColor = HexColor('6E6D73');
+  final bottomBarBackgroundColor = HexColor('AFBDC7');
+  final selectedColor = HexColor('C95132');
+  final unselectedColor = HexColor('666666');
+  final buttonBackgroundColor = HexColor('857572');
+  final buttonForegroundColor = HexColor('FFC107');
+  final buttonBorderColor = HexColor('EE6C4D');
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
@@ -21,19 +30,25 @@ class MyApp extends StatelessWidget {
       // initialRoute: '/home',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          elevation: 0,
+          backgroundColor: bottomBarBackgroundColor,
+          selectedItemColor: selectedColor,
+          unselectedItemColor: unselectedColor,
+        ),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all<Color>(
-              HexColor('#FFC107'),
+              buttonBackgroundColor,
             ),
             foregroundColor: MaterialStateProperty.all<Color>(
-              HexColor('#FFC107'),
+              buttonForegroundColor,
             ),
             shape: MaterialStateProperty.all<OutlinedBorder>(
               RoundedRectangleBorder(
                 side: BorderSide(
-                  color: HexColor('EE6C4D'),
-                  width: 2,
+                  color: buttonBorderColor,
+                  width: 1,
                 ),
                 borderRadius: BorderRadius.circular(25),
               ),
@@ -42,10 +57,11 @@ class MyApp extends StatelessWidget {
         ),
         // Global appBar theme
         appBarTheme: AppBarTheme(
-          color: HexColor('5890B8'),
+          backgroundColor: appBarBackgroundColor,
+          foregroundColor: appBarTextColor,
           elevation: 0,
         ),
-        scaffoldBackgroundColor: HexColor('91BCDB'),
+        scaffoldBackgroundColor: scaffoldBackgroundColor,
       ),
       home: const BottomBar(),
     );
