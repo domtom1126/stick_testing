@@ -35,17 +35,5 @@ class PostListing {
       'price': price,
       'date_added': dateAdded,
     });
-    return AlertDialog(
-      title: Text('Post Added'),
-      content: Text('Your post has been added'),
-      actions: <Widget>[
-        ElevatedButton(
-          child: Text('Ok'),
-          onPressed: () {
-            // Navigator.of().pop();
-          },
-        ),
-      ],
-    );
   }
 }
