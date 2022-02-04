@@ -86,6 +86,10 @@ Widget priceInput() {
   );
 }
 
+Widget addCarButton() {
+  return ElevatedButton(onPressed: () => addCar(), child: Text('Add Car'));
+}
+
 Future addCar() async {
   final _formKey = GlobalKey<FormState>();
 
@@ -96,11 +100,6 @@ Future addCar() async {
       odometer: _odometerController.text,
       price: _priceController.text,
       dateAdded: DateTime.now().toString());
-  if (_formKey.currentState!.validate()) {
-    await FirebaseFirestore.instance
-        .collection('cars')
-        .add(postListing.addPost());
-    // _postingBloc.add(PostingEvent.postingSuccess());
-
-  }
+  postListing.addPost();
+  // _postingBloc.add(PostingEvent.postingSuccess());
 }
