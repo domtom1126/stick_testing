@@ -86,15 +86,6 @@ Widget priceInput() {
   );
 }
 
-// todo I am probably going to need to wrap this with a BlocBuilder or something
-Widget addCarButton() {
-  // final _postingBloc = BlocProvider.of<PostingBloc>(context);
-  return ElevatedButton(
-    onPressed: () => addCar(),
-    child: Text('Add Car'),
-  );
-}
-
 Future addCar() async {
   final _formKey = GlobalKey<FormState>();
 
@@ -106,9 +97,10 @@ Future addCar() async {
       price: _priceController.text,
       dateAdded: DateTime.now().toString());
   if (_formKey.currentState!.validate()) {
-    // await Firestore.instance.collection('cars').add(postListing.toMap());
+    await FirebaseFirestore.instance
+        .collection('cars')
+        .add(postListing.addPost());
     // _postingBloc.add(PostingEvent.postingSuccess());
-    // Navigator.pop(context);
 
   }
 }
