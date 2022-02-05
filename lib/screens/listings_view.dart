@@ -14,7 +14,7 @@ class ListingView {
           return ListView(
               children: snapshot.data!.docs.map((publicList) {
             return ListTile(
-              // leading: Text('hello'),
+              // TODO maybe add some "leading:" text?
               title: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -33,13 +33,44 @@ class ListingView {
                 ],
               ),
               subtitle: Text('${publicList['odometer']} Miles'),
-              onTap: () {},
+              onTap: () {
+                showBottomSheet(
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    context: context,
+                    builder: (context) => viewCar(
+                        publicList['make'],
+                        publicList['model'],
+                        publicList['year'],
+                        publicList['price'],
+                        publicList['odometer']));
+              },
             );
           }).toList());
         } else {
-          return Center(child: CircularProgressIndicator());
+          return const Center(child: CircularProgressIndicator());
         }
       },
     );
   }
+}
+
+Widget viewCar(make, model, year, price, odometer) {
+  return SizedBox(
+    width: double.infinity,
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Text('$year $make $model'),
+        Text('$price'),
+        Text('$odometer Miles'),
+        // Text('${publicList['description']}'),
+      ],
+    ),
+  );
 }
