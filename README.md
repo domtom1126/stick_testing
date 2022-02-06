@@ -1,16 +1,11 @@
-# Find a Stick
+# Mission
 
-Find a proper manual through a proper car browsing app
+Solve car sales for people searching for a manual car.
 
-<!-- ## Getting Started
+## Problem
 
-This project is a starting point for a Flutter application.
+Car apps are not very good at knowing what you want. Unfortunately, most people in the market for buying a car have no clue what they want.  Even if you filter these car apps for “manual only”, you’ll still come to find 60% of the listings are in fact automatics. You’re better off filtering for “automatics”. Or try Find a Stick. Find a Stick is for people who know what they want, as the name suggests, they want a manual.
 
-A few resources to get you started if this is your first Flutter project:
+## Solution
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference. -->
+An app for car people. Manuals only. A simple app that doesn't overwhelm the seller with a thousand questions that don’t pertain to the person who will one day buy it. As the seller all you need to know is the make, model, year, how many miles and what you wanna sell it for. Whether it be a gated Murciélago or a ‘92 Tacoma, Find a Stick welcomes all, as long as it’s a manual.
