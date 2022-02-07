@@ -1,4 +1,5 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:testing/screens/post.dart';
@@ -21,7 +22,7 @@ class MyApp extends StatelessWidget {
   final selectedColor = HexColor('C95132');
   final unselectedColor = HexColor('666666');
   final buttonBackgroundColor = HexColor('857572');
-  final buttonForegroundColor = HexColor('FFC107');
+  final buttonForegroundColor = HexColor('ffffff');
   final buttonBorderColor = HexColor('EE6C4D');
   // This widget is the root of your application.
   @override
@@ -30,14 +31,18 @@ class MyApp extends StatelessWidget {
       // initialRoute: '/home',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        // * AppBar Theme
+        appBarTheme: AppBarTheme(
+          backgroundColor: appBarBackgroundColor,
+          foregroundColor: appBarTextColor,
           elevation: 0,
-          backgroundColor: bottomBarBackgroundColor,
-          selectedItemColor: selectedColor,
-          unselectedItemColor: unselectedColor,
         ),
+        // * Scaffold Theme
+        scaffoldBackgroundColor: scaffoldBackgroundColor,
+        // * START button theme
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
+            minimumSize: MaterialStateProperty.all<Size>(Size(100, 40)),
             backgroundColor: MaterialStateProperty.all<Color>(
               buttonBackgroundColor,
             ),
@@ -55,13 +60,21 @@ class MyApp extends StatelessWidget {
             ),
           ),
         ),
-        // Global appBar theme
-        appBarTheme: AppBarTheme(
-          backgroundColor: appBarBackgroundColor,
-          foregroundColor: appBarTextColor,
-          elevation: 0,
+        // * END button theme
+        // * START text form field theme
+        inputDecorationTheme: InputDecorationTheme(
+          isCollapsed: true,
+          filled: true,
         ),
-        scaffoldBackgroundColor: scaffoldBackgroundColor,
+        // * END text form field theme
+        // * START bottom bar theme
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+          elevation: 0,
+          backgroundColor: bottomBarBackgroundColor,
+          selectedItemColor: selectedColor,
+          unselectedItemColor: unselectedColor,
+        ),
+        // * END bottom bar theme
       ),
       home: const BottomBar(),
     );
