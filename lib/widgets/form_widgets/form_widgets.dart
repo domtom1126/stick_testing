@@ -9,10 +9,10 @@ TextEditingController _modelController = TextEditingController();
 TextEditingController _yearController = TextEditingController();
 TextEditingController _odometerController = TextEditingController();
 TextEditingController _priceController = TextEditingController();
+TextEditingController _descriptionController = TextEditingController();
 
 Widget makeInput() {
   return TextFormField(
-    maxLength: 25,
     controller: _makeController,
     decoration: const InputDecoration(
       hintText: 'Make',
@@ -86,6 +86,16 @@ Widget priceInput() {
   );
 }
 
+Widget descriptionInput() {
+  return TextFormField(
+    controller: _descriptionController,
+    maxLength: null,
+    decoration: const InputDecoration(
+      hintText: 'Description',
+    ),
+  );
+}
+
 Widget addCarButton() {
   return ElevatedButton(onPressed: () => addCar(), child: Text('Add Car'));
 }
@@ -99,6 +109,7 @@ Future addCar() async {
       year: _yearController.text,
       odometer: _odometerController.text,
       price: _priceController.text,
+      description: _descriptionController.text,
       dateAdded: DateTime.now().toString());
   postListing.addPost();
   // _postingBloc.add(PostingEvent.postingSuccess());
