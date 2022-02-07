@@ -11,6 +11,7 @@ class PostListing {
   String year = '';
   String odometer = '';
   String price = '';
+  String description = '';
   String dateAdded = '';
 
   PostListing({
@@ -20,6 +21,7 @@ class PostListing {
     required this.year,
     required this.odometer,
     required this.price,
+    required this.description,
     required this.dateAdded,
   });
 
@@ -33,6 +35,7 @@ class PostListing {
       'year': year,
       'odometer': odometer,
       'price': price,
+      'description': description,
       'date_added': dateAdded,
     });
   }
