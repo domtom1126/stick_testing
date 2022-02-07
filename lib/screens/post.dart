@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing/listing_bloc.dart';
@@ -17,49 +18,62 @@ class _PostState extends State<Post> {
       appBar: AppBar(
         title: const Text('Post a Car'),
       ),
-      body: Form(
-        key: _formKey,
-        child: Column(children: [
-          makeInput(),
-          modelInput(),
-          yearInput(),
-          odometerInput(),
-          priceInput(),
-          addCarButton(),
-          ElevatedButton(
-              onPressed: () => confirmModal(), child: Text('Confirm')),
-        ]),
+      body: Padding(
+        padding: const EdgeInsets.all(20.0),
+        child: Form(
+          key: _formKey,
+          child: Container(
+            height: 400,
+            decoration: BoxDecoration(
+                border: Border.all(
+                  color: Colors.grey,
+                ),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: Column(children: [
+              makeInput(),
+              modelInput(),
+              yearInput(),
+              odometerInput(),
+              priceInput(),
+              descriptionInput(),
+              ElevatedButton(
+                  onPressed: () => confirmModal(),
+                  child: const Text('Confirm')),
+            ]),
+          ),
+        ),
       ),
     );
   }
 
+  // TODO this stuff needs to be bloc
   Future<void> confirmModal() async {
-    setState(() {
-      showBottomSheet(
+    setState(
+      () {
+        showBottomSheet(
           context: context,
           builder: (BuildContext context) {
-            return Container(
+            return SizedBox(
               height: MediaQuery.of(context).size.height * 0.3,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
+                  const Text(
                     'Are you sure you want to add this car?',
                     style: TextStyle(fontSize: 20),
                   ),
-                  SizedBox(height: 10),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ElevatedButton(
-                        child: Text('Yes'),
+                        child: const Text('Yes'),
                         onPressed: () {
                           Navigator.pop(context);
                           addCar();
                         },
                       ),
                       ElevatedButton(
-                        child: Text('No'),
+                        child: const Text('No'),
                         onPressed: () {
                           Navigator.pop(context);
                         },
@@ -69,30 +83,14 @@ class _PostState extends State<Post> {
                 ],
               ),
             );
-          });
-    });
+          },
+        );
+      },
+    );
   }
 }
 
-// class PostScreen extends StatelessWidget {
-//   const PostScreen({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     final _postingBloc = BlocProvider.of<PostingBloc>(context);
-//     return Container(
-//       child: ElevatedButton(
-//         onPressed: () {
-//           // _postingBloc.add(_postingBloc.postingState());
-//         },
-//         child: Text('Add Car'),
-//       ),
-//     );
-//   }
-// }
-
-
-// Bloc Stuff 
+// Bloc Stuff
 
 // BlocProvider(
 //         create: (BuildContext context) => PostingBloc(),
