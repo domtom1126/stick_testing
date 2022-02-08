@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:testing/screens/view_car.dart';
 
 class ListingView {
   final cars = FirebaseFirestore.instance
@@ -35,19 +36,22 @@ class ListingView {
               subtitle: Text('${publicList['odometer']} Miles'),
               onTap: () {
                 showBottomSheet(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(20),
+                      topRight: Radius.circular(20),
                     ),
-                    context: context,
-                    builder: (context) => viewCar(
-                        publicList['make'],
-                        publicList['model'],
-                        publicList['year'],
-                        publicList['price'],
-                        publicList['odometer']));
+                  ),
+                  context: context,
+                  builder: (context) => viewCar(
+                    publicList['make'],
+                    publicList['model'],
+                    publicList['year'],
+                    publicList['price'],
+                    publicList['odometer'],
+                    publicList['description'],
+                  ),
+                );
               },
             );
           }).toList());
@@ -57,20 +61,4 @@ class ListingView {
       },
     );
   }
-}
-
-Widget viewCar(make, model, year, price, odometer) {
-  return SizedBox(
-    width: double.infinity,
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.center,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Text('$year $make $model'),
-        Text('$price'),
-        Text('$odometer Miles'),
-        // Text('${publicList['description']}'),
-      ],
-    ),
-  );
 }
