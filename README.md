@@ -1,3 +1,5 @@
+[<img src="../testing/images/logo_original%20copy.png">]
+
 # Mission
 
 Solve car sales for people searching for a manual car.
