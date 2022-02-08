@@ -1,3 +1,5 @@
+# Find a Stick
+<span height=50px></span>
 <h1 align="center"><img width=275px height=275px src="images/logo_original-trimmy.png"/></h1>
 
 # Mission
