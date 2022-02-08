@@ -1,4 +1,4 @@
-<img align="center" src="images/logo_original%20copy.png">
+<h1 align="center"><img width=100px height="100" src="images/logo_original%20copy.png"/></h1>
 
 # Mission
 
