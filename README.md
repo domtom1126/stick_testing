@@ -1,4 +1,4 @@
-<img src="images/logo_original%20copy.png">
+<img align="center" src="images/logo_original%20copy.png">
 
 # Mission
 
