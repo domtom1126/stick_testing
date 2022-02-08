@@ -1,4 +1,4 @@
-<h1 align="center"><img width=100px height="100" src="images/logo_original%20copy.png"/></h1>
+<h1 align="center"><img width=350px height=350px src="images/logo_original-trimmy.png"/></h1>
 
 # Mission
 
