@@ -8,7 +8,7 @@ Solve car sales for people searching for a manual car.
 
 ## Problem
 
->Car apps are not very good at knowing what you want. Unfortunately, most people in the market for buying a car have no clue what they want.  Even if you filter .these car apps for “manual only”, you’ll still come to find 60% of the listings are in fact automatics. You’re better off filtering for “automatics”. Or try Find a Stick. Find a Stick is for people who know what they want, as the name suggests, they want a manual.
+Car apps are not very good at knowing what you want. Unfortunately, most people in the market for buying a car have no clue what they want.  Even if you filter .these car apps for “manual only”, you’ll still come to find 60% of the listings are in fact automatics. You’re better off filtering for “automatics”. Or try Find a Stick. Find a Stick is for people who know what they want, as the name suggests, they want a manual.
 
 ## Solution
 
