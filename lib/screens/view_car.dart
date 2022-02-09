@@ -13,7 +13,7 @@ Widget viewCar(String make, String model, String year, String price,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Placeholder(
+          const Placeholder(
             fallbackHeight: 250,
           ),
           Row(
@@ -27,7 +27,17 @@ Widget viewCar(String make, String model, String year, String price,
           ),
           Text(price),
           Text('$odometer Miles'),
-          Text('description'),
+          Text(description),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              ElevatedButton(onPressed: null, child: Icon(Icons.favorite)),
+              ElevatedButton(onPressed: null, child: Icon(Icons.email)),
+            ],
+          ),
         ],
       ),
     ),
