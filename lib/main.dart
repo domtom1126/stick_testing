@@ -63,8 +63,15 @@ class MyApp extends StatelessWidget {
         // * END button theme
         // * START text form field theme
         inputDecorationTheme: InputDecorationTheme(
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(25),
+            borderSide: BorderSide(
+              color: buttonBorderColor,
+              width: 1,
+            ),
+          ),
           isCollapsed: true,
-          filled: true,
+          // filled: true,
         ),
         // * END text form field theme
         // * START bottom bar theme
