@@ -43,7 +43,14 @@ class _PostState extends State<Post> {
               descriptionInput(),
               const SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () => confirmModal(),
+                  onPressed: () => confirmModal(
+                        makeInput().toString(),
+                        makeInput(),
+                        makeInput(),
+                        makeInput(),
+                        makeInput(),
+                        makeInput(),
+                      ),
                   child: const Text('Confirm')),
             ]),
           ),
@@ -53,7 +60,8 @@ class _PostState extends State<Post> {
   }
 
   // TODO this stuff needs to be bloc
-  Future<void> confirmModal() async {
+  Future<void> confirmModal(
+      year, make, model, odometer, price, description) async {
     setState(
       () {
         showBottomSheet(
