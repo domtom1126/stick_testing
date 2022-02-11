@@ -21,7 +21,7 @@ Widget makeInput() {
       if (value!.isEmpty) {
         return 'Enter make (Ford, Honda, etc)';
       }
-      return null;
+      return _makeController.text;
     },
   );
 }
@@ -36,7 +36,7 @@ Widget modelInput() {
       if (value!.isEmpty) {
         return 'Enter model (Focus, Civic, etc)';
       }
-      return null;
+      return _modelController.text;
     },
   );
 }
@@ -51,7 +51,7 @@ Widget yearInput() {
       if (value!.isEmpty) {
         return 'Enter year (2020, 1994, etc)';
       }
-      return null;
+      return _yearController.text;
     },
   );
 }
@@ -66,7 +66,7 @@ Widget odometerInput() {
       if (value!.isEmpty) {
         return 'Enter odometer';
       }
-      return null;
+      return _odometerController.text;
     },
   );
 }
@@ -81,7 +81,7 @@ Widget priceInput() {
       if (value!.isEmpty) {
         return 'Enter price';
       }
-      return null;
+      return _priceController.text;
     },
   );
 }
@@ -93,6 +93,12 @@ Widget descriptionInput() {
     decoration: const InputDecoration(
       hintText: 'Description',
     ),
+    validator: (value) {
+      if (value!.isEmpty) {
+        return 'Enter price';
+      }
+      return _descriptionController.text;
+    },
   );
 }
 
