@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:testing/firebase_functions/post_listing.dart';
 import 'package:testing/listing_bloc.dart';
+import 'package:testing/screens/post.dart';
 
 TextEditingController _makeController = TextEditingController();
 TextEditingController _modelController = TextEditingController();
@@ -81,7 +82,7 @@ Widget priceInput() {
       if (value!.isEmpty) {
         return 'Enter price';
       }
-      return _priceController.text;
+      return null;
     },
   );
 }
@@ -118,5 +119,44 @@ Future addCar() async {
       description: _descriptionController.text,
       dateAdded: DateTime.now().toString());
   postListing.addPost();
-  // _postingBloc.add(PostingEvent.postingSuccess());
+}
+// _postingBloc.add(PostingEvent.postingSuccess());
+
+Widget postConfirm() {
+  return Container(
+    // TODO change this height so its responsive
+    height: 500,
+    width: double.infinity,
+    child: Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Text(_yearController.text, style: const TextStyle(fontSize: 20)),
+              Text(
+                '${_makeController.text} ${_modelController.text}',
+                style: const TextStyle(fontSize: 20),
+              ),
+            ],
+          ),
+          Text(_priceController.text),
+          Text('${_odometerController.text} Miles'),
+          Text(_descriptionController.text),
+          const SizedBox(
+            height: 20,
+          ),
+          const Text('Are you sure you want to post this car?'),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: const [
+              ElevatedButton(onPressed: null, child: Text('Yes')),
+              ElevatedButton(onPressed: null, child: Text('No')),
+            ],
+          ),
+        ],
+      ),
+    ),
+  );
 }
