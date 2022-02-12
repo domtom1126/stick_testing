@@ -43,13 +43,9 @@ class _PostState extends State<Post> {
               descriptionInput(),
               const SizedBox(height: 20),
               ElevatedButton(
-                  onPressed: () => confirmModal(
-                        makeInput().toString(),
-                        makeInput(),
-                        makeInput(),
-                        makeInput(),
-                        makeInput(),
-                        makeInput(),
+                  onPressed: () => showBottomSheet(
+                        context: context,
+                        builder: (context) => postConfirm(),
                       ),
                   child: const Text('Confirm')),
             ]),
@@ -58,64 +54,4 @@ class _PostState extends State<Post> {
       ),
     );
   }
-
-  // TODO this stuff needs to be bloc
-  Future<void> confirmModal(
-      year, make, model, odometer, price, description) async {
-    setState(
-      () {
-        showBottomSheet(
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          context: context,
-          builder: (BuildContext context) {
-            return SizedBox(
-              height: MediaQuery.of(context).size.height * 0.3,
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Are you sure you want to add this car?',
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        ElevatedButton(
-                          child: const Text('Yes'),
-                          onPressed: () {
-                            Navigator.pop(context);
-                            addCar();
-                          },
-                        ),
-                        ElevatedButton(
-                          child: const Text('No'),
-                          onPressed: () {
-                            Navigator.pop(context);
-                          },
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            );
-          },
-        );
-      },
-    );
-  }
 }
-
-// Bloc Stuff
-
-// BlocProvider(
-//         create: (BuildContext context) => PostingBloc(),
-//         child: formWidget(),
-//       ),
