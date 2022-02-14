@@ -4,42 +4,52 @@ import 'package:flutter/material.dart';
 
 Widget viewCar(String make, String model, String year, String price,
     String odometer, String description) {
-  return Container(
-    // TODO change this height so its responsive
+  return SizedBox(
     height: 500,
-    width: double.infinity,
-    child: Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const Placeholder(
-            fallbackHeight: 250,
-          ),
-          Row(
+    child: Column(
+      // TODO change this height so its responsive
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('$year ', style: const TextStyle(fontSize: 20)),
-              Text(
-                '$make $model',
-                style: const TextStyle(fontSize: 20),
+              const Placeholder(
+                fallbackHeight: 250,
+              ),
+              Row(
+                children: [
+                  Text('$year ', style: const TextStyle(fontSize: 20)),
+                  Text(
+                    '$make $model',
+                    style: const TextStyle(fontSize: 20),
+                  ),
+                ],
+              ),
+              Text(price),
+              Text('$odometer Miles'),
+              Text(description),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  ElevatedButton(
+                      onPressed: () => AlertDialog(
+                            title: Text('this was liked'),
+                            content: Container(
+                              child: Text('This was liked'),
+                            ),
+                          ),
+                      child: Icon(Icons.favorite)),
+                  ElevatedButton(onPressed: null, child: Icon(Icons.email)),
+                ],
               ),
             ],
           ),
-          Text(price),
-          Text('$odometer Miles'),
-          Text(description),
-          const SizedBox(
-            height: 20,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: const [
-              ElevatedButton(onPressed: null, child: Icon(Icons.favorite)),
-              ElevatedButton(onPressed: null, child: Icon(Icons.email)),
-            ],
-          ),
-        ],
-      ),
+        )
+      ],
     ),
   );
 }
