@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:testing/screens/home.dart';
+import 'package:testing/screens/liked.dart';
 import 'package:testing/screens/post.dart';
 import 'package:testing/screens/profile.dart';
 
@@ -15,6 +16,7 @@ class _BottomBarState extends State<BottomBar> {
   final List<Widget> _children = [
     const Home(),
     const Post(),
+    const Liked(),
     const Profile(),
   ];
 
@@ -39,6 +41,10 @@ class _BottomBarState extends State<BottomBar> {
           BottomNavigationBarItem(
             icon: Icon(Icons.add_circle),
             label: 'Post',
+          ),
+          BottomNavigationBarItem(
+            icon: Icon(Icons.favorite),
+            label: 'Liked',
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.person),
