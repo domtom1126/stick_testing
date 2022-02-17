@@ -22,6 +22,14 @@ class _PostState extends State<Post> {
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   final ImagePicker _imagePicker = ImagePicker();
+  File? image;
+  Future pickImage() async {
+    final _imagePicker = ImagePicker();
+    final image = await _imagePicker.pickImage(source: ImageSource.gallery);
+    final image_temp = File(image!.path);
+    setState(() => this.image = image_temp);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,7 +47,7 @@ class _PostState extends State<Post> {
             //       color: Colors.grey,
             //     ),
             //     borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: Column(
+            child: ListView(
               children: [
                 inputField('Make', _makeController, 'Enter make'),
                 const SizedBox(height: 20),
@@ -57,6 +65,7 @@ class _PostState extends State<Post> {
                     onPressed: () => pickImage(),
                     child: const Text('Add Image')),
                 const SizedBox(height: 20),
+                image != null ? Image.file(image!) : Container(),
                 ElevatedButton(
                     onPressed: () => showBottomSheet(
                           context: context,
