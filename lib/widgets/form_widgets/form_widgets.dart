@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -40,11 +42,6 @@ Future addCar() async {
     inputField(
         'Description', _descriptionController, 'Please enter a description'),
   ]);
-}
-
-Future pickImage() async {
-  final _imagePicker = ImagePicker();
-  final image = await _imagePicker.pickImage(source: ImageSource.gallery);
 }
 
 // _postingBloc.add(PostingEvent.postingSuccess());
