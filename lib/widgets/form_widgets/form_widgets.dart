@@ -8,13 +8,6 @@ import 'package:testing/firebase_functions/post_listing.dart';
 import 'package:testing/listing_bloc.dart';
 import 'package:testing/screens/post.dart';
 
-TextEditingController _makeController = TextEditingController();
-TextEditingController _modelController = TextEditingController();
-TextEditingController _yearController = TextEditingController();
-TextEditingController _odometerController = TextEditingController();
-TextEditingController _priceController = TextEditingController();
-TextEditingController _descriptionController = TextEditingController();
-
 Widget inputField(
     String label, TextEditingController controller, String errorMessage) {
   return TextFormField(
@@ -32,21 +25,26 @@ Widget inputField(
   );
 }
 
-Future addCar() async {
-  Column(children: <Widget>[
-    inputField('Make', _makeController, 'Please enter a make'),
-    inputField('Model', _modelController, 'Please enter a model'),
-    inputField('Year', _yearController, 'Please enter a year'),
-    inputField('Odometer', _odometerController, 'Please enter an odometer'),
-    inputField('Price', _priceController, 'Please enter a price'),
-    inputField(
-        'Description', _descriptionController, 'Please enter a description'),
-  ]);
-}
-
 // _postingBloc.add(PostingEvent.postingSuccess());
 class PostConfirm extends StatefulWidget {
-  const PostConfirm({Key? key}) : super(key: key);
+  String make;
+  String model;
+  String year;
+  String odometer;
+  String price;
+  String description;
+  // String image;
+
+  PostConfirm({
+    required this.make,
+    required this.model,
+    required this.year,
+    required this.odometer,
+    required this.price,
+    required this.description,
+    // required this.image,
+  });
+  // Parameters need to go here
 
   @override
   _PostConfirmState createState() => _PostConfirmState();
@@ -71,18 +69,18 @@ class _PostConfirmState extends State<PostConfirm> {
             Row(
               children: [
                 Text(
-                  _yearController.text,
+                  widget.year,
                   style: const TextStyle(fontSize: 20),
                 ),
                 Text(
-                  ' ${_makeController.text}${_modelController.text}',
+                  ' ${widget.make}${widget.model}',
                   style: const TextStyle(fontSize: 20),
                 ),
               ],
             ),
-            Text(_priceController.text),
-            Text('${_odometerController.text} Miles'),
-            Text(_descriptionController.text),
+            Text(widget.price),
+            Text('${widget.odometer} Miles'),
+            Text(widget.description),
             const SizedBox(
               height: 20,
             ),
@@ -90,10 +88,10 @@ class _PostConfirmState extends State<PostConfirm> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                ElevatedButton(onPressed: null, child: const Text('Yes')),
                 ElevatedButton(
-                    onPressed: () => addCar(), child: const Text('Yes')),
-                ElevatedButton(
-                    onPressed: Navigator.of(context).pop, child: Text('No')),
+                    onPressed: Navigator.of(context).pop,
+                    child: Center(child: Text('No'))),
               ],
             ),
           ],
