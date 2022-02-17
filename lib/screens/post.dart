@@ -65,11 +65,20 @@ class _PostState extends State<Post> {
                     onPressed: () => pickImage(),
                     child: const Text('Add Image')),
                 const SizedBox(height: 20),
-                image != null ? Image.file(image!) : Container(),
+                image != null
+                    ? Image.file(image!, height: 200, width: 200)
+                    : Container(child: Text('No Image Selected')),
                 ElevatedButton(
                     onPressed: () => showBottomSheet(
                           context: context,
-                          builder: (context) => const PostConfirm(),
+                          builder: (context) => PostConfirm(
+                            make: _makeController.text,
+                            model: _modelController.text,
+                            year: _yearController.text,
+                            odometer: _odometerController.text,
+                            price: _priceController.text,
+                            description: _descriptionController.text,
+                          ),
                         ),
                     child: const Text('Confirm')),
               ],
