@@ -67,7 +67,9 @@ class _PostState extends State<Post> {
                 const SizedBox(height: 20),
                 image != null
                     ? Image.file(image!, height: 200, width: 200)
-                    : Container(child: Text('No Image Selected')),
+                    : Container(
+                        child: Center(child: Text('No Image Selected')),
+                      ),
                 ElevatedButton(
                     onPressed: () => showBottomSheet(
                           context: context,
@@ -78,6 +80,7 @@ class _PostState extends State<Post> {
                             odometer: _odometerController.text,
                             price: _priceController.text,
                             description: _descriptionController.text,
+                            image: File(image!.path),
                           ),
                         ),
                     child: const Text('Confirm')),
