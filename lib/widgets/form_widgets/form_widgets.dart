@@ -33,7 +33,7 @@ class PostConfirm extends StatefulWidget {
   String odometer;
   String price;
   String description;
-  // String image;
+  File image;
 
   PostConfirm({
     required this.make,
@@ -42,7 +42,7 @@ class PostConfirm extends StatefulWidget {
     required this.odometer,
     required this.price,
     required this.description,
-    // required this.image,
+    required this.image,
   });
   // Parameters need to go here
 
@@ -62,9 +62,10 @@ class _PostConfirmState extends State<PostConfirm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            const Placeholder(
-              fallbackHeight: 250,
-              fallbackWidth: 300,
+            // TODO image goes here
+            Image(
+              image: AssetImage(widget.image.path),
+              height: 100,
             ),
             Row(
               children: [
