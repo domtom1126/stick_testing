@@ -51,6 +51,14 @@ class PostConfirm extends StatefulWidget {
 }
 
 class _PostConfirmState extends State<PostConfirm> {
+  final _postListing = PostListing(
+      make: '',
+      model: '',
+      year: '',
+      odometer: '',
+      price: '',
+      description: '',
+      dateAdded: '');
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -63,9 +71,12 @@ class _PostConfirmState extends State<PostConfirm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TODO image goes here
-            Image(
-              image: AssetImage(widget.image.path),
-              height: 100,
+            Center(
+              child: Image(
+                image: AssetImage(widget.image.path),
+                height: 250,
+                width: 250,
+              ),
             ),
             Row(
               children: [
@@ -74,7 +85,7 @@ class _PostConfirmState extends State<PostConfirm> {
                   style: const TextStyle(fontSize: 20),
                 ),
                 Text(
-                  ' ${widget.make}${widget.model}',
+                  ' ${widget.make} ${widget.model}',
                   style: const TextStyle(fontSize: 20),
                 ),
               ],
@@ -89,7 +100,17 @@ class _PostConfirmState extends State<PostConfirm> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(onPressed: null, child: const Text('Yes')),
+                // TODO post gets added here
+                ElevatedButton(
+                    onPressed: () => _postListing.addPost(
+                        widget.make,
+                        widget.model,
+                        widget.year,
+                        widget.odometer,
+                        widget.price,
+                        widget.description,
+                        widget.image.toString()),
+                    child: const Text('Yes')),
                 ElevatedButton(
                     onPressed: Navigator.of(context).pop,
                     child: Center(child: Text('No'))),
