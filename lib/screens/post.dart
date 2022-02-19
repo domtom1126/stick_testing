@@ -21,7 +21,6 @@ class _PostState extends State<Post> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  final ImagePicker _imagePicker = ImagePicker();
   File? image;
   Future pickImage() async {
     final _imagePicker = ImagePicker();
