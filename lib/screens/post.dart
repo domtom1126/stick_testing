@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:testing/listing_bloc.dart';
@@ -48,23 +49,43 @@ class _PostState extends State<Post> {
             //     borderRadius: BorderRadius.all(Radius.circular(20))),
             child: ListView(
               children: [
-                inputField(
-                    'Make', _makeController, TextInputType.text, 'Enter make'),
+                textInputField('Make', _makeController, TextInputType.text,
+                    'Enter make', 20),
                 const SizedBox(height: 20),
-                inputField('Model', _modelController, TextInputType.text,
-                    'Enter model'),
+                textInputField('Model', _modelController, TextInputType.text,
+                    'Enter model', 20),
                 const SizedBox(height: 20),
-                inputField('Year', _yearController, TextInputType.number,
-                    'Enter year'),
+                TextFormField(
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(4),
+                  ],
+                  keyboardType: TextInputType.number,
+                  controller: _yearController,
+                  decoration: const InputDecoration(
+                    hintText: 'Year',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Enter year';
+                    }
+                    return null;
+                  },
+                ),
                 const SizedBox(height: 20),
-                inputField('Odometer', _odometerController,
-                    TextInputType.number, 'Enter odometer'),
+                numInputField('Odometer', _odometerController,
+                    TextInputType.number, 'Enter odometer', 10, ''),
                 const SizedBox(height: 20),
-                inputField('Price', _priceController, TextInputType.number,
-                    'Enter price'),
+                numInputField(
+                  'Price',
+                  _priceController,
+                  TextInputType.number,
+                  'Enter price',
+                  10,
+                  '\$',
+                ),
                 const SizedBox(height: 20),
-                inputField('Description', _descriptionController,
-                    TextInputType.text, 'Enter description'),
+                textInputField('Description', _descriptionController,
+                    TextInputType.text, 'Enter description', 200),
                 ElevatedButton(
                     onPressed: () => pickImage(),
                     child: const Text('Add Image')),
@@ -75,7 +96,9 @@ class _PostState extends State<Post> {
                         child: Center(child: Text('No Image Selected')),
                       ),
                 ElevatedButton(
-                    onPressed: () => showBottomSheet(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        showBottomSheet(
                           context: context,
                           builder: (context) => PostConfirm(
                             make: _makeController.text,
@@ -86,7 +109,9 @@ class _PostState extends State<Post> {
                             description: _descriptionController.text,
                             image: File(image!.path),
                           ),
-                        ),
+                        );
+                      }
+                    },
                     child: const Text('Confirm')),
               ],
             ),
