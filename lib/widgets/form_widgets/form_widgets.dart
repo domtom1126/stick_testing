@@ -8,9 +8,10 @@ import 'package:testing/firebase_functions/post_listing.dart';
 import 'package:testing/listing_bloc.dart';
 import 'package:testing/screens/post.dart';
 
-Widget inputField(
-    String label, TextEditingController controller, String errorMessage) {
+Widget inputField(String label, TextEditingController controller,
+    TextInputType keyboardType, String errorMessage) {
   return TextFormField(
+    keyboardType: keyboardType,
     controller: controller,
     decoration: InputDecoration(
       hintText: label,
