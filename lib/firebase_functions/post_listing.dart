@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:testing/listing.dart';
@@ -12,6 +14,7 @@ class PostListing {
   String odometer = '';
   String price = '';
   String description = '';
+  // String image = '';
   String dateAdded = '';
 
   PostListing({
@@ -22,10 +25,12 @@ class PostListing {
     required this.odometer,
     required this.price,
     required this.description,
+    // required this.image,
     required this.dateAdded,
   });
 
-  addPost() async {
+  addPost(String make, String model, String year, String odometer, String price,
+      String description, String image) async {
     CollectionReference addPost =
         FirebaseFirestore.instance.collection('posts');
     await addPost.add({
@@ -36,7 +41,8 @@ class PostListing {
       'odometer': odometer,
       'price': price,
       'description': description,
-      'date_added': dateAdded,
+      'image': image,
+      'date_added': DateTime.now(),
     });
   }
 }
