@@ -31,15 +31,22 @@ class _BottomBarState extends State<BottomBar> {
     return Scaffold(
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        elevation: 0,
+        enableFeedback: false,
         onTap: _onItemTapped,
         currentIndex: _selectedIndex,
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+            icon: Icon(
+              Icons.home,
+            ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.add_circle),
+            icon: Icon(
+              Icons.add_circle,
+            ),
             label: 'Post',
           ),
           BottomNavigationBarItem(
