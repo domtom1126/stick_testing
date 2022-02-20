@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class ViewCar extends StatefulWidget {
-  // const ViewCar({Key? key}) : super(key: key);
   final String make;
   final String model;
   final String year;
@@ -55,15 +54,33 @@ class _ViewCarState extends State<ViewCar> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
+                      child: Icon(Icons.favorite),
+                      onPressed: () {
+                        final snackBar = SnackBar(
+                          duration: const Duration(seconds: 2),
+                          content: const Text('Car Liked'),
+                          action: SnackBarAction(
+                            label: 'Undo',
+                            onPressed: () {
+                              // Some code to undo the change.
+                            },
+                          ),
+                        );
+
+                        // Find the ScaffoldMessenger in the widget tree
+                        // and use it to show a SnackBar.
+                        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      },
+                    ),
+                    ElevatedButton(
                         onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) => const AlertDialog(
-                                  title: Text('This car was liked'),
-                                  content: Text('This car was liked'),
-                                )),
-                        child: const Icon(Icons.favorite)),
-                    const ElevatedButton(
-                        onPressed: null, child: Icon(Icons.email)),
+                              context: context,
+                              builder: (context) => const AlertDialog(
+                                title: Text('Email the Owner'),
+                                content: Text('Email the Owner'),
+                              ),
+                            ),
+                        child: Icon(Icons.email)),
                   ],
                 ),
               ],
