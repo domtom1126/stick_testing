@@ -6,6 +6,8 @@ import 'package:testing/screens/post.dart';
 import 'package:testing/screens/profile.dart';
 import 'package:testing/widgets/bottom_bar.dart';
 
+import 'screens/home.dart';
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -28,6 +30,11 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      onUnknownRoute: (RouteSettings settings) {
+        return MaterialPageRoute(
+          builder: (BuildContext context) => BottomBar(),
+        );
+      },
       // initialRoute: '/home',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
