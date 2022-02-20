@@ -11,6 +11,8 @@ import 'package:testing/screens/home.dart';
 import 'package:testing/screens/post.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 
+import '../bottom_bar.dart';
+
 Widget textInputField(String label, TextEditingController controller,
     TextInputType keyboardType, String errorMessage, int maxLength) {
   return TextFormField(
@@ -143,10 +145,8 @@ class _PostConfirmState extends State<PostConfirm> {
                           widget.price,
                           widget.description,
                           widget.image.toString());
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => const Home()));
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/home', (_) => false);
                     },
                     child: const Text('Yes')),
                 ElevatedButton(
