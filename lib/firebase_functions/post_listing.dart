@@ -14,7 +14,7 @@ class PostListing {
   String odometer = '';
   String price = '';
   String description = '';
-  // String image = '';
+  String image = '';
   String dateAdded = '';
 
   PostListing({
@@ -25,12 +25,14 @@ class PostListing {
     required this.odometer,
     required this.price,
     required this.description,
-    // required this.image,
+    required this.image,
     required this.dateAdded,
   });
 
   addPost(String make, String model, String year, String odometer, String price,
       String description, String image) async {
+    // TODO Images are gonna upload here
+
     CollectionReference addPost =
         FirebaseFirestore.instance.collection('posts');
     await addPost.add({
