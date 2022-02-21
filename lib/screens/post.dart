@@ -26,8 +26,8 @@ class _PostState extends State<Post> {
   Future pickImage() async {
     final _imagePicker = ImagePicker();
     final image = await _imagePicker.pickImage(source: ImageSource.gallery);
-    final image_temp = File(image!.path);
-    setState(() => this.image = image_temp);
+    final imageTemp = File(image!.path);
+    setState(() => this.image = imageTemp);
   }
 
   @override

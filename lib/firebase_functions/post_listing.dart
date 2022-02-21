@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
 import 'package:testing/listing.dart';
 
@@ -32,7 +33,11 @@ class PostListing {
   addPost(String make, String model, String year, String odometer, String price,
       String description, String image) async {
     // TODO Images are gonna upload here
-
+    final snapshot = firebase_storage.FirebaseStorage.instance
+        .ref('images/')
+        .putFile(File(image))
+        .snapshot;
+    final imageURL = await snapshot.ref.getDownloadURL();
     CollectionReference addPost =
         FirebaseFirestore.instance.collection('posts');
     await addPost.add({
@@ -43,7 +48,7 @@ class PostListing {
       'odometer': odometer,
       'price': price,
       'description': description,
-      'image': image,
+      'image': imageURL,
       'date_added': DateTime.now(),
     });
   }
