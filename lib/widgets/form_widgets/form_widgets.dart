@@ -22,6 +22,10 @@ Widget textInputField(String label, TextEditingController controller,
     keyboardType: keyboardType,
     controller: controller,
     decoration: InputDecoration(
+      errorStyle: TextStyle(
+        color: Colors.orangeAccent,
+        fontSize: 14.0,
+      ),
       hintText: label,
     ),
     validator: (value) {
@@ -92,6 +96,7 @@ class _PostConfirmState extends State<PostConfirm> {
       odometer: '',
       price: '',
       description: '',
+      image: '',
       dateAdded: '');
   @override
   Widget build(BuildContext context) {
@@ -144,7 +149,7 @@ class _PostConfirmState extends State<PostConfirm> {
                           widget.odometer,
                           widget.price,
                           widget.description,
-                          widget.image.toString());
+                          widget.image.path);
                       Navigator.pushNamedAndRemoveUntil(
                           context, '/home', (_) => false);
                     },
