@@ -6,13 +6,14 @@ class ViewCar extends StatefulWidget {
   final String year;
   final String price;
   final String odometer;
+  final String image;
   final String description;
 
   // TODO add images bro
   // final String image;
 
   const ViewCar(this.make, this.model, this.year, this.price, this.odometer,
-      this.description);
+      this.image, this.description);
 
   @override
   _ViewCarState createState() => _ViewCarState();
@@ -31,9 +32,7 @@ class _ViewCarState extends State<ViewCar> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Placeholder(
-                  fallbackHeight: 250,
-                ),
+                Image.network(widget.image, height: 200, width: 200),
                 Row(
                   children: [
                     Text('${widget.year} ',
