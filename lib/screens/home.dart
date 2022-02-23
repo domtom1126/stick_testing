@@ -34,8 +34,10 @@ class _HomeState extends State<Home> {
                 title: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const Placeholder(
-                      fallbackHeight: 250,
+                    Image.network(
+                      publicList['image'],
+                      height: 200,
+                      width: 200,
                     ),
                     Text(
                       '${publicList['price']}',
@@ -64,6 +66,7 @@ class _HomeState extends State<Home> {
                       publicList['year'],
                       publicList['price'],
                       publicList['odometer'],
+                      publicList['image'],
                       publicList['description'],
                     ),
                   );
