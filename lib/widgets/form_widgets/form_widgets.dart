@@ -150,11 +150,33 @@ class _PostConfirmState extends State<PostConfirm> {
                           .authStateChanges()
                           .listen((User? user) {
                         if (user == null) {
-                          print('okat');
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => SignIn()));
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  title: const Text('Sign in to post'),
+                                  content: const Text(
+                                      'You need to be signed in to post a car'),
+                                  actions: [
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text('Nevermind'),
+                                    ),
+                                    ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    const SignIn()));
+                                      },
+                                      child: const Text('Sign In'),
+                                    ),
+                                  ],
+                                );
+                              });
                         } else {
                           print('ok');
                           _postListing.addPost(
@@ -184,50 +206,3 @@ class _PostConfirmState extends State<PostConfirm> {
     );
   }
 }
-
-// Widget postConfirm() {
-//   return Container(
-//     // TODO change this height so its responsive
-//     height: 500,
-//     width: double.infinity,
-//     child: Padding(
-//       padding: const EdgeInsets.all(8.0),
-//       child: Column(
-//         crossAxisAlignment: CrossAxisAlignment.start,
-//         children: [
-//           const Placeholder(
-//             fallbackHeight: 250,
-//             fallbackWidth: 300,
-//           ),
-//           Row(
-//             children: [
-//               Text(
-//                 _yearController.text,
-//                 style: const TextStyle(fontSize: 20),
-//               ),
-//               Text(
-//                 ' ${_makeController.text}${_modelController.text}',
-//                 style: const TextStyle(fontSize: 20),
-//               ),
-//             ],
-//           ),
-//           Text(_priceController.text),
-//           Text('${_odometerController.text} Miles'),
-//           Text(_descriptionController.text),
-//           const SizedBox(
-//             height: 20,
-//           ),
-//           const Text('Are you sure you want to post this car?'),
-//           Row(
-//             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-//             children: [
-//               ElevatedButton(
-//                   onPressed: () => addCar(), child: const Text('Yes')),
-//               ElevatedButton(onPressed: , child: Text('No')),
-//             ],
-//           ),
-//         ],
-//       ),
-//     ),
-//   );
-// }
