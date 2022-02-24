@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -10,12 +11,14 @@ import 'package:testing/listing_bloc.dart';
 import 'package:testing/screens/home.dart';
 import 'package:testing/screens/post.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:testing/screens/sign_in.dart';
 
 import '../bottom_bar.dart';
 
 Widget textInputField(String label, TextEditingController controller,
-    TextInputType keyboardType, String errorMessage, int maxLength) {
+    TextInputType keyboardType, String errorMessage, int maxLength, int lines) {
   return TextFormField(
+    maxLines: lines,
     inputFormatters: [
       LengthLimitingTextInputFormatter(maxLength),
     ],
@@ -142,18 +145,34 @@ class _PostConfirmState extends State<PostConfirm> {
                 // TODO After post go to home screen
                 ElevatedButton(
                     onPressed: () {
-                      _postListing.addPost(
-                          widget.make,
-                          widget.model,
-                          widget.year,
-                          widget.odometer,
-                          widget.price,
-                          widget.description,
-                          widget.image.path);
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/home', (_) => false);
+                      print('hello');
+                      FirebaseAuth.instance
+                          .authStateChanges()
+                          .listen((User? user) {
+                        if (user == null) {
+                          print('okat');
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => SignIn()));
+                        } else {
+                          print('ok');
+                          _postListing.addPost(
+                              widget.make,
+                              widget.model,
+                              widget.year,
+                              widget.odometer,
+                              widget.price,
+                              widget.description,
+                              widget.image);
+                          Navigator.pushNamedAndRemoveUntil(
+                              context, '/home', (_) => false);
+                          print('User is signed in!');
+                        }
+                      });
                     },
                     child: const Text('Yes')),
+
                 ElevatedButton(
                     onPressed: Navigator.of(context).pop,
                     child: Center(child: Text('No'))),
