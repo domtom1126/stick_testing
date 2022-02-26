@@ -166,11 +166,11 @@ class _PostConfirmState extends State<PostConfirm> {
                                     ),
                                     ElevatedButton(
                                       onPressed: () {
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    const SignIn()));
+                                        showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return SignIn();
+                                            });
                                       },
                                       child: const Text('Sign In'),
                                     ),
