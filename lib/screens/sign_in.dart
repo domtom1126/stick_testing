@@ -78,18 +78,18 @@ class _SignInState extends State<SignIn> {
 
   void _signInSignUp(String email, String password) async {
     try {
+      Navigator.pop(context);
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: email);
-      Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         setState(() {
           Text('The password provided is too weak.');
         });
       } else if (e.code == 'email-already-in-use') {
+        Navigator.pop(context);
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
-        Navigator.pop(context);
       }
     } catch (e) {
       print(e);
