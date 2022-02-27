@@ -166,6 +166,7 @@ class _PostConfirmState extends State<PostConfirm> {
                                     ),
                                     ElevatedButton(
                                       onPressed: () {
+                                        Navigator.of(context).pop();
                                         showModalBottomSheet(
                                             context: context,
                                             builder: (context) {
