@@ -52,7 +52,7 @@ class _HomeState extends State<Home> {
                 ),
                 subtitle: Text('${publicList['odometer']} Miles'),
                 onTap: () {
-                  showBottomSheet(
+                  showModalBottomSheet(
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(20),
