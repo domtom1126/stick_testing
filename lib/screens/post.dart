@@ -33,21 +33,16 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Post a Car'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Form(
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverAppBar(
+            title: Text('Post'),
+          )
+        ],
+        body: Form(
           key: _formKey,
-          child: Container(
-            // height: 400,
-            // decoration: BoxDecoration(
-            //     border: Border.all(
-            //       color: Colors.grey,
-            //     ),
-            //     borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: ListView(
+          child: Expanded(
+            child: Column(
               children: [
                 textInputField('Make', _makeController, TextInputType.text,
                     'Enter make', 20, 1),
@@ -92,7 +87,7 @@ class _PostState extends State<Post> {
                 const SizedBox(height: 20),
                 image != null
                     ? Image.file(image!, height: 200, width: 200)
-                    : Container(
+                    : Expanded(
                         child: Center(child: Text('No Image Selected')),
                       ),
                 ElevatedButton(
@@ -116,7 +111,6 @@ class _PostState extends State<Post> {
                             image: File(image!.path),
                           ),
                         );
-                        print(File(image!.path));
                       }
                     },
                     child: const Text('Confirm')),
