@@ -22,61 +22,77 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
-      body: StreamBuilder(
-        stream: cars,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData) {
-            return ListView(
-                children: snapshot.data!.docs.map((publicList) {
-              return ListTile(
-                // TODO maybe add some "leading:" text?
-                title: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Image.network(
-                      publicList['image'],
-                      height: 200,
-                      width: 200,
-                    ),
-                    Text(
-                      '${publicList['price']}',
-                      style: const TextStyle(fontSize: 18),
-                    ),
-                    Text(
-                      '${publicList['year']} ${publicList['make']} ${publicList['model']}',
-                      style: const TextStyle(
-                          fontSize: 18, fontWeight: FontWeight.bold),
-                    ),
-                  ],
-                ),
-                subtitle: Text('${publicList['odometer']} Miles'),
-                onTap: () {
-                  showModalBottomSheet(
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    context: context,
-                    builder: (context) => ViewCar(
-                      publicList['make'],
-                      publicList['model'],
-                      publicList['year'],
-                      publicList['price'],
-                      publicList['odometer'],
-                      publicList['image'],
-                      publicList['description'],
-                    ),
-                  );
-                },
-              );
-            }).toList());
-          } else {
-            return const Center(child: CircularProgressIndicator());
-          }
-        },
+      body: CustomScrollView(
+        slivers: [
+          const SliverAppBar(
+            pinned: false,
+            snap: false,
+            floating: true,
+            title: Text('Home'),
+          ),
+          SliverList(
+            delegate: SliverChildBuilderDelegate(
+              (BuildContext context, int index) {
+                return StreamBuilder(
+                  stream: cars,
+                  builder: (BuildContext context,
+                      AsyncSnapshot<QuerySnapshot> snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                          children: snapshot.data!.docs.map((publicList) {
+                        return ListTile(
+                          // TODO maybe add some "leading:" text?
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Image.network(
+                                publicList['image'],
+                                height: 200,
+                                width: 200,
+                              ),
+                              Text(
+                                '${publicList['price']}',
+                                style: const TextStyle(fontSize: 18),
+                              ),
+                              Text(
+                                '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+                                style: const TextStyle(
+                                    fontSize: 18, fontWeight: FontWeight.bold),
+                              ),
+                            ],
+                          ),
+                          subtitle: Text('${publicList['odometer']} Miles'),
+                          onTap: () {
+                            showModalBottomSheet(
+                              shape: const RoundedRectangleBorder(
+                                borderRadius: BorderRadius.only(
+                                  topLeft: Radius.circular(20),
+                                  topRight: Radius.circular(20),
+                                ),
+                              ),
+                              context: context,
+                              builder: (context) => ViewCar(
+                                publicList['make'],
+                                publicList['model'],
+                                publicList['year'],
+                                publicList['price'],
+                                publicList['odometer'],
+                                publicList['image'],
+                                publicList['description'],
+                              ),
+                            );
+                          },
+                        );
+                      }).toList());
+                    } else {
+                      return const Center(child: CircularProgressIndicator());
+                    }
+                  },
+                );
+              },
+            ),
+          )
+        ],
       ),
     );
   }
