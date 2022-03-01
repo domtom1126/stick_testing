@@ -20,6 +20,7 @@ class ViewCar extends StatefulWidget {
 }
 
 class _ViewCarState extends State<ViewCar> {
+  bool onLiked = false;
   @override
   Widget build(BuildContext buildContext) {
     return SizedBox(
@@ -53,8 +54,14 @@ class _ViewCarState extends State<ViewCar> {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: onLiked ? Colors.red : Colors.grey,
+                      ),
                       child: Icon(Icons.favorite),
                       onPressed: () {
+                        setState(() {
+                          onLiked = !onLiked;
+                        });
                         final snackBar = SnackBar(
                           duration: const Duration(seconds: 2),
                           content: const Text('Car Liked'),
