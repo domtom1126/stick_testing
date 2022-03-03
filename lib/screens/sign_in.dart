@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -79,6 +80,12 @@ class _SignInPageState extends State<SignInPage> {
   void _signInSignUp(String email, String password) async {
     try {
       Navigator.pop(context);
+      CollectionReference addNewUser =
+          FirebaseFirestore.instance.collection('users');
+      await addNewUser.add({
+        'email': email,
+        'password': password,
+      });
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: email);
     } on FirebaseAuthException catch (e) {
@@ -107,6 +114,7 @@ class SignInModal extends StatefulWidget {
 class _SignInModalState extends State<SignInModal> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  bool loginFail = false;
 
   @override
   Widget build(BuildContext context) {
@@ -143,14 +151,15 @@ class _SignInModalState extends State<SignInModal> {
                 child: TextFormField(
                   obscureText: true,
                   controller: _passwordController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Password',
+                    errorText: loginFail ? 'Password is not correct' : null,
                   ),
                 ),
               ),
               TextButton(
                 onPressed: () {
-                  //forgot password screen
+                  // TODO add forgot password screen
                 },
                 child: const Text(
                   'Forgot Password',
@@ -171,7 +180,7 @@ class _SignInModalState extends State<SignInModal> {
 
   void _signInSignUp(String email, String password) async {
     try {
-      Navigator.pop(context);
+      // Navigator.pop(context);
       await FirebaseAuth.instance
           .createUserWithEmailAndPassword(email: email, password: email);
     } on FirebaseAuthException catch (e) {
@@ -179,8 +188,12 @@ class _SignInModalState extends State<SignInModal> {
         setState(() {
           Text('The password provided is too weak.');
         });
+      } else if (e.code == 'wrong-password') {
+        setState(() {
+          loginFail = true;
+        });
       } else if (e.code == 'email-already-in-use') {
-        Navigator.pop(context);
+        // Navigator.pop(context);
         await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
       }
