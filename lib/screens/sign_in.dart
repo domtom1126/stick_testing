@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatefulWidget {
@@ -12,6 +13,7 @@ class SignInPage extends StatefulWidget {
 class _SignInPageState extends State<SignInPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  String errorMessage = '';
 
   @override
   Widget build(BuildContext context) {
@@ -40,6 +42,12 @@ class _SignInPageState extends State<SignInPage> {
               Container(
                 padding: const EdgeInsets.all(10),
                 child: TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty || !value.contains('@')) {
+                      return 'Please enter a valid email';
+                    }
+                    return null;
+                  },
                   controller: _emailController,
                   decoration: const InputDecoration(
                     labelText: 'User Name',
@@ -49,6 +57,12 @@ class _SignInPageState extends State<SignInPage> {
               Container(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
                 child: TextFormField(
+                  validator: (value) {
+                    if (value!.isEmpty || value.length < 6) {
+                      return 'Password must be at least 6 characters';
+                    }
+                    return null;
+                  },
                   obscureText: true,
                   controller: _passwordController,
                   decoration: const InputDecoration(
@@ -70,8 +84,13 @@ class _SignInPageState extends State<SignInPage> {
                   child: ElevatedButton(
                     child: const Text('Login'),
                     onPressed: () => _signInSignUp(
-                        _emailController.text, _passwordController.text),
+                        _emailController.text, _passwordController.text)
+                    // Navigator.of(context).pushReplacementNamed('/home');
+                    ,
                   )),
+              Container(
+                child: Text(errorMessage),
+              )
             ],
           )),
     );
@@ -79,7 +98,7 @@ class _SignInPageState extends State<SignInPage> {
 
   void _signInSignUp(String email, String password) async {
     try {
-      Navigator.pop(context);
+      // Navigator.pop(context);
       CollectionReference addNewUser =
           FirebaseFirestore.instance.collection('users');
       await addNewUser.add({
@@ -87,16 +106,27 @@ class _SignInPageState extends State<SignInPage> {
         'password': password,
       });
       await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: email);
+          .createUserWithEmailAndPassword(email: email, password: password);
+      Navigator.of(context).pushReplacementNamed('/home');
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         setState(() {
-          Text('The password provided is too weak.');
+          errorMessage = 'The password provided is too weak.';
+        });
+      } else if (e.code == 'wrong-password') {
+        setState(() {
+          errorMessage =
+              'The password is invalid or the user does not have a password.';
         });
       } else if (e.code == 'email-already-in-use') {
-        Navigator.pop(context);
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
+        showAboutDialog(context: context, children: [
+          Text('The account already exists for that email.'),
+        ]);
+      } else if (e.code == 'wrong-password') {
+        setState(() {
+          errorMessage =
+              'The password is invalid or the user does not have a password.';
+        });
       }
     } catch (e) {
       print(e);
@@ -114,7 +144,6 @@ class SignInModal extends StatefulWidget {
 class _SignInModalState extends State<SignInModal> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  bool loginFail = false;
 
   @override
   Widget build(BuildContext context) {
@@ -153,7 +182,6 @@ class _SignInModalState extends State<SignInModal> {
                   controller: _passwordController,
                   decoration: InputDecoration(
                     labelText: 'Password',
-                    errorText: loginFail ? 'Password is not correct' : null,
                   ),
                 ),
               ),
@@ -170,8 +198,11 @@ class _SignInModalState extends State<SignInModal> {
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: ElevatedButton(
                     child: const Text('Login'),
-                    onPressed: () => _signInSignUp(
-                        _emailController.text, _passwordController.text),
+                    onPressed: () {
+                      _signInSignUp(
+                          _emailController.text, _passwordController.text);
+                      // Navigator.pop(context);
+                    },
                   )),
             ],
           )),
@@ -182,7 +213,7 @@ class _SignInModalState extends State<SignInModal> {
     try {
       // Navigator.pop(context);
       await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: email);
+          .createUserWithEmailAndPassword(email: email, password: password);
     } on FirebaseAuthException catch (e) {
       if (e.code == 'weak-password') {
         setState(() {
@@ -190,12 +221,13 @@ class _SignInModalState extends State<SignInModal> {
         });
       } else if (e.code == 'wrong-password') {
         setState(() {
-          loginFail = true;
+          Text('The password is invalid or the user does not have a password.');
         });
       } else if (e.code == 'email-already-in-use') {
         // Navigator.pop(context);
-        await FirebaseAuth.instance
-            .signInWithEmailAndPassword(email: email, password: password);
+        setState(() {
+          Container(child: Text('The account already exists for that email.'));
+        });
       }
     } catch (e) {
       print(e);
