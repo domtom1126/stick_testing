@@ -33,6 +33,7 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // resizeToAvoidBottomInset: false,
       body: NestedScrollView(
         headerSliverBuilder: (context, innerBoxIsScrolled) => [
           SliverAppBar(
@@ -41,81 +42,79 @@ class _PostState extends State<Post> {
         ],
         body: Form(
           key: _formKey,
-          child: Expanded(
-            child: Column(
-              children: [
-                textInputField('Make', _makeController, TextInputType.text,
-                    'Enter make', 20, 1),
-                const SizedBox(height: 20),
-                textInputField('Model', _modelController, TextInputType.text,
-                    'Enter model', 20, 1),
-                const SizedBox(height: 20),
-                TextFormField(
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(4),
-                  ],
-                  keyboardType: TextInputType.number,
-                  controller: _yearController,
-                  decoration: const InputDecoration(
-                    hintText: 'Year',
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Enter year';
+          child: ListView(
+            children: [
+              textInputField('Make', _makeController, TextInputType.text,
+                  'Enter make', 20, 1),
+              const SizedBox(height: 20),
+              textInputField('Model', _modelController, TextInputType.text,
+                  'Enter model', 20, 1),
+              const SizedBox(height: 20),
+              TextFormField(
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(4),
+                ],
+                keyboardType: TextInputType.number,
+                controller: _yearController,
+                decoration: const InputDecoration(
+                  hintText: 'Year',
+                ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Enter year';
+                  }
+                  return null;
+                },
+              ),
+              const SizedBox(height: 20),
+              numInputField('Odometer', _odometerController,
+                  TextInputType.number, 'Enter odometer', 10, ''),
+              const SizedBox(height: 20),
+              numInputField(
+                'Price',
+                _priceController,
+                TextInputType.number,
+                'Enter price',
+                10,
+                '\$',
+              ),
+              const SizedBox(height: 20),
+              textInputField('Description', _descriptionController,
+                  TextInputType.text, 'Enter description', 200, 5),
+              ElevatedButton(
+                  onPressed: () => pickImage(), child: const Text('Add Image')),
+              const SizedBox(height: 20),
+              image != null
+                  ? Container(
+                      child: Image.file(image!, height: 200, width: 200))
+                  : Container(
+                      child: Center(child: Text('No Image Selected')),
+                    ),
+              ElevatedButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      showModalBottomSheet(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius: BorderRadius.only(
+                            topLeft: Radius.circular(20),
+                            topRight: Radius.circular(20),
+                          ),
+                        ),
+                        context: context,
+                        builder: (context) => PostConfirm(
+                          make: _makeController.text,
+                          model: _modelController.text,
+                          year: _yearController.text,
+                          odometer: _odometerController.text,
+                          price: _priceController.text,
+                          description: _descriptionController.text,
+                          image: File(image!.path),
+                        ),
+                      );
                     }
-                    return null;
                   },
-                ),
-                const SizedBox(height: 20),
-                numInputField('Odometer', _odometerController,
-                    TextInputType.number, 'Enter odometer', 10, ''),
-                const SizedBox(height: 20),
-                numInputField(
-                  'Price',
-                  _priceController,
-                  TextInputType.number,
-                  'Enter price',
-                  10,
-                  '\$',
-                ),
-                const SizedBox(height: 20),
-                textInputField('Description', _descriptionController,
-                    TextInputType.text, 'Enter description', 200, 5),
-                ElevatedButton(
-                    onPressed: () => pickImage(),
-                    child: const Text('Add Image')),
-                const SizedBox(height: 20),
-                image != null
-                    ? Image.file(image!, height: 200, width: 200)
-                    : Expanded(
-                        child: Center(child: Text('No Image Selected')),
-                      ),
-                ElevatedButton(
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        showModalBottomSheet(
-                          shape: const RoundedRectangleBorder(
-                            borderRadius: BorderRadius.only(
-                              topLeft: Radius.circular(20),
-                              topRight: Radius.circular(20),
-                            ),
-                          ),
-                          context: context,
-                          builder: (context) => PostConfirm(
-                            make: _makeController.text,
-                            model: _modelController.text,
-                            year: _yearController.text,
-                            odometer: _odometerController.text,
-                            price: _priceController.text,
-                            description: _descriptionController.text,
-                            image: File(image!.path),
-                          ),
-                        );
-                      }
-                    },
-                    child: const Text('Confirm')),
-              ],
-            ),
+                  child: const Text('Confirm')),
+            ],
           ),
         ),
       ),
