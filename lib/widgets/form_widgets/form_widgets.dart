@@ -145,7 +145,6 @@ class _PostConfirmState extends State<PostConfirm> {
                 // TODO After post go to home screen
                 ElevatedButton(
                     onPressed: () {
-                      print('hello');
                       FirebaseAuth.instance
                           .authStateChanges()
                           .listen((User? user) {
@@ -168,10 +167,15 @@ class _PostConfirmState extends State<PostConfirm> {
                                       onPressed: () {
                                         Navigator.of(context).pop();
                                         showModalBottomSheet(
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                topRight: Radius.circular(20),
+                                              ),
+                                            ),
                                             context: context,
-                                            builder: (context) {
-                                              return SignIn();
-                                            });
+                                            builder: (context) =>
+                                                SignInModal());
                                       },
                                       child: const Text('Sign In'),
                                     ),
