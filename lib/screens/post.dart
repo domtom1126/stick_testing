@@ -22,12 +22,13 @@ class _PostState extends State<Post> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  File? image;
+  File? pickedImage;
   Future pickImage() async {
     final _imagePicker = ImagePicker();
-    final image = await _imagePicker.pickImage(source: ImageSource.gallery);
-    final imageTemp = File(image!.path);
-    setState(() => this.image = imageTemp);
+    final pickedImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    final imageTemp = File(pickedImage!.path);
+    setState(() => this.pickedImage = imageTemp);
   }
 
   @override
@@ -82,14 +83,18 @@ class _PostState extends State<Post> {
               textInputField('Description', _descriptionController,
                   TextInputType.text, 'Enter description', 200, 5),
               ElevatedButton(
-                  onPressed: () => pickImage(), child: const Text('Add Image')),
+                  onPressed: () async {
+                    final _imagePicker = ImagePicker();
+                    final pickedImage = await _imagePicker.pickImage(
+                        source: ImageSource.gallery);
+                    final imageTemp = File(pickedImage!.path);
+                    setState(() => this.pickedImage = imageTemp);
+                  },
+                  child: const Text('Add Image')),
               const SizedBox(height: 20),
-              image != null
-                  ? Container(
-                      child: Image.file(image!, height: 200, width: 200))
-                  : Container(
-                      child: Center(child: Text('No Image Selected')),
-                    ),
+              pickedImage != null
+                  ? Image.file(pickedImage!, height: 200, width: 200)
+                  : Text('No Image'),
               ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
@@ -108,7 +113,7 @@ class _PostState extends State<Post> {
                           odometer: _odometerController.text,
                           price: _priceController.text,
                           description: _descriptionController.text,
-                          image: File(image!.path),
+                          image: File(pickedImage!.path),
                         ),
                       );
                     }
