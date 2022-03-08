@@ -1,7 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:testing/screens/create_account.dart';
 import 'package:testing/screens/sign_in.dart';
+
+import '../signin_controller.dart';
 
 class Profile extends StatefulWidget {
   const Profile({Key? key}) : super(key: key);
@@ -11,8 +15,17 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  final FirebaseAuth auth = FirebaseAuth.instance;
+  // final FirebaseAuth auth = FirebaseAuth.instance;
+  final GoogleSignIn googleSignIn = GoogleSignIn();
+  login() {
+    try {
+      googleSignIn.signIn();
+    } catch (e) {
+      print(e);
+    }
+  }
 
+  final controller = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,42 +33,40 @@ class _ProfileState extends State<Profile> {
         title: const Text('Profile'),
       ),
       body: Center(
-        child: Column(
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const SignInPage()));
-                },
-                child: const Text('Sign In')),
-            if (auth.currentUser != null)
-              ElevatedButton(
-                  onPressed: () {
-                    auth.signOut();
-                  },
-                  child: const Text('Sign Out')),
-            if (auth.currentUser == null)
-              ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const CreateAccount()));
-                  },
-                  child: const Text('Create an Account')),
-            if (auth.currentUser != null)
-              Container(
-                child: Text('Signed in'),
-              ),
-            if (auth.currentUser == null)
-              Container(
-                child: Text('Signed out'),
-              ),
-          ],
-        ),
+        child: Obx(() {
+          if (controller.googleAccount.value == null) {
+            return buildSignIn(context);
+          } else {
+            return buildProfilePage(context);
+          }
+        }),
       ),
     );
+  }
+
+  Column buildSignIn(BuildContext context) {
+    return Column(
+      children: [
+        ElevatedButton(
+            onPressed: () {
+              controller.login();
+            },
+            child: Text('Sign in with Google')),
+      ],
+    );
+  }
+
+  Column buildProfilePage(BuildContext context) {
+    return Column(children: [
+      Text(controller.googleAccount.value?.displayName ?? '',
+          style: TextStyle(fontSize: 20)),
+      Text(controller.googleAccount.value?.email ?? '',
+          style: TextStyle(fontSize: 20)),
+      ElevatedButton(
+          onPressed: () {
+            null;
+          },
+          child: const Text('Sign Out')),
+    ]);
   }
 }
