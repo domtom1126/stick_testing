@@ -64,7 +64,7 @@ class _ProfileState extends State<Profile> {
           style: TextStyle(fontSize: 20)),
       ElevatedButton(
           onPressed: () {
-            null;
+            controller.logout();
           },
           child: const Text('Sign Out')),
     ]);
