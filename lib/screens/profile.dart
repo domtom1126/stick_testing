@@ -32,21 +32,22 @@ class _ProfileState extends State<Profile> {
       appBar: AppBar(
         title: const Text('Profile'),
       ),
-      body: Center(
-        child: Obx(() {
-          if (controller.googleAccount.value == null) {
-            return buildSignIn(context);
-          } else {
-            return buildProfilePage(context);
-          }
-        }),
-      ),
+      body: Obx(() {
+        if (controller.googleAccount.value == null) {
+          return buildSignIn(context);
+        } else {
+          return buildProfilePage(context);
+        }
+      }),
     );
   }
 
   Column buildSignIn(BuildContext context) {
     return Column(
       children: [
+        SizedBox(
+          height: 50,
+        ),
         ElevatedButton(
             onPressed: () {
               controller.login();
@@ -56,17 +57,56 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Column buildProfilePage(BuildContext context) {
-    return Column(children: [
-      Text(controller.googleAccount.value?.displayName ?? '',
-          style: TextStyle(fontSize: 20)),
-      Text(controller.googleAccount.value?.email ?? '',
-          style: TextStyle(fontSize: 20)),
-      ElevatedButton(
-          onPressed: () {
-            controller.logout();
-          },
-          child: const Text('Sign Out')),
-    ]);
+  Center buildProfilePage(BuildContext context) {
+    return Center(
+      child: Container(
+        height: 400,
+        width: 300,
+        padding: EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade400,
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+        ),
+        child: Column(children: [
+          SizedBox(
+            height: 20,
+          ),
+          CircleAvatar(
+            backgroundImage:
+                NetworkImage(controller.googleAccount.value?.photoUrl ?? ''),
+            radius: 50,
+          ),
+          SizedBox(
+            height: 40,
+          ),
+          Text(controller.googleAccount.value?.displayName ?? '',
+              style: TextStyle(fontSize: 20)),
+          SizedBox(
+            height: 10,
+          ),
+          Text(controller.googleAccount.value?.email ?? '',
+              style: TextStyle(fontSize: 20)),
+          SizedBox(
+            height: 30,
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ElevatedButton(
+                onPressed: () {
+                  null;
+                },
+                child: const Text('Edit Profile')),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ElevatedButton(
+                onPressed: () {
+                  controller.logout();
+                },
+                child: const Text('Sign Out')),
+          ),
+        ]),
+      ),
+    );
   }
 }
