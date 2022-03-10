@@ -42,18 +42,31 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  Column buildSignIn(BuildContext context) {
-    return Column(
-      children: [
-        SizedBox(
-          height: 50,
+  Center buildSignIn(BuildContext context) {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[800],
+          borderRadius: BorderRadius.all(Radius.circular(20)),
         ),
-        ElevatedButton(
-            onPressed: () {
-              controller.login();
-            },
-            child: Text('Sign in with Google')),
-      ],
+        height: 400,
+        width: 300,
+        child: Column(
+          children: [
+            SizedBox(
+              height: 50,
+            ),
+            SizedBox(
+              width: 200,
+              child: ElevatedButton(
+                  onPressed: () {
+                    controller.login();
+                  },
+                  child: Text('Sign in with Google')),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
