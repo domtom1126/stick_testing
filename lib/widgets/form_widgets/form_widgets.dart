@@ -5,9 +5,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:testing/firebase_functions/post_listing.dart';
-import 'package:testing/listing_bloc.dart';
+
 import 'package:testing/screens/home.dart';
 import 'package:testing/screens/post.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
@@ -66,6 +67,8 @@ Widget numInputField(
   );
 }
 
+// final googleSignIn = GoogleSignIn();
+
 // _postingBloc.add(PostingEvent.postingSuccess());
 class PostConfirm extends StatefulWidget {
   String make;
@@ -74,7 +77,7 @@ class PostConfirm extends StatefulWidget {
   String odometer;
   String price;
   String description;
-  File image;
+  // File image;
 
   PostConfirm({
     required this.make,
@@ -83,7 +86,7 @@ class PostConfirm extends StatefulWidget {
     required this.odometer,
     required this.price,
     required this.description,
-    required this.image,
+    // required this.image,
   });
   // Parameters need to go here
 
@@ -99,8 +102,31 @@ class _PostConfirmState extends State<PostConfirm> {
       odometer: '',
       price: '',
       description: '',
-      image: '',
+      // image: '',
       dateAdded: '');
+  // bool isAuth = false;
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   googleSignIn.onCurrentUserChanged.listen((account) {
+  //     if (account != null) {
+  //       print(account);
+  //       setState(() {
+  //         isAuth = true;
+  //       });
+  //     } else {
+  //       print('no account');
+  //       setState(() {
+  //         isAuth = false;
+  //       });
+  //     }
+  //   });
+  // }
+
+  // login() {
+  //   googleSignIn.signIn();
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -113,13 +139,7 @@ class _PostConfirmState extends State<PostConfirm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TODO image goes here
-            Center(
-              child: Image(
-                image: AssetImage(widget.image.path),
-                height: 250,
-                width: 250,
-              ),
-            ),
+            Text('Picture here'),
             Row(
               children: [
                 Text(
@@ -177,7 +197,7 @@ class _PostConfirmState extends State<PostConfirm> {
                                             builder: (context) =>
                                                 SignInModal());
                                       },
-                                      child: const Text('Sign In'),
+                                      child: const Text('Sign In with Google'),
                                     ),
                                   ],
                                 );
@@ -185,13 +205,14 @@ class _PostConfirmState extends State<PostConfirm> {
                         } else {
                           print('ok');
                           _postListing.addPost(
-                              widget.make,
-                              widget.model,
-                              widget.year,
-                              widget.odometer,
-                              widget.price,
-                              widget.description,
-                              widget.image);
+                            widget.make,
+                            widget.model,
+                            widget.year,
+                            widget.odometer,
+                            widget.price,
+                            widget.description,
+                            // widget.image
+                          );
                           Navigator.pushNamedAndRemoveUntil(
                               context, '/home', (_) => false);
                           print('User is signed in!');
