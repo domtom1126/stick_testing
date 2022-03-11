@@ -19,13 +19,13 @@ class MyApp extends StatelessWidget {
 
   final appBarBackgroundColor = Colors.transparent;
   final appBarTextColor = HexColor('ffffff');
-  final scaffoldBackgroundColor = HexColor('6E6D73');
-  final bottomBarBackgroundColor = HexColor('AFBDC7');
-  final selectedColor = HexColor('C95132');
-  final unselectedColor = HexColor('666666');
-  final buttonBackgroundColor = HexColor('857572');
+  final scaffoldBackgroundColor = HexColor('353738');
+  final bottomBarBackgroundColor = HexColor('5A676B');
+  final selectedColor = HexColor('FFFFFF');
+  final unselectedColor = HexColor('353738');
+  final buttonBackgroundColor = HexColor('4C6273');
   final buttonForegroundColor = HexColor('ffffff');
-  final buttonBorderColor = HexColor('EE6C4D');
+  final buttonBorderColor = HexColor('FFFFFF');
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
