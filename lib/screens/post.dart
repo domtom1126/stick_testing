@@ -117,7 +117,7 @@ class _PostState extends State<Post> {
                             odometer: _odometerController.text,
                             price: _priceController.text,
                             description: _descriptionController.text,
-                            image: File(pickedImage!.path),
+                            // image: '',
                           ),
                         );
                       }
