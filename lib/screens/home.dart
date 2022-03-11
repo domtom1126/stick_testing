@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:testing/firebase_functions/get_listings.dart';
 import 'package:testing/screens/view_car.dart';
 
 import '../listing.dart';
-import '../listing_bloc.dart';
 
 // TODO this page will get the most recent listings. Wrap with BlocBuilder
 class Home extends StatefulWidget {
@@ -19,12 +19,14 @@ class _HomeState extends State<Home> {
       .collection('posts')
       .orderBy('date_added', descending: true)
       .snapshots();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: CustomScrollView(
         slivers: [
-          const SliverAppBar(
+          SliverAppBar(
+            backgroundColor: HexColor('5A676B'),
             pinned: false,
             snap: false,
             floating: true,
@@ -40,52 +42,10 @@ class _HomeState extends State<Home> {
                     if (snapshot.hasData) {
                       return Column(
                           children: snapshot.data!.docs.map((publicList) {
-                        return ListTile(
-                          // TODO maybe add some "leading:" text?
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Image.network(
-                                publicList['image'],
-                                height: 200,
-                                width: 200,
-                              ),
-                              Text(
-                                '${publicList['price']}',
-                                style: const TextStyle(fontSize: 18),
-                              ),
-                              Text(
-                                '${publicList['year']} ${publicList['make']} ${publicList['model']}',
-                                style: const TextStyle(
-                                    fontSize: 18, fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          subtitle: Text('${publicList['odometer']} Miles'),
-                          onTap: () {
-                            showModalBottomSheet(
-                              shape: const RoundedRectangleBorder(
-                                borderRadius: BorderRadius.only(
-                                  topLeft: Radius.circular(20),
-                                  topRight: Radius.circular(20),
-                                ),
-                              ),
-                              context: context,
-                              builder: (context) => ViewCar(
-                                publicList['make'],
-                                publicList['model'],
-                                publicList['year'],
-                                publicList['price'],
-                                publicList['odometer'],
-                                publicList['image'],
-                                publicList['description'],
-                              ),
-                            );
-                          },
-                        );
+                        return buildCar(publicList, context);
                       }).toList());
                     } else {
-                      return const Center(child: CircularProgressIndicator());
+                      return const Center(child: Text('no Data'));
                     }
                   },
                 );
@@ -94,6 +54,52 @@ class _HomeState extends State<Home> {
           )
         ],
       ),
+    );
+  }
+
+  ListTile buildCar(
+      QueryDocumentSnapshot<Object?> publicList, BuildContext context) {
+    return ListTile(
+      // TODO maybe add some "leading:" text?
+      title: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Image.network(
+            publicList['image'],
+            height: 200,
+            width: 200,
+          ),
+          Text(
+            '${publicList['price']}',
+            style: const TextStyle(fontSize: 18),
+          ),
+          Text(
+            '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+          ),
+        ],
+      ),
+      subtitle: Text('${publicList['odometer']} Miles'),
+      onTap: () {
+        showModalBottomSheet(
+          shape: const RoundedRectangleBorder(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(20),
+              topRight: Radius.circular(20),
+            ),
+          ),
+          context: context,
+          builder: (context) => ViewCar(
+            publicList['make'],
+            publicList['model'],
+            publicList['year'],
+            publicList['price'],
+            publicList['odometer'],
+            publicList['image'],
+            publicList['description'],
+          ),
+        );
+      },
     );
   }
 }
