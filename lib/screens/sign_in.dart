@@ -2,6 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:testing/signin_controller.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -142,9 +144,9 @@ class SignInModal extends StatefulWidget {
 }
 
 class _SignInModalState extends State<SignInModal> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
-
+  // final TextEditingController _emailController = TextEditingController();
+  // final TextEditingController _passwordController = TextEditingController();
+  final loginController = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -167,41 +169,12 @@ class _SignInModalState extends State<SignInModal> {
                     style: TextStyle(fontSize: 15),
                   )),
               Container(
-                padding: const EdgeInsets.all(10),
-                child: TextFormField(
-                  controller: _emailController,
-                  decoration: const InputDecoration(
-                    labelText: 'User Name',
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                child: TextFormField(
-                  obscureText: true,
-                  controller: _passwordController,
-                  decoration: InputDecoration(
-                    labelText: 'Password',
-                  ),
-                ),
-              ),
-              TextButton(
-                onPressed: () {
-                  // TODO add forgot password screen
-                },
-                child: const Text(
-                  'Forgot Password',
-                ),
-              ),
-              Container(
                   height: 50,
                   padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   child: ElevatedButton(
-                    child: const Text('Login'),
+                    child: const Text('Sign in with Google'),
                     onPressed: () {
-                      _signInSignUp(
-                          _emailController.text, _passwordController.text);
-                      // Navigator.pop(context);
+                      loginController.login();
                     },
                   )),
             ],
@@ -209,28 +182,5 @@ class _SignInModalState extends State<SignInModal> {
     );
   }
 
-  void _signInSignUp(String email, String password) async {
-    try {
-      // Navigator.pop(context);
-      await FirebaseAuth.instance
-          .createUserWithEmailAndPassword(email: email, password: password);
-    } on FirebaseAuthException catch (e) {
-      if (e.code == 'weak-password') {
-        setState(() {
-          Text('The password provided is too weak.');
-        });
-      } else if (e.code == 'wrong-password') {
-        setState(() {
-          Text('The password is invalid or the user does not have a password.');
-        });
-      } else if (e.code == 'email-already-in-use') {
-        // Navigator.pop(context);
-        setState(() {
-          Container(child: Text('The account already exists for that email.'));
-        });
-      }
-    } catch (e) {
-      print(e);
-    }
-  }
+  void _signInSignUp() async {}
 }
