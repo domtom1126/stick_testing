@@ -5,7 +5,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:testing/firebase_functions/post_listing.dart';
 
@@ -13,10 +15,11 @@ import 'package:testing/screens/home.dart';
 import 'package:testing/screens/post.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:testing/screens/sign_in.dart';
+import 'package:testing/signin_controller.dart';
 
 import '../bottom_bar.dart';
 
-Widget textInputField(String label, TextEditingController controller,
+TextFormField textInputField(String label, TextEditingController controller,
     TextInputType keyboardType, String errorMessage, int maxLength, int lines) {
   return TextFormField(
     maxLines: lines,
@@ -30,6 +33,7 @@ Widget textInputField(String label, TextEditingController controller,
         color: Colors.orangeAccent,
         fontSize: 14.0,
       ),
+      hintStyle: TextStyle(color: HexColor('FFFFFF')),
       hintText: label,
     ),
     validator: (value) {
@@ -41,7 +45,7 @@ Widget textInputField(String label, TextEditingController controller,
   );
 }
 
-Widget numInputField(
+TextFormField numInputField(
     String label,
     TextEditingController controller,
     TextInputType keyboardType,
@@ -56,6 +60,7 @@ Widget numInputField(
     keyboardType: keyboardType,
     controller: controller,
     decoration: InputDecoration(
+      hintStyle: TextStyle(color: HexColor('FFFFFF')),
       hintText: label,
     ),
     validator: (value) {
@@ -165,59 +170,55 @@ class _PostConfirmState extends State<PostConfirm> {
                 // TODO After post go to home screen
                 ElevatedButton(
                     onPressed: () {
-                      FirebaseAuth.instance
-                          .authStateChanges()
-                          .listen((User? user) {
-                        if (user == null) {
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  title: const Text('Sign in to post'),
-                                  content: const Text(
-                                      'You need to be signed in to post a car'),
-                                  actions: [
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                      child: const Text('Nevermind'),
-                                    ),
-                                    ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        showModalBottomSheet(
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20),
-                                                topRight: Radius.circular(20),
-                                              ),
+                      final loginController = Get.put(LoginController());
+                      if (loginController.googleAccount == null) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                title: const Text('Sign in to post'),
+                                content: const Text(
+                                    'You need to be signed in to post a car'),
+                                actions: [
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                    child: const Text('Nevermind'),
+                                  ),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      // Navigator.of(context).pop();
+                                      showModalBottomSheet(
+                                          shape: const RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.only(
+                                              topLeft: Radius.circular(20),
+                                              topRight: Radius.circular(20),
                                             ),
-                                            context: context,
-                                            builder: (context) =>
-                                                SignInModal());
-                                      },
-                                      child: const Text('Sign In with Google'),
-                                    ),
-                                  ],
-                                );
-                              });
-                        } else {
-                          print('ok');
-                          _postListing.addPost(
-                            widget.make,
-                            widget.model,
-                            widget.year,
-                            widget.odometer,
-                            widget.price,
-                            widget.description,
-                            // widget.image
-                          );
-                          Navigator.pushNamedAndRemoveUntil(
-                              context, '/home', (_) => false);
-                          print('User is signed in!');
-                        }
-                      });
+                                          ),
+                                          context: context,
+                                          builder: (context) => SignInModal());
+                                    },
+                                    child: const Text('Sign In with Google'),
+                                  ),
+                                ],
+                              );
+                            });
+                      } else {
+                        print('ok');
+                        _postListing.addPost(
+                          widget.make,
+                          widget.model,
+                          widget.year,
+                          widget.odometer,
+                          widget.price,
+                          widget.description,
+                          // widget.image
+                        );
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/home', (_) => false);
+                        print('User is signed in!');
+                      }
                     },
                     child: const Text('Yes')),
 
