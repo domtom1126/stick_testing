@@ -23,37 +23,29 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: HexColor('5A676B'),
-            pinned: false,
-            snap: false,
-            floating: true,
-            title: Text('Home'),
-          ),
-          SliverList(
-            delegate: SliverChildBuilderDelegate(
-              (BuildContext context, int index) {
-                return StreamBuilder(
-                  stream: cars,
-                  builder: (BuildContext context,
-                      AsyncSnapshot<QuerySnapshot> snapshot) {
-                    if (snapshot.hasData) {
-                      return Column(
-                          children: snapshot.data!.docs.map((publicList) {
-                        return buildCar(publicList, context);
-                      }).toList());
-                    } else {
-                      return const Center(child: Text('no Data'));
-                    }
-                  },
-                );
-              },
-            ),
-          )
-        ],
+      appBar: AppBar(
+        title: Text('Home'),
       ),
+      body: ListView(children: [
+        StreamBuilder(
+          stream: cars,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+                  children: snapshot.data!.docs.map((publicList) {
+                return buildCar(publicList, context);
+              }).toList());
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: HexColor('4C6273'),
+                ),
+              );
+            }
+          },
+        )
+      ]),
     );
   }
 
@@ -64,10 +56,9 @@ class _HomeState extends State<Home> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            publicList['image'],
-            height: 200,
-            width: 200,
+          Placeholder(
+            fallbackHeight: 200,
+            fallbackWidth: 200,
           ),
           Text(
             '${publicList['price']}',
@@ -95,7 +86,7 @@ class _HomeState extends State<Home> {
             publicList['year'],
             publicList['price'],
             publicList['odometer'],
-            publicList['image'],
+            // publicList['image'],
             publicList['description'],
           ),
         );
@@ -103,3 +94,39 @@ class _HomeState extends State<Home> {
     );
   }
 }
+
+// CustomScrollView(
+//         slivers: [
+//           SliverAppBar(
+//             backgroundColor: HexColor('5A676B'),
+//             pinned: false,
+//             snap: false,
+//             floating: true,
+//             title: Text('Home'),
+//           ),
+//           SliverList(
+//             delegate: SliverChildBuilderDelegate(
+//               (BuildContext context, int index) {
+//                 return StreamBuilder(
+//                   stream: cars,
+//                   builder: (BuildContext context,
+//                       AsyncSnapshot<QuerySnapshot> snapshot) {
+//                     if (snapshot.hasData) {
+//                       return Column(
+//                           children: snapshot.data!.docs.map((publicList) {
+//                         return buildCar(publicList, context);
+//                       }).toList());
+//                     } else {
+//                       return Center(
+//                         child: CircularProgressIndicator(
+//                           color: HexColor('4C6273'),
+//                         ),
+//                       );
+//                     }
+//                   },
+//                 );
+//               },
+//             ),
+//           )
+//         ],
+//       ),
