@@ -60,7 +60,8 @@ class _PostState extends State<Post> {
                   ],
                   keyboardType: TextInputType.number,
                   controller: _yearController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
+                    hintStyle: TextStyle(color: HexColor('FFFFFF')),
                     hintText: 'Year',
                   ),
                   validator: (value) {
