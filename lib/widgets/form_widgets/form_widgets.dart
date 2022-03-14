@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -171,7 +171,7 @@ class _PostConfirmState extends State<PostConfirm> {
                 ElevatedButton(
                     onPressed: () {
                       final loginController = Get.put(LoginController());
-                      if (loginController.googleAccount == null) {
+                      if (loginController.googleAccount.value == null) {
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -189,15 +189,7 @@ class _PostConfirmState extends State<PostConfirm> {
                                   ElevatedButton(
                                     onPressed: () {
                                       // Navigator.of(context).pop();
-                                      showModalBottomSheet(
-                                          shape: const RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.only(
-                                              topLeft: Radius.circular(20),
-                                              topRight: Radius.circular(20),
-                                            ),
-                                          ),
-                                          context: context,
-                                          builder: (context) => SignInModal());
+                                      loginController.login();
                                     },
                                     child: const Text('Sign In with Google'),
                                   ),
@@ -217,7 +209,7 @@ class _PostConfirmState extends State<PostConfirm> {
                         );
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/home', (_) => false);
-                        print('User is signed in!');
+                        print(loginController.googleAccount.value!.email);
                       }
                     },
                     child: const Text('Yes')),
