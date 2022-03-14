@@ -2,8 +2,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:testing/signin_controller.dart';
 
 import 'package:testing/widgets/form_widgets/form_widgets.dart';
 
@@ -30,8 +32,43 @@ class _PostState extends State<Post> {
     setState(() => this.pickedImage = imageTemp);
   }
 
+  final controller = Get.put(LoginController());
+
   @override
   Widget build(BuildContext context) {
+    return Obx(() {
+      if (controller.googleAccount.value == null) {
+        return buildUserNotAuth(context);
+      } else {
+        return buildUserAuth(context);
+      }
+    });
+  }
+
+  Scaffold buildUserNotAuth(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Login'),
+      ),
+      body: Column(
+        children: [
+          const Text('It doesn\'t look like you are logged in'),
+          const Text(
+              'Sign in below with Google that way people will have a good email to contact you at'),
+          SizedBox(
+            width: 200,
+            child: ElevatedButton(
+                onPressed: () {
+                  controller.login();
+                },
+                child: Text('Sign in with Google')),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Scaffold buildUserAuth(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text('Post'),
@@ -106,6 +143,7 @@ class _PostState extends State<Post> {
                           year: _yearController.text,
                           odometer: _odometerController.text,
                           price: _priceController.text,
+                          email: controller.googleAccount.value!.email,
                           description: _descriptionController.text,
                           // image: '',
                         ),
