@@ -81,6 +81,7 @@ class PostConfirm extends StatefulWidget {
   String year;
   String odometer;
   String price;
+  String email;
   String description;
   // File image;
 
@@ -90,6 +91,7 @@ class PostConfirm extends StatefulWidget {
     required this.year,
     required this.odometer,
     required this.price,
+    required this.email,
     required this.description,
     // required this.image,
   });
@@ -107,6 +109,7 @@ class _PostConfirmState extends State<PostConfirm> {
       odometer: '',
       price: '',
       description: '',
+      email: '',
       // image: '',
       dateAdded: '');
   // bool isAuth = false;
@@ -197,6 +200,8 @@ class _PostConfirmState extends State<PostConfirm> {
                               );
                             });
                       } else {
+                        String email =
+                            loginController.googleAccount.value!.email;
                         print('ok');
                         _postListing.addPost(
                           widget.make,
