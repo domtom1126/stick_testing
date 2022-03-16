@@ -3,7 +3,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:testing/listing.dart';
+import 'package:testing/signin_controller.dart';
 
 // * This would be like data_service.dart
 
@@ -14,6 +16,7 @@ class PostListing {
   String odometer = '';
   String price = '';
   String description = '';
+  String email = '';
   // String image = '';
   String dateAdded = '';
 
@@ -24,6 +27,7 @@ class PostListing {
     required this.odometer,
     required this.price,
     required this.description,
+    required this.email,
     // required this.image,
     required this.dateAdded,
   });
@@ -39,6 +43,8 @@ class PostListing {
     // final imageURL = await snapshot.ref.getDownloadURL();
     CollectionReference addPost =
         FirebaseFirestore.instance.collection('posts');
+    final controller = Get.put(LoginController());
+    final email = controller.googleAccount.value!.email;
     await addPost.add({
       'make': make,
       'model': model,
@@ -46,6 +52,7 @@ class PostListing {
       'odometer': odometer,
       'price': price,
       'description': description,
+      'email': email,
       // 'image': imageURL,
       'date_added': DateTime.now(),
     });
