@@ -1,23 +1,10 @@
-import 'dart:io';
-
-import 'package:cloud_firestore/cloud_firestore.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:testing/firebase_functions/post_listing.dart';
-
-import 'package:testing/screens/home.dart';
-import 'package:testing/screens/post.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:testing/screens/sign_in.dart';
 import 'package:testing/signin_controller.dart';
-
-import '../bottom_bar.dart';
 
 TextFormField textInputField(String label, TextEditingController controller,
     TextInputType keyboardType, String errorMessage, int maxLength, int lines) {
@@ -29,7 +16,7 @@ TextFormField textInputField(String label, TextEditingController controller,
     keyboardType: keyboardType,
     controller: controller,
     decoration: InputDecoration(
-      errorStyle: TextStyle(
+      errorStyle: const TextStyle(
         color: Colors.orangeAccent,
         fontSize: 14.0,
       ),
@@ -76,13 +63,13 @@ TextFormField numInputField(
 
 // _postingBloc.add(PostingEvent.postingSuccess());
 class PostConfirm extends StatefulWidget {
-  String make;
-  String model;
-  String year;
-  String odometer;
-  String price;
-  String email;
-  String description;
+  final String make;
+  final String model;
+  final String year;
+  final String odometer;
+  final String price;
+  final String email;
+  final String description;
   // File image;
 
   PostConfirm({
@@ -112,32 +99,10 @@ class _PostConfirmState extends State<PostConfirm> {
       email: '',
       // image: '',
       dateAdded: '');
-  // bool isAuth = false;
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   googleSignIn.onCurrentUserChanged.listen((account) {
-  //     if (account != null) {
-  //       print(account);
-  //       setState(() {
-  //         isAuth = true;
-  //       });
-  //     } else {
-  //       print('no account');
-  //       setState(() {
-  //         isAuth = false;
-  //       });
-  //     }
-  //   });
-  // }
-
-  // login() {
-  //   googleSignIn.signIn();
-  // }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
       // TODO change this height so its responsive
       height: 500,
       width: double.infinity,
@@ -147,7 +112,7 @@ class _PostConfirmState extends State<PostConfirm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TODO image goes here
-            Text('Picture here'),
+            const Text('Picture here'),
             Row(
               children: [
                 Text(
@@ -200,9 +165,6 @@ class _PostConfirmState extends State<PostConfirm> {
                               );
                             });
                       } else {
-                        String email =
-                            loginController.googleAccount.value!.email;
-                        print('ok');
                         _postListing.addPost(
                           widget.make,
                           widget.model,
@@ -214,14 +176,13 @@ class _PostConfirmState extends State<PostConfirm> {
                         );
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/home', (_) => false);
-                        print(loginController.googleAccount.value!.email);
                       }
                     },
                     child: const Text('Yes')),
 
                 ElevatedButton(
                     onPressed: Navigator.of(context).pop,
-                    child: Center(child: Text('No'))),
+                    child: const Center(child: Text('No'))),
               ],
             ),
           ],
