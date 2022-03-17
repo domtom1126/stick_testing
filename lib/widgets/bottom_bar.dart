@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:testing/screens/home.dart';
 import 'package:testing/screens/liked.dart';
 import 'package:testing/screens/post.dart';
 import 'package:testing/screens/profile.dart';
+import 'package:testing/signin_controller.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);
@@ -25,6 +27,8 @@ class _BottomBarState extends State<BottomBar> {
       _selectedIndex = index;
     });
   }
+
+  final controller = Get.put(LoginController());
 
   @override
   Widget build(BuildContext context) {
