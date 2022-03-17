@@ -9,7 +9,7 @@ class ViewCar extends StatefulWidget {
   // final String image;
   final String description;
 
-  const ViewCar(this.make, this.model, this.year, this.price, this.odometer,
+  ViewCar(this.make, this.model, this.year, this.price, this.odometer,
       this.description);
 
   @override
@@ -34,7 +34,7 @@ class _ViewCarState extends State<ViewCar> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Placeholder(
+                const Placeholder(
                   fallbackHeight: 250,
                   fallbackWidth: 250,
                 ),
@@ -61,7 +61,7 @@ class _ViewCarState extends State<ViewCar> {
                       style: ElevatedButton.styleFrom(
                         primary: onLiked ? Colors.red : Colors.grey,
                       ),
-                      child: Icon(Icons.favorite),
+                      child: const Icon(Icons.favorite),
                       onPressed: () {
                         setState(() {
                           onLiked = !onLiked;
@@ -90,7 +90,7 @@ class _ViewCarState extends State<ViewCar> {
                                 content: Text('Email the Owner'),
                               ),
                             ),
-                        child: Icon(Icons.email)),
+                        child: const Icon(Icons.email)),
                   ],
                 ),
               ],
