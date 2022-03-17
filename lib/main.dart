@@ -1,12 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:testing/screens/post.dart';
-import 'package:testing/screens/profile.dart';
 import 'package:testing/widgets/bottom_bar.dart';
-
-import 'screens/home.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
