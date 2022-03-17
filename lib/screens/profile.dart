@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:testing/screens/create_account.dart';
-import 'package:testing/screens/sign_in.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 import '../signin_controller.dart';
 
@@ -15,16 +12,6 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  // final FirebaseAuth auth = FirebaseAuth.instance;
-  final GoogleSignIn googleSignIn = GoogleSignIn();
-  login() {
-    try {
-      googleSignIn.signIn();
-    } catch (e) {
-      print(e);
-    }
-  }
-
   final controller = Get.put(LoginController());
   @override
   Widget build(BuildContext context) {
@@ -47,14 +34,33 @@ class _ProfileState extends State<Profile> {
       child: Container(
         decoration: BoxDecoration(
           color: Colors.grey[800],
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         height: 400,
         width: 300,
         child: Column(
           children: [
-            SizedBox(
-              height: 50,
+            const SizedBox(
+              height: 20,
+            ),
+            Text(
+              'You\'re not logged in!',
+              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Sign in below with Google. You\'ll see your profile after you sign in.',
+                style: TextStyle(color: HexColor('FFFFFF'), fontSize: 15),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
             ),
             SizedBox(
               width: 200,
@@ -62,7 +68,7 @@ class _ProfileState extends State<Profile> {
                   onPressed: () {
                     controller.login();
                   },
-                  child: Text('Sign in with Google')),
+                  child: const Text('Sign in with Google')),
             ),
           ],
         ),
@@ -75,13 +81,13 @@ class _ProfileState extends State<Profile> {
       child: Container(
         height: 400,
         width: 300,
-        padding: EdgeInsets.all(20),
+        padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
-          color: Colors.grey.shade400,
-          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: Colors.grey[800],
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
         ),
         child: Column(children: [
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           CircleAvatar(
@@ -89,17 +95,17 @@ class _ProfileState extends State<Profile> {
                 NetworkImage(controller.googleAccount.value?.photoUrl ?? ''),
             radius: 50,
           ),
-          SizedBox(
+          const SizedBox(
             height: 40,
           ),
           Text(controller.googleAccount.value?.displayName ?? '',
-              style: TextStyle(fontSize: 20)),
-          SizedBox(
+              style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
+          const SizedBox(
             height: 10,
           ),
           Text(controller.googleAccount.value?.email ?? '',
-              style: TextStyle(fontSize: 20)),
-          SizedBox(
+              style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
+          const SizedBox(
             height: 30,
           ),
           Align(
