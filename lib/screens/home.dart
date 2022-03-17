@@ -1,10 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:testing/firebase_functions/get_listings.dart';
 import 'package:testing/screens/view_car.dart';
-
-import '../listing.dart';
 
 // TODO this page will get the most recent listings. Wrap with BlocBuilder
 class Home extends StatefulWidget {
@@ -24,7 +21,7 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Home'),
+        title: const Text('Home'),
       ),
       body: ListView(children: [
         StreamBuilder(
@@ -56,7 +53,7 @@ class _HomeState extends State<Home> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Placeholder(
+          const Placeholder(
             fallbackHeight: 200,
             fallbackWidth: 200,
           ),
@@ -94,39 +91,3 @@ class _HomeState extends State<Home> {
     );
   }
 }
-
-// CustomScrollView(
-//         slivers: [
-//           SliverAppBar(
-//             backgroundColor: HexColor('5A676B'),
-//             pinned: false,
-//             snap: false,
-//             floating: true,
-//             title: Text('Home'),
-//           ),
-//           SliverList(
-//             delegate: SliverChildBuilderDelegate(
-//               (BuildContext context, int index) {
-//                 return StreamBuilder(
-//                   stream: cars,
-//                   builder: (BuildContext context,
-//                       AsyncSnapshot<QuerySnapshot> snapshot) {
-//                     if (snapshot.hasData) {
-//                       return Column(
-//                           children: snapshot.data!.docs.map((publicList) {
-//                         return buildCar(publicList, context);
-//                       }).toList());
-//                     } else {
-//                       return Center(
-//                         child: CircularProgressIndicator(
-//                           color: HexColor('4C6273'),
-//                         ),
-//                       );
-//                     }
-//                   },
-//                 );
-//               },
-//             ),
-//           )
-//         ],
-//       ),
