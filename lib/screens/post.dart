@@ -48,22 +48,55 @@ class _PostState extends State<Post> {
   Scaffold buildUserNotAuth(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
-      body: Column(
-        children: [
-          const Text('It doesn\'t look like you are logged in'),
-          const Text(
-              'Sign in below with Google that way people will have a good email to contact you at'),
-          SizedBox(
-            width: 200,
-            child: ElevatedButton(
-                onPressed: () {
-                  controller.login();
-                },
-                child: Text('Sign in with Google')),
+      body: Center(
+        heightFactor: 0,
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.grey[800],
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
           ),
-        ],
+          height: 400,
+          width: 300,
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 20,
+              ),
+              Text(
+                'You\'re not logged in',
+                style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Text(
+                  'Sign in with your Google account. Intrested people will be able to contact you through your Gmail.',
+                  style: TextStyle(color: HexColor('FFFFFF'), fontSize: 15),
+                  textAlign: TextAlign.center,
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                width: 200,
+                child: ElevatedButton(
+                    onPressed: () {
+                      controller.login();
+                    },
+                    child: const Text('Sign in with Google')),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -71,7 +104,7 @@ class _PostState extends State<Post> {
   Scaffold buildUserAuth(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Post'),
+        title: const Text('Post'),
         centerTitle: true,
       ),
       // resizeToAvoidBottomInset: false,
@@ -81,6 +114,14 @@ class _PostState extends State<Post> {
           key: _formKey,
           child: ListView(
             children: <Widget>[
+              Text(
+                'Manual Cars Only!',
+                style: TextStyle(fontSize: 20, color: HexColor('FFFFFF')),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               textInputField('Make', _makeController, TextInputType.text,
                   'Enter make', 20, 1),
               const SizedBox(height: 20),
@@ -124,7 +165,7 @@ class _PostState extends State<Post> {
               const SizedBox(height: 20),
               pickedImage != null
                   ? Image.file(pickedImage!, height: 200, width: 200)
-                  : Center(child: Text('Select an image')),
+                  : const Center(child: Text('Select an image')),
               const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: () {
