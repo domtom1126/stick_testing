@@ -27,7 +27,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       onUnknownRoute: (RouteSettings settings) {
         return MaterialPageRoute(
-          builder: (BuildContext context) => BottomBar(),
+          builder: (BuildContext context) => const BottomBar(),
         );
       },
       // initialRoute: '/home',
@@ -44,7 +44,7 @@ class MyApp extends StatelessWidget {
         // * START button theme
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
-            minimumSize: MaterialStateProperty.all<Size>(Size(100, 40)),
+            minimumSize: MaterialStateProperty.all<Size>(const Size(100, 40)),
             backgroundColor: MaterialStateProperty.all<Color>(
               buttonBackgroundColor,
             ),
