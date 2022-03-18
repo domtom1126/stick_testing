@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:find_a_stick/screens/view_car.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:testing/screens/view_car.dart';
 
 // TODO this page will get the most recent listings. Wrap with BlocBuilder
 class Home extends StatefulWidget {
@@ -53,10 +53,7 @@ class _HomeState extends State<Home> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Placeholder(
-            fallbackHeight: 200,
-            fallbackWidth: 200,
-          ),
+          Image.network(publicList['image']),
           Text(
             '${publicList['price']}',
             style: const TextStyle(fontSize: 18),
