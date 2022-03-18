@@ -1,13 +1,14 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:testing/signin_controller.dart';
-
-import 'package:testing/widgets/form_widgets/form_widgets.dart';
+import '../signin_controller.dart';
+import '../widgets/form_widgets/form_widgets.dart';
 
 class Post extends StatefulWidget {
   const Post({Key? key}) : super(key: key);
@@ -33,8 +34,22 @@ class _PostState extends State<Post> {
   }
 
   final controller = Get.put(LoginController());
-
+  final _googleSignIn = GoogleSignIn();
+  GoogleSignInAccount? _currentUser;
   @override
+  // void initState() {
+  //   super.initState();
+  //   _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+  //     setState(() {
+  //       _currentUser = account;
+  //     });
+  //     if (_currentUser != null) {
+  //       buildUserAuth(context);
+  //     }
+  //   });
+  //   _googleSignIn.signInSilently();
+  // }
+
   Widget build(BuildContext context) {
     return Obx(() {
       if (controller.googleAccount.value == null) {
@@ -51,7 +66,6 @@ class _PostState extends State<Post> {
         title: const Text('Login'),
       ),
       body: Center(
-        heightFactor: 0,
         child: Container(
           decoration: BoxDecoration(
             color: Colors.grey[800],
@@ -133,7 +147,9 @@ class _PostState extends State<Post> {
                   LengthLimitingTextInputFormatter(4),
                 ],
                 keyboardType: TextInputType.number,
+                keyboardAppearance: Brightness.dark,
                 controller: _yearController,
+                style: TextStyle(color: HexColor('FFFFFF')),
                 decoration: InputDecoration(
                   hintStyle: TextStyle(color: HexColor('FFFFFF')),
                   hintText: 'Year',
