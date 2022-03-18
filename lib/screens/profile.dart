@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -79,7 +80,7 @@ class _ProfileState extends State<Profile> {
   Center buildProfilePage(BuildContext context) {
     return Center(
       child: Container(
-        height: 400,
+        height: 450,
         width: 300,
         padding: const EdgeInsets.all(20),
         decoration: BoxDecoration(
@@ -119,6 +120,13 @@ class _ProfileState extends State<Profile> {
           Align(
             alignment: Alignment.bottomCenter,
             child: ElevatedButton(
+                onPressed: () => showModalBottomSheet(
+                    context: context, builder: showUserCars),
+                child: const Text('Your Cars')),
+          ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ElevatedButton(
                 onPressed: () {
                   controller.logout();
                 },
@@ -126,6 +134,49 @@ class _ProfileState extends State<Profile> {
           ),
         ]),
       ),
+    );
+  }
+
+  SafeArea showUserCars(BuildContext context) {
+    final userCars = FirebaseFirestore.instance
+        .collection('posts')
+        .where('email', isEqualTo: controller.googleAccount.value?.email)
+        .snapshots();
+    return SafeArea(
+      child: Column(children: [
+        const Text('Your Cars'),
+        const SizedBox(
+          height: 20,
+        ),
+        StreamBuilder(
+          stream: userCars,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return Column(
+                children: snapshot.data!.docs.map((userCars) {
+                  return ListTile(
+                    title: Text(userCars['Make']),
+                    subtitle: Text(userCars['Model']),
+                    // Delete post button
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete),
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(userCars.id)
+                            .delete();
+                      },
+                    ),
+                  );
+                }).toList(),
+              );
+            } else {
+              return const Text('You haven\'t posted any cars yet!');
+            }
+          },
+        )
+      ]),
     );
   }
 }
