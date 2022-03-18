@@ -202,7 +202,7 @@ class _PostState extends State<Post> {
                           price: _priceController.text,
                           email: controller.googleAccount.value!.email,
                           description: _descriptionController.text,
-                          // image: '',
+                          image: pickedImage!,
                         ),
                       );
                     }
