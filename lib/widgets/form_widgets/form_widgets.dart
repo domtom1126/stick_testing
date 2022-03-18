@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -74,7 +76,7 @@ class PostConfirm extends StatefulWidget {
   final String price;
   final String email;
   final String description;
-  // File image;
+  File image;
 
   PostConfirm({
     required this.make,
@@ -84,7 +86,7 @@ class PostConfirm extends StatefulWidget {
     required this.price,
     required this.email,
     required this.description,
-    // required this.image,
+    required this.image,
   });
   // Parameters need to go here
 
@@ -101,7 +103,7 @@ class _PostConfirmState extends State<PostConfirm> {
       price: '',
       description: '',
       email: '',
-      // image: '',
+      image: '',
       dateAdded: '');
 
   @override
@@ -116,7 +118,13 @@ class _PostConfirmState extends State<PostConfirm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TODO image goes here
-            const Text('Picture here'),
+            Center(
+              child: Image(
+                image: AssetImage(widget.image.path),
+                height: 250,
+                width: 250,
+              ),
+            ),
             Row(
               children: [
                 Text(
@@ -170,14 +178,13 @@ class _PostConfirmState extends State<PostConfirm> {
                             });
                       } else {
                         _postListing.addPost(
-                          widget.make,
-                          widget.model,
-                          widget.year,
-                          widget.odometer,
-                          widget.price,
-                          widget.description,
-                          // widget.image
-                        );
+                            widget.make,
+                            widget.model,
+                            widget.year,
+                            widget.odometer,
+                            widget.price,
+                            widget.description,
+                            widget.image.toString());
                         Navigator.pushNamedAndRemoveUntil(
                             context, '/home', (_) => false);
                       }
