@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:testing/firebase_functions/post_listing.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
-import 'package:testing/signin_controller.dart';
+import '../../firebase_functions/post_listing.dart';
+import '../../signin_controller.dart';
 
 TextFormField textInputField(String label, TextEditingController controller,
     TextInputType keyboardType, String errorMessage, int maxLength, int lines) {
@@ -14,7 +14,9 @@ TextFormField textInputField(String label, TextEditingController controller,
       LengthLimitingTextInputFormatter(maxLength),
     ],
     keyboardType: keyboardType,
+    keyboardAppearance: Brightness.dark,
     controller: controller,
+    style: TextStyle(color: HexColor('FFFFFF')),
     decoration: InputDecoration(
       errorStyle: const TextStyle(
         color: Colors.orangeAccent,
@@ -45,7 +47,9 @@ TextFormField numInputField(
       CurrencyTextInputFormatter(symbol: numType, decimalDigits: 0),
     ],
     keyboardType: keyboardType,
+    keyboardAppearance: Brightness.dark,
     controller: controller,
+    style: TextStyle(color: HexColor('FFFFFF')),
     decoration: InputDecoration(
       hintStyle: TextStyle(color: HexColor('FFFFFF')),
       hintText: label,
