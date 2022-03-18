@@ -2,6 +2,7 @@
 <span height=50px></span>
 <h1 align="center"><img width=275px height=275px src="images/logo_original-trimmy.png"/></h1>
 
+## Beta app is available on TestFlight. Email loonydom1@gmail.com for invite.
 # Mission
 
 Solve car sales for people searching for a manual car.
