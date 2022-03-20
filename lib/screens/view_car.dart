@@ -6,11 +6,11 @@ class ViewCar extends StatefulWidget {
   final String year;
   final String price;
   final String odometer;
-  // final String image;
+  final String image;
   final String description;
 
   ViewCar(this.make, this.model, this.year, this.price, this.odometer,
-      this.description);
+      this.image, this.description);
 
   @override
   _ViewCarState createState() => _ViewCarState();
@@ -34,10 +34,7 @@ class _ViewCarState extends State<ViewCar> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Placeholder(
-                  fallbackHeight: 250,
-                  fallbackWidth: 250,
-                ),
+                Image.network(widget.image),
                 Row(
                   children: [
                     Text('${widget.year} ',
@@ -63,6 +60,10 @@ class _ViewCarState extends State<ViewCar> {
                       ),
                       child: const Icon(Icons.favorite),
                       onPressed: () {
+                        // get current user id
+                        // add to favorites
+                        // CollectionReference addToLiked =
+                        //     FirebaseFirestore.instance.collection('${c} liked');
                         setState(() {
                           onLiked = !onLiked;
                         });
