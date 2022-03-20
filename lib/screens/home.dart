@@ -53,18 +53,26 @@ class _HomeState extends State<Home> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(publicList['image']),
+          Image.network(
+            publicList['image'],
+            height: 200,
+            width: 200,
+          ),
           Text(
             '${publicList['price']}',
-            style: const TextStyle(fontSize: 18),
+            style: TextStyle(fontSize: 18, color: HexColor('FFFFFF')),
           ),
           Text(
             '${publicList['year']} ${publicList['make']} ${publicList['model']}',
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+            style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: HexColor('FFFFFF')),
           ),
         ],
       ),
-      subtitle: Text('${publicList['odometer']} Miles'),
+      subtitle: Text('${publicList['odometer']} Miles',
+          style: TextStyle(color: HexColor('FFFFFF'))),
       onTap: () {
         showModalBottomSheet(
           shape: const RoundedRectangleBorder(
@@ -80,7 +88,7 @@ class _HomeState extends State<Home> {
             publicList['year'],
             publicList['price'],
             publicList['odometer'],
-            // publicList['image'],
+            publicList['image'],
             publicList['description'],
           ),
         );
