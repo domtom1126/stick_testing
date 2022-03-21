@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:get/get.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -65,11 +66,16 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(
               width: 200,
-              child: ElevatedButton(
-                  onPressed: () {
-                    controller.login();
-                  },
-                  child: const Text('Sign in with Google')),
+              child: SignInButton(Buttons.Google, onPressed: () {
+                controller.googleLogin();
+              }, text: 'Sign in with Google'),
+            ),
+            SizedBox(
+              width: 200,
+              child: SignInButton(Buttons.Apple, onPressed: () {
+                // controller.loginApple();
+                null;
+              }, text: 'Sign in with Apple'),
             ),
           ],
         ),
@@ -128,7 +134,7 @@ class _ProfileState extends State<Profile> {
             alignment: Alignment.bottomCenter,
             child: ElevatedButton(
                 onPressed: () {
-                  controller.logout();
+                  controller.googleLogout();
                 },
                 child: const Text('Sign Out')),
           ),
@@ -140,7 +146,7 @@ class _ProfileState extends State<Profile> {
   SafeArea showUserCars(BuildContext context) {
     final userCars = FirebaseFirestore.instance
         .collection('posts')
-        .where('email', isEqualTo: controller.googleAccount.value?.email)
+        .where('email', isEqualTo: controller.googleAccount.value!.email)
         .snapshots();
     return SafeArea(
       child: Column(children: [
@@ -156,8 +162,8 @@ class _ProfileState extends State<Profile> {
               return Column(
                 children: snapshot.data!.docs.map((userCars) {
                   return ListTile(
-                    title: Text(userCars['Make']),
-                    subtitle: Text(userCars['Model']),
+                    title: Text(userCars['make']),
+                    subtitle: Text(userCars['model']),
                     // Delete post button
                     trailing: IconButton(
                       icon: Icon(Icons.delete),
