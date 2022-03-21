@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -102,11 +103,15 @@ class _PostState extends State<Post> {
               ),
               SizedBox(
                 width: 200,
-                child: ElevatedButton(
-                    onPressed: () {
-                      controller.login();
-                    },
-                    child: const Text('Sign in with Google')),
+                child: SignInButton(Buttons.Google, onPressed: () {
+                  controller.googleLogin();
+                }, text: 'Sign in with Google'),
+              ),
+              SizedBox(
+                width: 200,
+                child: SignInButton(Buttons.Apple, onPressed: () {
+                  controller.appleLogin();
+                }, text: 'Sign in with Apple'),
               ),
             ],
           ),
@@ -116,6 +121,7 @@ class _PostState extends State<Post> {
   }
 
   Scaffold buildUserAuth(BuildContext context) {
+    bool uploading = false;
     return Scaffold(
       appBar: AppBar(
         title: const Text('Post'),
