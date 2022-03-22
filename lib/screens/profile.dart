@@ -127,7 +127,15 @@ class _ProfileState extends State<Profile> {
             alignment: Alignment.bottomCenter,
             child: ElevatedButton(
                 onPressed: () => showModalBottomSheet(
-                    context: context, builder: showUserCars),
+                    backgroundColor: HexColor('40434E'),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    context: context,
+                    builder: showUserCars),
                 child: const Text('Your Cars')),
           ),
           Align(
@@ -143,46 +151,51 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  SafeArea showUserCars(BuildContext context) {
+  ListView showUserCars(BuildContext context) {
     final userCars = FirebaseFirestore.instance
         .collection('posts')
         .where('email', isEqualTo: controller.googleAccount.value!.email)
         .snapshots();
-    return SafeArea(
-      child: Column(children: [
-        const Text('Your Cars'),
-        const SizedBox(
-          height: 20,
-        ),
-        StreamBuilder(
-          stream: userCars,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                children: snapshot.data!.docs.map((userCars) {
-                  return ListTile(
-                    title: Text(userCars['make']),
-                    subtitle: Text(userCars['model']),
-                    // Delete post button
-                    trailing: IconButton(
-                      icon: Icon(Icons.delete),
-                      onPressed: () {
-                        FirebaseFirestore.instance
-                            .collection('posts')
-                            .doc(userCars.id)
-                            .delete();
-                      },
-                    ),
-                  );
-                }).toList(),
-              );
-            } else {
-              return const Text('You haven\'t posted any cars yet!');
-            }
-          },
-        )
-      ]),
+    return ListView(
+      children: [
+        Column(children: [
+          const SizedBox(
+            height: 20,
+          ),
+          StreamBuilder(
+            stream: userCars,
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: snapshot.data!.docs.map((userCars) {
+                    return ListTile(
+                      title: Text(
+                          '${userCars['year']} ${userCars['make']} ${userCars['model']}',
+                          style: TextStyle(
+                              fontSize: 16, color: HexColor('FFFFFF'))),
+                      subtitle: TextButton(
+                          onPressed: null, child: Text('Mark as Sold')),
+                      // Delete post button
+                      trailing: IconButton(
+                        icon: Icon(Icons.delete),
+                        onPressed: () {
+                          FirebaseFirestore.instance
+                              .collection('posts')
+                              .doc(userCars.id)
+                              .delete();
+                        },
+                      ),
+                    );
+                  }).toList(),
+                );
+              } else {
+                return const Text('You haven\'t posted any cars yet!');
+              }
+            },
+          )
+        ])
+      ],
     );
   }
 }
