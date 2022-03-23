@@ -50,24 +50,41 @@ class _HomeState extends State<Home> {
       QueryDocumentSnapshot<Object?> publicList, BuildContext context) {
     return ListTile(
       // TODO maybe add some "leading:" text?
+      enableFeedback: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Image.network(
-            publicList['image'],
-            // height: 200,
-            // width: 200,
+          SizedBox(
+            height: 200,
+            width: double.infinity,
+            child: ClipRRect(
+                borderRadius: BorderRadius.circular(10),
+                child: Image.network(
+                  publicList['image'],
+                  fit: BoxFit.fitWidth,
+                )),
           ),
-          Text(
-            '${publicList['price']}',
-            style: TextStyle(fontSize: 18, color: HexColor('FFFFFF')),
+          const SizedBox(
+            height: 10,
           ),
           Text(
             '${publicList['year']} ${publicList['make']} ${publicList['model']}',
             style: TextStyle(
-                fontSize: 18,
+                fontSize: 20,
                 fontWeight: FontWeight.bold,
                 color: HexColor('FFFFFF')),
+          ),
+          Text(
+            '${publicList['price']}',
+            style: TextStyle(
+              fontSize: 18,
+              color: HexColor('FFFFFF'),
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.start,
+          ),
+          const SizedBox(
+            height: 5,
           ),
         ],
       ),
