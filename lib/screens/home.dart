@@ -55,8 +55,8 @@ class _HomeState extends State<Home> {
         children: [
           Image.network(
             publicList['image'],
-            height: 200,
-            width: 200,
+            // height: 200,
+            // width: 200,
           ),
           Text(
             '${publicList['price']}',
@@ -75,6 +75,8 @@ class _HomeState extends State<Home> {
           style: TextStyle(color: HexColor('FFFFFF'))),
       onTap: () {
         showModalBottomSheet(
+          isScrollControlled: true,
+          backgroundColor: HexColor('40434E'),
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(20),
