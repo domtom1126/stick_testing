@@ -8,6 +8,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 import '../signin_controller.dart';
 import '../widgets/form_widgets/form_widgets.dart';
 
@@ -34,31 +35,23 @@ class _PostState extends State<Post> {
     setState(() => this.pickedImage = imageTemp);
   }
 
-  final controller = Get.put(LoginController());
-  final _googleSignIn = GoogleSignIn();
-  GoogleSignInAccount? _currentUser;
   @override
-  // void initState() {
-  //   super.initState();
-  //   _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
-  //     setState(() {
-  //       _currentUser = account;
-  //     });
-  //     if (_currentUser != null) {
-  //       buildUserAuth(context);
-  //     }
-  //   });
-  //   _googleSignIn.signInSilently();
-  // }
-
   Widget build(BuildContext context) {
-    return Obx(() {
-      if (controller.googleAccount.value == null) {
-        return buildUserNotAuth(context);
-      } else {
-        return buildUserAuth(context);
-      }
-    });
+    return Scaffold(
+      body: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasData) {
+              return buildUserAuth(context);
+            } else {
+              return buildUserNotAuth(context);
+            }
+          }),
+    );
   }
 
   Scaffold buildUserNotAuth(BuildContext context) {
@@ -80,7 +73,7 @@ class _PostState extends State<Post> {
                 height: 20,
               ),
               Text(
-                'You\'re not logged in',
+                'You\'re not logged in!',
                 style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
                 textAlign: TextAlign.center,
               ),
@@ -104,13 +97,16 @@ class _PostState extends State<Post> {
               SizedBox(
                 width: 200,
                 child: SignInButton(Buttons.Google, onPressed: () {
-                  controller.googleLogin();
+                  final provider =
+                      Provider.of<GoogleSignInProvider>(context, listen: false);
+                  provider.googleLogin();
                 }, text: 'Sign in with Google'),
               ),
               SizedBox(
                 width: 200,
                 child: SignInButton(Buttons.Apple, onPressed: () {
-                  controller.appleLogin();
+                  // controller.appleLogin();
+                  null;
                 }, text: 'Sign in with Apple'),
               ),
             ],
@@ -193,6 +189,7 @@ class _PostState extends State<Post> {
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       showModalBottomSheet(
+                        backgroundColor: HexColor('40434E'),
                         shape: const RoundedRectangleBorder(
                           borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
@@ -206,7 +203,8 @@ class _PostState extends State<Post> {
                           year: _yearController.text,
                           odometer: _odometerController.text,
                           price: _priceController.text,
-                          email: controller.googleAccount.value!.email,
+                          // TODO Replace with email
+                          email: '',
                           description: _descriptionController.text,
                           image: pickedImage!,
                         ),
