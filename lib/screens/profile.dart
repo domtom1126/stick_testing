@@ -97,7 +97,9 @@ class _ProfileState extends State<Profile> {
             alignment: Alignment.bottomCenter,
             child: ElevatedButton(
                 onPressed: () {
-                  null;
+                  final provider =
+                      Provider.of<GoogleSignInProvider>(context, listen: false);
+                  provider.googleLogout();
                 },
                 child: const Text('Sign Out')),
           ),
