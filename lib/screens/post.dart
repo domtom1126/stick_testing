@@ -129,6 +129,7 @@ class _PostState extends State<Post> {
         child: Form(
           key: _formKey,
           child: ListView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             children: <Widget>[
               Text(
                 'Manual Cars Only!',
@@ -153,6 +154,11 @@ class _PostState extends State<Post> {
                 controller: _yearController,
                 style: TextStyle(color: HexColor('FFFFFF')),
                 decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: HexColor('EE815A'), width: 2.0),
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
                   hintStyle: TextStyle(color: HexColor('FFFFFF')),
                   hintText: 'Year',
                 ),
@@ -178,6 +184,7 @@ class _PostState extends State<Post> {
               const SizedBox(height: 20),
               textInputField('Description', _descriptionController,
                   TextInputType.text, 'Enter description', 200, 5),
+              const SizedBox(height: 20),
               ElevatedButton(
                   onPressed: pickImage, child: const Text('Add Image')),
               const SizedBox(height: 20),
