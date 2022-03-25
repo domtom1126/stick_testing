@@ -143,7 +143,10 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(
               width: 200,
-              child: SignInButton(Buttons.Google, onPressed: () {
+              child: SignInButton(Buttons.Google,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ), onPressed: () {
                 final provider =
                     Provider.of<GoogleSignInProvider>(context, listen: false);
                 provider.googleLogin();
@@ -151,7 +154,10 @@ class _ProfileState extends State<Profile> {
             ),
             SizedBox(
               width: 200,
-              child: SignInButton(Buttons.Apple, onPressed: () {
+              child: SignInButton(Buttons.Apple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ), onPressed: () {
                 // controller.loginApple();
                 null;
               }, text: 'Sign in with Apple'),
