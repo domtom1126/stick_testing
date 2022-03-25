@@ -111,8 +111,9 @@ class _PostState extends State<Post> {
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
                     ), onPressed: () {
-                  // controller.appleLogin();
-                  null;
+                  final appleProvider =
+                      Provider.of<AppleSignInProvider>(context, listen: false);
+                  appleProvider.appleLogin();
                 }, text: 'Sign in with Apple'),
               ),
             ],
