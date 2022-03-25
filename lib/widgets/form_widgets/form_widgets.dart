@@ -20,6 +20,10 @@ TextFormField textInputField(String label, TextEditingController controller,
     controller: controller,
     style: TextStyle(color: HexColor('FFFFFF')),
     decoration: InputDecoration(
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+        borderRadius: BorderRadius.circular(25.0),
+      ),
       errorStyle: const TextStyle(
         color: Colors.orangeAccent,
         fontSize: 14.0,
@@ -53,6 +57,10 @@ TextFormField numInputField(
     controller: controller,
     style: TextStyle(color: HexColor('FFFFFF')),
     decoration: InputDecoration(
+      focusedBorder: OutlineInputBorder(
+        borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+        borderRadius: BorderRadius.circular(25.0),
+      ),
       hintStyle: TextStyle(color: HexColor('FFFFFF')),
       hintText: label,
     ),
@@ -76,7 +84,7 @@ class PostConfirm extends StatefulWidget {
   final String price;
   final String email;
   final String description;
-  File image;
+  final File image;
 
   PostConfirm({
     required this.make,
@@ -149,45 +157,17 @@ class _PostConfirmState extends State<PostConfirm> {
               children: [
                 // TODO After post go to home screen
                 ElevatedButton(
-                    onPressed: () {
-                      final loginController = Get.put(LoginController());
-                      if (loginController.googleAccount.value == null) {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('Sign in to post'),
-                                content: const Text(
-                                    'You need to be signed in to post a car'),
-                                actions: [
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      Navigator.of(context).pop();
-                                    },
-                                    child: const Text('Nevermind'),
-                                  ),
-                                  ElevatedButton(
-                                    onPressed: () {
-                                      // Navigator.of(context).pop();
-                                      loginController.login();
-                                    },
-                                    child: const Text('Sign In with Google'),
-                                  ),
-                                ],
-                              );
-                            });
-                      } else {
-                        _postListing.addPost(
-                            widget.make,
-                            widget.model,
-                            widget.year,
-                            widget.odometer,
-                            widget.price,
-                            widget.description,
-                            widget.image.toString());
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/home', (_) => false);
-                      }
+                    onPressed: () async {
+                      await _postListing.addPost(
+                          widget.make,
+                          widget.model,
+                          widget.year,
+                          widget.odometer,
+                          widget.price,
+                          widget.description,
+                          widget.image);
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/home', (_) => false);
                     },
                     child: const Text('Yes')),
 
