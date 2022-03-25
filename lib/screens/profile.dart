@@ -158,8 +158,9 @@ class _ProfileState extends State<Profile> {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ), onPressed: () {
-                // controller.loginApple();
-                null;
+                final appleProvider =
+                    Provider.of<AppleSignInProvider>(context, listen: false);
+                appleProvider.appleLogin();
               }, text: 'Sign in with Apple'),
             ),
           ],
