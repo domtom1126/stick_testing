@@ -1,6 +1,25 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:readmore/readmore.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+sendEmail(String? email) {
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
+
+  final emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: email,
+    query: encodeQueryParameters(
+        <String, String>{'subject': 'Example Subject & Symbols are allowed!'}),
+  );
+  launch(emailLaunchUri.toString());
+}
 
 class ViewCar extends StatefulWidget {
   final String make;
@@ -10,9 +29,10 @@ class ViewCar extends StatefulWidget {
   final String odometer;
   final String image;
   final String description;
+  final String? receiverEmail;
 
   ViewCar(this.make, this.model, this.year, this.price, this.odometer,
-      this.image, this.description);
+      this.image, this.description, this.receiverEmail);
 
   @override
   _ViewCarState createState() => _ViewCarState();
@@ -143,13 +163,7 @@ class _ViewCarState extends State<ViewCar> {
                   },
                 ),
                 ElevatedButton(
-                    onPressed: () => showDialog(
-                          context: context,
-                          builder: (context) => const AlertDialog(
-                            title: Text('Email the Owner'),
-                            content: Text('Email the Owner'),
-                          ),
-                        ),
+                    onPressed: () => sendEmail(widget.receiverEmail),
                     child: const Icon(Icons.email)),
               ],
             ),
