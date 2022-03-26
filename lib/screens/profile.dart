@@ -54,18 +54,18 @@ class _ProfileState extends State<Profile> {
             height: 20,
           ),
           CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL!),
+            backgroundImage: NetworkImage(user.photoURL ?? ''),
             radius: 50,
           ),
           const SizedBox(
             height: 40,
           ),
-          Text(user.displayName!,
+          Text(user.displayName ?? '',
               style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
           const SizedBox(
             height: 10,
           ),
-          Text(user.email!,
+          Text(user.email ?? 'No email found',
               style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
           const SizedBox(
             height: 30,
