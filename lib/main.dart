@@ -30,8 +30,12 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (_) => GoogleSignInProvider(),
+    // TODO Use multiprovider here
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => GoogleSignInProvider()),
+        ChangeNotifierProvider(create: (_) => AppleSignInProvider()),
+      ],
       child: MaterialApp(
         onUnknownRoute: (RouteSettings settings) {
           return MaterialPageRoute(
