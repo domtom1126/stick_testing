@@ -1,9 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/screens/view_car.dart';
+import 'package:find_a_stick/widgets/bottom_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 // TODO this page will get the most recent listings. Wrap with BlocBuilder
+
+bool onLiked = false;
+
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
 
@@ -21,36 +26,33 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.transparent,
         title: const Text('Home'),
+        leading: IconButton(icon: Icon(Icons.search), onPressed: () {}),
       ),
-      body: ListView(children: [
-        StreamBuilder(
-          stream: cars,
-          builder:
-              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-            if (snapshot.hasData) {
-              return Column(
-                  children: snapshot.data!.docs.map((publicList) {
-                return buildCar(publicList, context);
-              }).toList());
-            } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: HexColor('4C6273'),
-                ),
-              );
-            }
-          },
-        )
-      ]),
+      body: StreamBuilder(
+        stream: cars,
+        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+          if (snapshot.hasData) {
+            return ListView(
+                children: snapshot.data!.docs.map((publicList) {
+              return buildCar(publicList, context);
+            }).toList());
+          } else {
+            return Center(
+              child: CircularProgressIndicator(
+                color: HexColor('4C6273'),
+              ),
+            );
+          }
+        },
+      ),
     );
   }
 
   ListTile buildCar(
       QueryDocumentSnapshot<Object?> publicList, BuildContext context) {
     return ListTile(
-      // TODO maybe add some "leading:" text?
-      enableFeedback: true,
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -59,28 +61,84 @@ class _HomeState extends State<Home> {
             width: double.infinity,
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  publicList['image'],
-                  fit: BoxFit.fitWidth,
+                child: GestureDetector(
+                  onTap: () => {
+                    showModalBottomSheet(
+                      isScrollControlled: true,
+                      backgroundColor: HexColor('40434E'),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
+                        ),
+                      ),
+                      context: context,
+                      builder: (context) => ViewCar(
+                        publicList['make'],
+                        publicList['model'],
+                        publicList['year'],
+                        publicList['price'],
+                        publicList['odometer'],
+                        publicList['image'],
+                        publicList['description'],
+                        publicList['email'],
+                      ),
+                    ),
+                  },
+                  child: Image.network(
+                    publicList['image'],
+                    fit: BoxFit.fitWidth,
+                  ),
                 )),
           ),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            '${publicList['year']} ${publicList['make']} ${publicList['model']}',
-            style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: HexColor('FFFFFF')),
+          // const SizedBox(
+          //   height: 10,
+          // ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  primary: onLiked ? Colors.red : Colors.grey,
+                ),
+                child: const Icon(Icons.favorite),
+                onPressed: () {
+                  setState(() {
+                    onLiked = !onLiked;
+                  });
+                  final snackBar = SnackBar(
+                    duration: const Duration(seconds: 2),
+                    content: const Text('Car Liked'),
+                    action: SnackBarAction(
+                      label: 'Undo',
+                      onPressed: () {
+                        // Some code to undo the change.
+                      },
+                    ),
+                  );
+
+                  // Find the ScaffoldMessenger in the widget tree
+                  // and use it to show a SnackBar.
+                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                },
+              ),
+              Text(
+                '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: HexColor('FFFFFF'),
+                ),
+              ),
+              //
+            ],
           ),
           Text(
             '${publicList['price']}',
             style: TextStyle(
-              fontSize: 18,
-              color: HexColor('FFFFFF'),
-              fontWeight: FontWeight.bold,
-            ),
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: HexColor('FFFFFF')),
             textAlign: TextAlign.start,
           ),
           const SizedBox(
@@ -88,29 +146,35 @@ class _HomeState extends State<Home> {
           ),
         ],
       ),
-      subtitle: Text('${publicList['odometer']} Miles',
-          style: TextStyle(color: HexColor('FFFFFF'))),
+      subtitle: Text(
+        '${publicList['odometer']} Miles',
+        style: TextStyle(
+          fontSize: 13,
+          color: HexColor('FFFFFF'),
+        ),
+      ),
       onTap: () {
-        showModalBottomSheet(
-          isScrollControlled: true,
-          backgroundColor: HexColor('40434E'),
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(20),
-              topRight: Radius.circular(20),
-            ),
-          ),
-          context: context,
-          builder: (context) => ViewCar(
-            publicList['make'],
-            publicList['model'],
-            publicList['year'],
-            publicList['price'],
-            publicList['odometer'],
-            publicList['image'],
-            publicList['description'],
-          ),
-        );
+        // showModalBottomSheet(
+        //   isScrollControlled: true,
+        //   backgroundColor: HexColor('40434E'),
+        //   shape: const RoundedRectangleBorder(
+        //     borderRadius: BorderRadius.only(
+        //       topLeft: Radius.circular(20),
+        //       topRight: Radius.circular(20),
+        //     ),
+        //   ),
+        //   context: context,
+        //   builder: (context) => ViewCar(
+        //     publicList['make'],
+        //     publicList['model'],
+        //     publicList['year'],
+        //     publicList['price'],
+        //     publicList['odometer'],
+        //     publicList['image'],
+        //     publicList['description'],
+        //     publicList['email'],
+        //   ),
+        // );
       },
     );
   }
