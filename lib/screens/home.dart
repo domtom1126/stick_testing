@@ -94,44 +94,14 @@ class _HomeState extends State<Home> {
           // const SizedBox(
           //   height: 10,
           // ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  primary: onLiked ? Colors.red : Colors.grey,
-                ),
-                child: const Icon(Icons.favorite),
-                onPressed: () {
-                  setState(() {
-                    onLiked = !onLiked;
-                  });
-                  final snackBar = SnackBar(
-                    duration: const Duration(seconds: 2),
-                    content: const Text('Car Liked'),
-                    action: SnackBarAction(
-                      label: 'Undo',
-                      onPressed: () {
-                        // Some code to undo the change.
-                      },
-                    ),
-                  );
 
-                  // Find the ScaffoldMessenger in the widget tree
-                  // and use it to show a SnackBar.
-                  ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                },
-              ),
-              Text(
-                '${publicList['year']} ${publicList['make']} ${publicList['model']}',
-                style: TextStyle(
-                  fontSize: 20,
-                  fontWeight: FontWeight.bold,
-                  color: HexColor('FFFFFF'),
-                ),
-              ),
-              //
-            ],
+          Text(
+            '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+            style: TextStyle(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+              color: HexColor('FFFFFF'),
+            ),
           ),
           Text(
             '${publicList['price']}',
