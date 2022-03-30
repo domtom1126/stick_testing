@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:find_a_stick/main.dart';
 import 'package:find_a_stick/screens/view_car.dart';
 import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -28,6 +29,18 @@ class _HomeState extends State<Home> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: const Text('Home'),
+        actions: [
+          IconButton(
+              icon: Icon(MyApp.themeNotifier.value == ThemeMode.light
+                  ? Icons.dark_mode
+                  : Icons.light_mode),
+              onPressed: () {
+                MyApp.themeNotifier.value =
+                    MyApp.themeNotifier.value == ThemeMode.light
+                        ? ThemeMode.dark
+                        : ThemeMode.light;
+              })
+        ],
         leading: IconButton(icon: Icon(Icons.search), onPressed: () {}),
       ),
       body: StreamBuilder(
@@ -123,29 +136,6 @@ class _HomeState extends State<Home> {
           color: HexColor('FFFFFF'),
         ),
       ),
-      onTap: () {
-        // showModalBottomSheet(
-        //   isScrollControlled: true,
-        //   backgroundColor: HexColor('40434E'),
-        //   shape: const RoundedRectangleBorder(
-        //     borderRadius: BorderRadius.only(
-        //       topLeft: Radius.circular(20),
-        //       topRight: Radius.circular(20),
-        //     ),
-        //   ),
-        //   context: context,
-        //   builder: (context) => ViewCar(
-        //     publicList['make'],
-        //     publicList['model'],
-        //     publicList['year'],
-        //     publicList['price'],
-        //     publicList['odometer'],
-        //     publicList['image'],
-        //     publicList['description'],
-        //     publicList['email'],
-        //   ),
-        // );
-      },
     );
   }
 }
