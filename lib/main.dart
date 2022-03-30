@@ -1,7 +1,3 @@
-import 'package:find_a_stick/screens/home.dart';
-import 'package:find_a_stick/screens/liked.dart';
-import 'package:find_a_stick/screens/post.dart';
-import 'package:find_a_stick/screens/profile.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -16,89 +12,149 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  MyApp({Key? key}) : super(key: key);
+  static final ValueNotifier<ThemeMode> themeNotifier =
+      ValueNotifier(ThemeMode.light);
+  const MyApp({Key? key}) : super(key: key);
 
-  final appBarBackgroundColor = Colors.transparent;
-  final appBarTextColor = HexColor('ffffff');
-  final scaffoldBackgroundColor = HexColor('37383B');
-  final bottomBarBackgroundColor = HexColor('5A676B');
-  final selectedColor = HexColor('FFFFFF');
-  final unselectedColor = HexColor('353738');
-  final buttonBackgroundColor = HexColor('59797D');
-  final buttonForegroundColor = HexColor('ffffff');
-  final buttonBorderColor = HexColor('F25922');
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     // TODO Use multiprovider here
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => GoogleSignInProvider()),
-        ChangeNotifierProvider(create: (_) => AppleSignInProvider()),
-      ],
-      child: MaterialApp(
-        onUnknownRoute: (RouteSettings settings) {
-          return MaterialPageRoute(
-            builder: (BuildContext context) => const BottomBar(),
-          );
-        },
-        // initialRoute: '/',
-        debugShowCheckedModeBanner: false,
-        theme: ThemeData(
-          // * AppBar Theme
-          appBarTheme: AppBarTheme(
-            backgroundColor: appBarBackgroundColor,
-            foregroundColor: appBarTextColor,
-            elevation: 0,
+    return ValueListenableBuilder<ThemeMode>(
+      valueListenable: themeNotifier,
+      builder: (_, ThemeMode currentMode, __) {
+        return MultiProvider(
+          providers: [
+            ChangeNotifierProvider(create: (_) => GoogleSignInProvider()),
+            ChangeNotifierProvider(create: (_) => AppleSignInProvider()),
+          ],
+          child: MaterialApp(
+            onUnknownRoute: (RouteSettings settings) {
+              return MaterialPageRoute(
+                builder: (BuildContext context) => const BottomBar(),
+              );
+            },
+            // initialRoute: '/',
+            debugShowCheckedModeBanner: false,
+            theme: lightTheme(),
+            darkTheme: darkTheme(),
+            themeMode: currentMode,
+            home: const BottomBar(),
           ),
-          // * Scaffold Theme
-          scaffoldBackgroundColor: scaffoldBackgroundColor,
-          // * START button theme
-          elevatedButtonTheme: ElevatedButtonThemeData(
-            style: ButtonStyle(
-              minimumSize: MaterialStateProperty.all<Size>(const Size(100, 40)),
-              backgroundColor: MaterialStateProperty.all<Color>(
-                buttonBackgroundColor,
-              ),
-              foregroundColor: MaterialStateProperty.all<Color>(
-                buttonForegroundColor,
-              ),
-              shape: MaterialStateProperty.all<OutlinedBorder>(
-                RoundedRectangleBorder(
-                  side: BorderSide(
-                    color: buttonBorderColor,
-                    width: 2,
-                  ),
-                  borderRadius: BorderRadius.circular(25),
-                ),
-              ),
-            ),
-          ),
-          // * END button theme
-          // * START text form field theme
-          inputDecorationTheme: InputDecorationTheme(
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(25),
-              borderSide: BorderSide(
-                color: buttonBorderColor,
-                width: 1,
-              ),
-            ),
-            isCollapsed: true,
-            // filled: true,
-          ),
-          // * END text form field theme
-          // * START bottom bar theme
-          bottomNavigationBarTheme: BottomNavigationBarThemeData(
-            elevation: 0,
-            backgroundColor: bottomBarBackgroundColor,
-            selectedItemColor: selectedColor,
-            unselectedItemColor: unselectedColor,
-          ),
-          // * END bottom bar theme
-        ),
-        home: const BottomBar(),
+        );
+      },
+    );
+  }
+
+  ThemeData darkTheme() {
+    return ThemeData(
+      // * AppBar Theme
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        foregroundColor: HexColor('ffffff'),
+        elevation: 0,
       ),
+      // * Scaffold Theme
+      scaffoldBackgroundColor: HexColor('37383B'),
+      // * START button theme
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all<Size>(const Size(100, 40)),
+          backgroundColor: MaterialStateProperty.all<Color>(
+            HexColor('59797D'),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(
+            HexColor('ffffff'),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              side: BorderSide(
+                color: HexColor('F25922'),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+        ),
+      ),
+      // * END button theme
+      // * START text form field theme
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: BorderSide(
+            color: HexColor('F25922'),
+            width: 1,
+          ),
+        ),
+        isCollapsed: true,
+        // filled: true,
+      ),
+      // * END text form field theme
+      // * START bottom bar theme
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        elevation: 0,
+        backgroundColor: HexColor('5A676B'),
+        selectedItemColor: HexColor('FFFFFF'),
+        unselectedItemColor: HexColor('353738'),
+      ),
+      // * END bottom bar theme
+    );
+  }
+
+  ThemeData lightTheme() {
+    return ThemeData(
+      // * AppBar Theme
+      appBarTheme: AppBarTheme(
+        backgroundColor: Colors.transparent,
+        foregroundColor: HexColor('ffffff'),
+        elevation: 0,
+      ),
+      // * Scaffold Theme
+      scaffoldBackgroundColor: HexColor('FFFFFF'),
+      // * START button theme
+      elevatedButtonTheme: ElevatedButtonThemeData(
+        style: ButtonStyle(
+          minimumSize: MaterialStateProperty.all<Size>(const Size(100, 40)),
+          backgroundColor: MaterialStateProperty.all<Color>(
+            HexColor('59797D'),
+          ),
+          foregroundColor: MaterialStateProperty.all<Color>(
+            HexColor('ffffff'),
+          ),
+          shape: MaterialStateProperty.all<OutlinedBorder>(
+            RoundedRectangleBorder(
+              side: BorderSide(
+                color: HexColor('F25922'),
+                width: 2,
+              ),
+              borderRadius: BorderRadius.circular(25),
+            ),
+          ),
+        ),
+      ),
+      // * END button theme
+      // * START text form field theme
+      inputDecorationTheme: InputDecorationTheme(
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(25),
+          borderSide: BorderSide(
+            color: HexColor('F25922'),
+            width: 1,
+          ),
+        ),
+        isCollapsed: true,
+        // filled: true,
+      ),
+      // * END text form field theme
+      // * START bottom bar theme
+      bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        elevation: 0,
+        backgroundColor: HexColor('5A676B'),
+        selectedItemColor: HexColor('FFFFFF'),
+        unselectedItemColor: HexColor('353738'),
+      ),
+      // * END bottom bar theme
     );
   }
 }
