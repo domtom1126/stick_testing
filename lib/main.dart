@@ -55,7 +55,20 @@ class MyApp extends StatelessWidget {
         elevation: 0,
       ),
       // * Scaffold Theme
-      scaffoldBackgroundColor: HexColor('37383B'),
+      scaffoldBackgroundColor: HexColor('2D2D30'),
+      textTheme: TextTheme(
+          bodyLarge: TextStyle(
+              fontSize: 20,
+              color: HexColor('FFFFFF'),
+              fontWeight: FontWeight.bold),
+          bodyMedium: TextStyle(
+              fontSize: 18,
+              color: HexColor('FFFFFF'),
+              fontWeight: FontWeight.bold),
+          bodySmall: TextStyle(
+              fontSize: 13,
+              color: HexColor('ffffff'),
+              fontWeight: FontWeight.bold)),
       // * START button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
@@ -80,6 +93,7 @@ class MyApp extends StatelessWidget {
       // * END button theme
       // * START text form field theme
       inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(color: HexColor('FFFFFF')),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
           borderSide: BorderSide(
@@ -93,10 +107,11 @@ class MyApp extends StatelessWidget {
       // * END text form field theme
       // * START bottom bar theme
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        showUnselectedLabels: false,
         elevation: 0,
-        backgroundColor: HexColor('5A676B'),
-        selectedItemColor: HexColor('FFFFFF'),
-        unselectedItemColor: HexColor('353738'),
+        backgroundColor: HexColor('2D2D30'),
+        selectedItemColor: Colors.amber[700],
+        unselectedItemColor: Colors.grey[400],
       ),
       // * END bottom bar theme
     );
@@ -106,12 +121,25 @@ class MyApp extends StatelessWidget {
     return ThemeData(
       // * AppBar Theme
       appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
-        foregroundColor: HexColor('ffffff'),
+        backgroundColor: HexColor('2D2D30'),
+        foregroundColor: HexColor('FFFFFF'),
         elevation: 0,
       ),
+      textTheme: TextTheme(
+          bodyLarge: TextStyle(
+              fontSize: 20,
+              color: HexColor('000000'),
+              fontWeight: FontWeight.bold),
+          bodyMedium: TextStyle(
+              fontSize: 18,
+              color: HexColor('000000'),
+              fontWeight: FontWeight.bold),
+          bodySmall: TextStyle(
+              fontSize: 13,
+              color: HexColor('000000'),
+              fontWeight: FontWeight.bold)),
       // * Scaffold Theme
-      scaffoldBackgroundColor: HexColor('FFFFFF'),
+      scaffoldBackgroundColor: HexColor('F3F3F3'),
       // * START button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
@@ -136,6 +164,8 @@ class MyApp extends StatelessWidget {
       // * END button theme
       // * START text form field theme
       inputDecorationTheme: InputDecorationTheme(
+        hintStyle: TextStyle(color: HexColor('000000')),
+        labelStyle: TextStyle(color: HexColor('000000')),
         border: OutlineInputBorder(
           borderRadius: BorderRadius.circular(25),
           borderSide: BorderSide(
@@ -149,10 +179,11 @@ class MyApp extends StatelessWidget {
       // * END text form field theme
       // * START bottom bar theme
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        showUnselectedLabels: false,
         elevation: 0,
-        backgroundColor: HexColor('5A676B'),
-        selectedItemColor: HexColor('FFFFFF'),
-        unselectedItemColor: HexColor('353738'),
+        backgroundColor: HexColor('2D2D30'),
+        selectedItemColor: Colors.amber[700],
+        unselectedItemColor: Colors.grey[400],
       ),
       // * END bottom bar theme
     );
