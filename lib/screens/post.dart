@@ -1,5 +1,7 @@
 import 'dart:io';
 
+import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:find_a_stick/firebase_functions/post_listing.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -10,7 +12,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import '../signin_controller.dart';
-import '../widgets/form_widgets/form_widgets.dart';
 
 class Post extends StatefulWidget {
   const Post({Key? key}) : super(key: key);
@@ -42,7 +43,7 @@ class _PostState extends State<Post> {
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.waiting) {
-              return Center(
+              return const Center(
                 child: CircularProgressIndicator(),
               );
             } else if (snapshot.hasData) {
@@ -139,17 +140,45 @@ class _PostState extends State<Post> {
           children: <Widget>[
             Text(
               'Manual Cars Only!',
-              style: TextStyle(fontSize: 20, color: HexColor('FFFFFF')),
+              style: Theme.of(context).textTheme.bodyLarge,
               textAlign: TextAlign.center,
             ),
             const SizedBox(
               height: 20,
             ),
-            textInputField('Make', _makeController, TextInputType.text,
-                'Enter make', 20, 1),
+            TextFormField(
+              controller: _makeController,
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                hintText: 'Make',
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter a make';
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 20),
-            textInputField('Model', _modelController, TextInputType.text,
-                'Enter model', 20, 1),
+            TextFormField(
+              controller: _modelController,
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                hintText: 'Model',
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter a make';
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 20),
             TextFormField(
               inputFormatters: [
@@ -158,13 +187,11 @@ class _PostState extends State<Post> {
               keyboardType: TextInputType.number,
               keyboardAppearance: Brightness.dark,
               controller: _yearController,
-              style: TextStyle(color: HexColor('FFFFFF')),
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
                   borderRadius: BorderRadius.circular(25.0),
                 ),
-                hintStyle: TextStyle(color: HexColor('FFFFFF')),
                 hintText: 'Year',
               ),
               validator: (value) {
@@ -175,27 +202,74 @@ class _PostState extends State<Post> {
               },
             ),
             const SizedBox(height: 20),
-            numInputField('Odometer', _odometerController, TextInputType.number,
-                'Enter odometer', 10, ''),
-            const SizedBox(height: 20),
-            numInputField(
-              'Price',
-              _priceController,
-              TextInputType.number,
-              'Enter price',
-              10,
-              '\$',
+            TextFormField(
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(10),
+              ],
+              controller: _odometerController,
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                hintText: 'Miles',
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter a miles';
+                }
+                return null;
+              },
             ),
             const SizedBox(height: 20),
-            textInputField('Description', _descriptionController,
-                TextInputType.text, 'Enter description', 200, 5),
+            TextFormField(
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(15),
+                CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
+              ],
+              controller: _priceController,
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                hintText: 'Price',
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter a price';
+                }
+                return null;
+              },
+            ),
+            const SizedBox(height: 20),
+            TextFormField(
+              controller: _descriptionController,
+              decoration: InputDecoration(
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                  borderRadius: BorderRadius.circular(25.0),
+                ),
+                hintText: 'Description',
+              ),
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'Please enter a description';
+                }
+                return null;
+              },
+            ),
             const SizedBox(height: 20),
             ElevatedButton(
-                onPressed: pickImage, child: const Text('Add Image')),
+              onPressed: pickImage,
+              child: const Text('Add Image'),
+            ),
             const SizedBox(height: 20),
             pickedImage != null
                 ? Image.file(pickedImage!, height: 200, width: 200)
-                : const Center(child: Text('Select an image')),
+                : const Center(
+                    child: Text('Select an image'),
+                  ),
             const SizedBox(height: 20),
             ElevatedButton(
                 onPressed: () {
@@ -209,21 +283,91 @@ class _PostState extends State<Post> {
                         ),
                       ),
                       context: context,
-                      builder: (context) => PostConfirm(
+                      builder: (context) => confirmModal(),
+                    );
+                  }
+                },
+                child: const Text('Confirm')),
+          ],
+        ),
+      ),
+    );
+  }
+
+  SizedBox confirmModal() {
+    return SizedBox(
+      // TODO change this height so its responsive
+      height: 500,
+      width: double.infinity,
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // TODO image goes here
+            Center(
+              child: Image(
+                image: AssetImage(pickedImage!.path),
+                height: 250,
+                width: 250,
+              ),
+            ),
+            Row(
+              children: [
+                Text(
+                  _yearController.text,
+                  style: const TextStyle(fontSize: 20),
+                ),
+                Text(
+                  ' ${_makeController.text} ${_modelController.text}',
+                  style: const TextStyle(fontSize: 20),
+                ),
+              ],
+            ),
+            Text(_priceController.text),
+            Text('${_odometerController.text} Miles'),
+            Text(_descriptionController.text),
+            const SizedBox(
+              height: 20,
+            ),
+            const Text('Are you sure you want to post this car?'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                // TODO After post go to home screen
+                ElevatedButton(
+                    onPressed: () async {
+                      final _postListing = PostListing(
                         make: _makeController.text,
                         model: _modelController.text,
                         year: _yearController.text,
                         odometer: _odometerController.text,
                         price: _priceController.text,
                         // TODO Replace with email
-                        email: '',
+                        // email: '',
                         description: _descriptionController.text,
                         image: pickedImage!,
-                      ),
-                    );
-                  }
-                },
-                child: const Text('Confirm')),
+                        dateAdded: DateTime.now().toString(),
+                      );
+                      await _postListing.addPost(
+                        _makeController.text,
+                        _modelController.text,
+                        _yearController.text,
+                        _odometerController.text,
+                        _priceController.text,
+                        _descriptionController.text,
+                        pickedImage!,
+                      );
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/home', (_) => false);
+                    },
+                    child: const Text('Yes')),
+
+                ElevatedButton(
+                    onPressed: Navigator.of(context).pop,
+                    child: const Center(child: Text('No'))),
+              ],
+            ),
           ],
         ),
       ),
