@@ -147,7 +147,11 @@ class _PostState extends State<Post> {
               height: 20,
             ),
             TextFormField(
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(20),
+              ],
               controller: _makeController,
+              keyboardAppearance: Brightness.dark,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
@@ -164,7 +168,11 @@ class _PostState extends State<Post> {
             ),
             const SizedBox(height: 20),
             TextFormField(
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(20),
+              ],
               controller: _modelController,
+              keyboardAppearance: Brightness.dark,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
@@ -207,6 +215,8 @@ class _PostState extends State<Post> {
                 LengthLimitingTextInputFormatter(10),
               ],
               controller: _odometerController,
+              keyboardAppearance: Brightness.dark,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
@@ -224,10 +234,12 @@ class _PostState extends State<Post> {
             const SizedBox(height: 20),
             TextFormField(
               inputFormatters: [
-                LengthLimitingTextInputFormatter(15),
+                LengthLimitingTextInputFormatter(10),
                 CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
               ],
               controller: _priceController,
+              keyboardAppearance: Brightness.dark,
+              keyboardType: TextInputType.number,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
@@ -245,6 +257,7 @@ class _PostState extends State<Post> {
             const SizedBox(height: 20),
             TextFormField(
               controller: _descriptionController,
+              keyboardAppearance: Brightness.dark,
               decoration: InputDecoration(
                 focusedBorder: OutlineInputBorder(
                   borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
@@ -305,13 +318,20 @@ class _PostState extends State<Post> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // TODO image goes here
-            Center(
-              child: Image(
-                image: AssetImage(pickedImage!.path),
-                height: 250,
-                width: 250,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.asset(
+                pickedImage!.path,
+                fit: BoxFit.fitWidth,
               ),
             ),
+            // Center(
+            //   child: Image(
+            //     image: AssetImage(pickedImage!.path),
+            //     height: 250,
+            //     width: 250,
+            //   ),
+            // ),
             Row(
               children: [
                 Text(
