@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/main.dart';
 import 'package:find_a_stick/screens/view_car.dart';
@@ -27,21 +28,29 @@ class _HomeState extends State<Home> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         title: const Text('Home'),
         actions: [
           IconButton(
-              icon: Icon(MyApp.themeNotifier.value == ThemeMode.light
-                  ? Icons.dark_mode
-                  : Icons.light_mode),
+              icon: Icon(
+                MyApp.themeNotifier.value == ThemeMode.light
+                    ? Icons.dark_mode
+                    : Icons.light_mode,
+                color: Colors.white,
+              ),
               onPressed: () {
-                MyApp.themeNotifier.value =
-                    MyApp.themeNotifier.value == ThemeMode.light
-                        ? ThemeMode.dark
-                        : ThemeMode.light;
+                setState(() {
+                  MyApp.themeNotifier.value == ThemeMode.light
+                      ? MyApp.themeNotifier.value = ThemeMode.dark
+                      : MyApp.themeNotifier.value = ThemeMode.light;
+                });
               })
         ],
-        leading: IconButton(icon: Icon(Icons.search), onPressed: () {}),
+        leading: IconButton(
+            icon: Icon(
+              Icons.search,
+              color: HexColor('EE6C4D'),
+            ),
+            onPressed: () {}),
       ),
       body: StreamBuilder(
         stream: cars,
@@ -76,31 +85,15 @@ class _HomeState extends State<Home> {
                 borderRadius: BorderRadius.circular(10),
                 child: GestureDetector(
                   onTap: () => {
-                    showModalBottomSheet(
-                      isScrollControlled: true,
-                      backgroundColor: HexColor('40434E'),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
-                      context: context,
-                      builder: (context) => ViewCar(
-                        publicList['make'],
-                        publicList['model'],
-                        publicList['year'],
-                        publicList['price'],
-                        publicList['odometer'],
-                        publicList['image'],
-                        publicList['description'],
-                        publicList['email'],
-                      ),
-                    ),
+                    showCarModal(context, publicList),
                   },
-                  child: Image.network(
-                    publicList['image'],
+                  child: CachedNetworkImage(
+                    imageUrl: publicList['image'],
                     fit: BoxFit.fitWidth,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 )),
           ),
@@ -110,18 +103,11 @@ class _HomeState extends State<Home> {
 
           Text(
             '${publicList['year']} ${publicList['make']} ${publicList['model']}',
-            style: TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-              color: HexColor('FFFFFF'),
-            ),
+            style: Theme.of(context).textTheme.titleLarge,
           ),
           Text(
             '${publicList['price']}',
-            style: TextStyle(
-                fontSize: 18,
-                fontWeight: FontWeight.bold,
-                color: HexColor('FFFFFF')),
+            style: Theme.of(context).textTheme.titleMedium,
             textAlign: TextAlign.start,
           ),
           const SizedBox(
@@ -131,10 +117,32 @@ class _HomeState extends State<Home> {
       ),
       subtitle: Text(
         '${publicList['odometer']} Miles',
-        style: TextStyle(
-          fontSize: 13,
-          color: HexColor('FFFFFF'),
+        style: Theme.of(context).textTheme.bodySmall,
+      ),
+    );
+  }
+
+  Future<dynamic> showCarModal(
+      BuildContext context, QueryDocumentSnapshot<Object?> publicList) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: HexColor('40434E'),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
+      ),
+      context: context,
+      builder: (context) => ViewCar(
+        publicList['make'],
+        publicList['model'],
+        publicList['year'],
+        publicList['price'],
+        publicList['odometer'],
+        publicList['image'],
+        publicList['description'],
+        publicList['email'],
       ),
     );
   }
