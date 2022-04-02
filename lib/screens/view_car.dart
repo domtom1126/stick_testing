@@ -1,3 +1,5 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -21,6 +23,8 @@ sendEmail(String? email) {
   launch(emailLaunchUri.toString());
 }
 
+// String _currentUser = FirebaseAuth.instance.currentUser!.uid;
+
 class ViewCar extends StatefulWidget {
   final String make;
   final String model;
@@ -40,6 +44,14 @@ class ViewCar extends StatefulWidget {
 
 class _ViewCarState extends State<ViewCar> {
   bool onLiked = false;
+
+  @override
+  void initState() {
+    // likesRef = FirebaseFirestore.instance.collection('likes').doc(_currentUser);
+    super.initState();
+    // likesRef!.get().then((value) => data = value.data as Map<String, dynamic>?);
+  }
+
   @override
   Widget build(BuildContext buildContext) {
     return carModal();
@@ -58,9 +70,12 @@ class _ViewCarState extends State<ViewCar> {
               width: double.infinity,
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(10),
-                child: Image.network(
-                  widget.image,
+                child: CachedNetworkImage(
+                  imageUrl: widget.image,
                   fit: BoxFit.fitWidth,
+                  placeholder: (context, url) =>
+                      const Center(child: CircularProgressIndicator()),
+                  errorWidget: (context, url, error) => const Icon(Icons.error),
                 ),
               ),
             ),
@@ -140,26 +155,9 @@ class _ViewCarState extends State<ViewCar> {
                   ),
                   child: const Icon(Icons.favorite),
                   onPressed: () {
-                    // get current user id
-                    // add to favorites
-                    // CollectionReference addToLiked =
-                    //     FirebaseFirestore.instance.collection('${c} liked');
                     setState(() {
                       onLiked = !onLiked;
                     });
-                    final snackBar = SnackBar(
-                      duration: const Duration(seconds: 2),
-                      content: const Text('Car Liked'),
-                      action: SnackBarAction(
-                        label: 'Undo',
-                        onPressed: () {
-                          // Some code to undo the change.
-                        },
-                      ),
-                    );
-                    // Find the ScaffoldMessenger in the widget tree
-                    // and use it to show a SnackBar.
-                    ScaffoldMessenger.of(context).showSnackBar(snackBar);
                   },
                 ),
                 ElevatedButton(
@@ -169,41 +167,6 @@ class _ViewCarState extends State<ViewCar> {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Hero _buildCarImage(BuildContext context) {
-    return Hero(
-      tag: 'carImage',
-      child: SizedBox(
-        height: 200,
-        width: double.infinity,
-        child: Image.network(
-          widget.image,
-          fit: BoxFit.fitWidth,
-        ),
-      ),
-    );
-  }
-}
-
-class BuildCarImage extends StatelessWidget {
-  const BuildCarImage({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      child: Hero(
-        tag: 'carImage',
-        child: SizedBox(
-          height: 200,
-          width: double.infinity,
-          child: Image.network(
-            'https://images.unsplash.com/photo-1518791841217-8f162f1e1131?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=800&q=60',
-            fit: BoxFit.fitWidth,
-          ),
-        ),
       ),
     );
   }
