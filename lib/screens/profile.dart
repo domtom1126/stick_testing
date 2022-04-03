@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -78,21 +79,21 @@ class _ProfileState extends State<Profile> {
                 },
                 child: const Text('Edit Profile')),
           ),
-          // Align(
-          //   alignment: Alignment.bottomCenter,
-          //   child: ElevatedButton(
-          //       onPressed: () => showModalBottomSheet(
-          //           backgroundColor: HexColor('40434E'),
-          //           shape: const RoundedRectangleBorder(
-          //             borderRadius: BorderRadius.only(
-          //               topLeft: Radius.circular(20),
-          //               topRight: Radius.circular(20),
-          //             ),
-          //           ),
-          //           context: context,
-          //           builder: showUserCars),
-          //       child: const Text('Your Cars')),
-          // ),
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: ElevatedButton(
+                onPressed: () => showModalBottomSheet(
+                    backgroundColor: HexColor('40434E'),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
+                      ),
+                    ),
+                    context: context,
+                    builder: showUserCars),
+                child: const Text('Your Cars')),
+          ),
           Align(
             alignment: Alignment.bottomCenter,
             child: ElevatedButton(
@@ -166,6 +167,56 @@ class _ProfileState extends State<Profile> {
           ],
         ),
       ),
+    );
+  }
+
+  ListView showUserCars(BuildContext context) {
+    final userCars = FirebaseFirestore.instance
+        .collection('posts')
+        .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+        .snapshots();
+    return ListView(
+      children: [
+        Column(children: [
+          const SizedBox(
+            height: 20,
+          ),
+          StreamBuilder(
+            stream: userCars,
+            builder:
+                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+              if (snapshot.hasData) {
+                return Column(
+                  children: snapshot.data!.docs.map((userCars) {
+                    return ListTile(
+                      title: Text(
+                        '${userCars['year']} ${userCars['make']} ${userCars['model']}',
+                        style: Theme.of(context).textTheme.titleLarge,
+                      ),
+                      subtitle: const TextButton(
+                          // TODO add mark as sold button
+                          onPressed: null,
+                          child: Text('Mark as Sold')),
+                      // Delete post button
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        onPressed: () {
+                          FirebaseFirestore.instance
+                              .collection('posts')
+                              .doc(userCars.id)
+                              .delete();
+                        },
+                      ),
+                    );
+                  }).toList(),
+                );
+              } else {
+                return const Text('You haven\'t posted any cars yet!');
+              }
+            },
+          )
+        ])
+      ],
     );
   }
 }
