@@ -57,18 +57,29 @@ class MyApp extends StatelessWidget {
       // * Scaffold Theme
       scaffoldBackgroundColor: HexColor('2D2D30'),
       textTheme: TextTheme(
-          bodyLarge: TextStyle(
-              fontSize: 20,
-              color: HexColor('FFFFFF'),
-              fontWeight: FontWeight.bold),
-          bodyMedium: TextStyle(
-              fontSize: 18,
-              color: HexColor('FFFFFF'),
-              fontWeight: FontWeight.bold),
-          bodySmall: TextStyle(
-              fontSize: 13,
-              color: HexColor('ffffff'),
-              fontWeight: FontWeight.bold)),
+        bodyLarge: TextStyle(
+          fontSize: 20,
+          color: HexColor('FFFFFF'),
+        ),
+        bodyMedium: TextStyle(
+          fontSize: 18,
+          color: HexColor('FFFFFF'),
+        ),
+        bodySmall: TextStyle(
+          fontSize: 13,
+          color: HexColor('ffffff'),
+        ),
+        titleLarge: TextStyle(
+          fontSize: 20,
+          color: HexColor('FFFFFF'),
+          fontWeight: FontWeight.bold,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 18,
+          color: HexColor('FFFFFF'),
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       // * START button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
@@ -110,7 +121,7 @@ class MyApp extends StatelessWidget {
         showUnselectedLabels: false,
         elevation: 0,
         backgroundColor: HexColor('2D2D30'),
-        selectedItemColor: Colors.amber[700],
+        selectedItemColor: HexColor('EE6C4D'),
         unselectedItemColor: Colors.grey[400],
       ),
       // * END bottom bar theme
@@ -126,18 +137,29 @@ class MyApp extends StatelessWidget {
         elevation: 0,
       ),
       textTheme: TextTheme(
-          bodyLarge: TextStyle(
-              fontSize: 20,
-              color: HexColor('000000'),
-              fontWeight: FontWeight.bold),
-          bodyMedium: TextStyle(
-              fontSize: 18,
-              color: HexColor('000000'),
-              fontWeight: FontWeight.bold),
-          bodySmall: TextStyle(
-              fontSize: 13,
-              color: HexColor('000000'),
-              fontWeight: FontWeight.bold)),
+        bodyLarge: TextStyle(
+            fontSize: 20,
+            color: HexColor('000000'),
+            fontWeight: FontWeight.bold),
+        bodyMedium: TextStyle(
+            fontSize: 18,
+            color: HexColor('000000'),
+            fontWeight: FontWeight.bold),
+        bodySmall: TextStyle(
+          fontSize: 13,
+          color: HexColor('000000'),
+        ),
+        titleLarge: TextStyle(
+          fontSize: 20,
+          color: HexColor('000000'),
+          fontWeight: FontWeight.bold,
+        ),
+        titleMedium: TextStyle(
+          fontSize: 18,
+          color: HexColor('000000'),
+          fontWeight: FontWeight.bold,
+        ),
+      ),
       // * Scaffold Theme
       scaffoldBackgroundColor: HexColor('F3F3F3'),
       // * START button theme
@@ -182,7 +204,7 @@ class MyApp extends StatelessWidget {
         showUnselectedLabels: false,
         elevation: 0,
         backgroundColor: HexColor('2D2D30'),
-        selectedItemColor: Colors.amber[700],
+        selectedItemColor: HexColor('EE6C4D'),
         unselectedItemColor: Colors.grey[400],
       ),
       // * END bottom bar theme
