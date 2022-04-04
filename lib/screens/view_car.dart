@@ -164,27 +164,36 @@ class _ViewCarState extends State<ViewCar> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: onLiked ? Colors.red : Colors.grey,
+                if (onLiked)
+                  IconButton(
+                    icon: Icon(Icons.favorite, color: Colors.red),
+                    onPressed: () {
+                      FirebaseFirestore.instance
+                          .collection('posts')
+                          .doc(widget.docId)
+                          .update({
+                        'likedIds': FieldValue.arrayRemove([uid])
+                      });
+                      setState(() {
+                        onLiked = false;
+                      });
+                    },
+                  )
+                else if (onLiked == false)
+                  IconButton(
+                    icon: Icon(Icons.favorite_border),
+                    onPressed: () {
+                      FirebaseFirestore.instance
+                          .collection('posts')
+                          .doc(widget.docId)
+                          .update({
+                        'likedIds': FieldValue.arrayUnion([uid])
+                      });
+                      setState(() {
+                        onLiked = true;
+                      });
+                    },
                   ),
-                  child: const Icon(Icons.favorite),
-                  onPressed: () async {
-                    DocumentReference updateId = FirebaseFirestore.instance
-                        .collection('posts')
-                        .doc(widget.docId);
-                    updateId.get().then((value) {
-                      if (value.exists) {
-                        updateId.update({
-                          'likedIds': FieldValue.arrayUnion([uid]),
-                        });
-                        setState(() {
-                          onLiked = true;
-                        });
-                      }
-                    });
-                  },
-                ),
                 ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     primary: Colors.blue,
