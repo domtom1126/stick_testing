@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:readmore/readmore.dart';
@@ -23,6 +24,8 @@ sendEmail(String? email) {
   launch(emailLaunchUri.toString());
 }
 
+final String uid = FirebaseAuth.instance.currentUser!.uid;
+
 // String _currentUser = FirebaseAuth.instance.currentUser!.uid;
 
 class ViewCar extends StatefulWidget {
@@ -34,9 +37,10 @@ class ViewCar extends StatefulWidget {
   final String image;
   final String description;
   final String? receiverEmail;
+  final String? docId;
 
   ViewCar(this.make, this.model, this.year, this.price, this.odometer,
-      this.image, this.description, this.receiverEmail);
+      this.image, this.description, this.receiverEmail, this.docId);
 
   @override
   _ViewCarState createState() => _ViewCarState();
@@ -47,9 +51,20 @@ class _ViewCarState extends State<ViewCar> {
 
   @override
   void initState() {
-    // likesRef = FirebaseFirestore.instance.collection('likes').doc(_currentUser);
     super.initState();
-    // likesRef!.get().then((value) => data = value.data as Map<String, dynamic>?);
+    FirebaseFirestore.instance
+        .collection('posts')
+        .doc(widget.docId)
+        .get()
+        .then((value) {
+      if (value['likedIds'] != null) {
+        if (value['likedIds'].contains(uid)) {
+          setState(() {
+            onLiked = true;
+          });
+        }
+      }
+    });
   }
 
   @override
@@ -154,15 +169,61 @@ class _ViewCarState extends State<ViewCar> {
                     primary: onLiked ? Colors.red : Colors.grey,
                   ),
                   child: const Icon(Icons.favorite),
-                  onPressed: () {
-                    setState(() {
-                      onLiked = !onLiked;
+                  onPressed: () async {
+                    DocumentReference updateId = FirebaseFirestore.instance
+                        .collection('posts')
+                        .doc(widget.docId);
+                    updateId.get().then((value) {
+                      if (value.exists) {
+                        updateId.update({
+                          'likedIds': FieldValue.arrayUnion([uid]),
+                        });
+                        setState(() {
+                          onLiked = true;
+                        });
+                      }
                     });
                   },
                 ),
                 ElevatedButton(
-                    onPressed: () => sendEmail(widget.receiverEmail),
-                    child: const Icon(Icons.email)),
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.blue,
+                  ),
+                  child: const Icon(Icons.message),
+                  onPressed: () {
+                    if (FirebaseAuth.instance.currentUser == null) {
+                      // show dialog to login
+                      showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: const Text('Login to send message'),
+                            content:
+                                const Text('Go to the profile page to login'),
+                            actions: <Widget>[
+                              ElevatedButton(
+                                child: const Text('Login'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                  // navigate to profile page
+                                  Navigator.of(context).pushNamed('/profile');
+                                },
+                              ),
+                              ElevatedButton(
+                                child: const Text('Cancel'),
+                                onPressed: () {
+                                  Navigator.of(context).pop();
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                    } else {
+                      sendEmail(widget.receiverEmail);
+                    }
+                  },
+                ),
               ],
             ),
           ),
