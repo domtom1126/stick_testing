@@ -70,8 +70,8 @@ class _LikedState extends State<Liked> {
                 );
               }).toList());
             } else {
-              return Center(
-                child: CircularProgressIndicator(),
+              return const Center(
+                child: Text('You haven\'t liked any cars yet'),
               );
             }
           },
