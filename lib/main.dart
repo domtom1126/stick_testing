@@ -1,3 +1,5 @@
+import 'package:find_a_stick/screens/home.dart';
+import 'package:find_a_stick/screens/post.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,7 +38,7 @@ class MyApp extends StatelessWidget {
             },
             // initialRoute: '/',
             debugShowCheckedModeBanner: false,
-            theme: lightTheme(),
+            theme: darkTheme(),
             darkTheme: darkTheme(),
             themeMode: currentMode,
             home: const BottomBar(),
@@ -51,28 +53,30 @@ class MyApp extends StatelessWidget {
       // * AppBar Theme
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
-        foregroundColor: HexColor('ffffff'),
+        foregroundColor: HexColor('FFFFFF'),
         elevation: 0,
       ),
       // * Scaffold Theme
+      // scaffoldBackgroundColor: HexColor('7E8987'),
       scaffoldBackgroundColor: HexColor('2D2D30'),
       textTheme: TextTheme(
         bodyLarge: TextStyle(
-          fontSize: 20,
-          color: HexColor('FFFFFF'),
-        ),
+            fontSize: 24,
+            color: HexColor('FFFFFF'),
+            fontWeight: FontWeight.w300),
         bodyMedium: TextStyle(
           fontSize: 18,
           color: HexColor('FFFFFF'),
+          fontWeight: FontWeight.w300,
         ),
         bodySmall: TextStyle(
           fontSize: 13,
-          color: HexColor('ffffff'),
+          color: HexColor('FFFFFF'),
         ),
         titleLarge: TextStyle(
-          fontSize: 20,
+          fontSize: 26,
           color: HexColor('FFFFFF'),
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w300,
         ),
         titleMedium: TextStyle(
           fontSize: 18,
@@ -83,20 +87,17 @@ class MyApp extends StatelessWidget {
       // * START button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
-          minimumSize: MaterialStateProperty.all<Size>(const Size(100, 40)),
+          elevation: MaterialStateProperty.all<double>(0),
+          minimumSize: MaterialStateProperty.all<Size>(const Size(500, 40)),
           backgroundColor: MaterialStateProperty.all<Color>(
-            HexColor('59797D'),
+            HexColor('EE6C4D'),
           ),
           foregroundColor: MaterialStateProperty.all<Color>(
             HexColor('ffffff'),
           ),
           shape: MaterialStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(
-              side: BorderSide(
-                color: HexColor('F25922'),
-                width: 2,
-              ),
-              borderRadius: BorderRadius.circular(25),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
         ),
@@ -104,16 +105,13 @@ class MyApp extends StatelessWidget {
       // * END button theme
       // * START text form field theme
       inputDecorationTheme: InputDecorationTheme(
-        hintStyle: TextStyle(color: HexColor('FFFFFF')),
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(25),
-          borderSide: BorderSide(
-            color: HexColor('F25922'),
-            width: 1,
-          ),
-        ),
+        hintStyle: TextStyle(
+            color: HexColor('FFFFFF'),
+            fontWeight: FontWeight.w300,
+            fontSize: 16),
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
         isCollapsed: true,
-        // filled: true,
+        filled: true,
       ),
       // * END text form field theme
       // * START bottom bar theme
@@ -132,19 +130,21 @@ class MyApp extends StatelessWidget {
     return ThemeData(
       // * AppBar Theme
       appBarTheme: AppBarTheme(
-        backgroundColor: HexColor('2D2D30'),
+        backgroundColor: HexColor('FFFFFF'),
         foregroundColor: HexColor('FFFFFF'),
         elevation: 0,
       ),
+      // * Scaffold Theme
+      scaffoldBackgroundColor: HexColor('F5F8F2'),
       textTheme: TextTheme(
         bodyLarge: TextStyle(
             fontSize: 20,
-            color: HexColor('000000'),
+            color: HexColor('FFFFFF'),
             fontWeight: FontWeight.bold),
         bodyMedium: TextStyle(
             fontSize: 18,
             color: HexColor('000000'),
-            fontWeight: FontWeight.bold),
+            fontWeight: FontWeight.w300),
         bodySmall: TextStyle(
           fontSize: 13,
           color: HexColor('000000'),
@@ -160,8 +160,6 @@ class MyApp extends StatelessWidget {
           fontWeight: FontWeight.bold,
         ),
       ),
-      // * Scaffold Theme
-      scaffoldBackgroundColor: HexColor('F3F3F3'),
       // * START button theme
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ButtonStyle(
