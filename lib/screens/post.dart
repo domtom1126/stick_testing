@@ -2,6 +2,8 @@ import 'dart:io';
 
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:find_a_stick/firebase_functions/post_listing.dart';
+import 'package:find_a_stick/widgets/bottom_bar.dart';
+import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -39,6 +41,7 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: appBar(context, 'Post a Car'),
       body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
@@ -49,260 +52,255 @@ class _PostState extends State<Post> {
             } else if (snapshot.hasData) {
               return buildUserAuth(context);
             } else {
-              return buildUserNotAuth(context);
+              return buildSignIn(context);
             }
           }),
     );
   }
 
-  Scaffold buildUserNotAuth(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Login'),
-      ),
-      body: Center(
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.grey[800],
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-          ),
-          height: 400,
-          width: 300,
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 20,
-              ),
-              Text(
-                'You\'re not logged in!',
-                style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+  Center buildSignIn(BuildContext context) {
+    return Center(
+      child: Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[800],
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        ),
+        height: 400,
+        width: 300,
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 25,
+            ),
+            Text(
+              'You\'re not logged in!',
+              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 50,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                'Sign in below with Google. \n You\'ll be able to post after you sign in.',
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Text(
-                  'Sign in with your Google account. Intrested people will be able to contact you through your Gmail.',
-                  style: TextStyle(color: HexColor('FFFFFF'), fontSize: 15),
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: 200,
-                child: SignInButton(Buttons.Google,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ), onPressed: () {
-                  final provider =
-                      Provider.of<GoogleSignInProvider>(context, listen: false);
-                  provider.googleLogin();
-                }, text: 'Sign in with Google'),
-              ),
-              SizedBox(
-                width: 200,
-                child: SignInButton(Buttons.Apple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ), onPressed: () {
-                  final appleProvider =
-                      Provider.of<AppleSignInProvider>(context, listen: false);
-                  appleProvider.appleLogin();
-                }, text: 'Sign in with Apple'),
-              ),
-            ],
-          ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            Divider(
+              height: 50,
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SignInButton(Buttons.Google,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ), onPressed: () {
+                final provider =
+                    Provider.of<GoogleSignInProvider>(context, listen: false);
+                provider.googleLogin();
+              }),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: SignInButton(Buttons.Apple,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                  ), onPressed: () {
+                final appleProvider =
+                    Provider.of<AppleSignInProvider>(context, listen: false);
+                appleProvider.appleLogin();
+              }, text: 'Sign in with Apple'),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Scaffold buildUserAuth(BuildContext context) {
+  Form buildUserAuth(BuildContext context) {
     bool uploading = false;
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text('Post'),
-        centerTitle: true,
-      ),
-      // resizeToAvoidBottomInset: false,
-      body: Form(
-        key: _formKey,
-        child: ListView(
-          padding: EdgeInsets.fromLTRB(10, 20, 10, 40),
-          keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-          children: <Widget>[
-            Text(
-              'Manual Cars Only!',
-              style: Theme.of(context).textTheme.bodyLarge,
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(
-              height: 20,
-            ),
-            TextFormField(
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(20),
-              ],
-              controller: _makeController,
-              keyboardAppearance: Brightness.dark,
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Make',
+    // resizeToAvoidBottomInset: false,
+    return Form(
+      key: _formKey,
+      child: ListView(
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 40),
+        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        children: <Widget>[
+          const SizedBox(
+            height: 20,
+          ),
+          TextFormField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(20),
+            ],
+            controller: _makeController,
+            keyboardAppearance: Brightness.dark,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a make';
-                }
-                return null;
-              },
+              hintText: 'Make',
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(20),
-              ],
-              controller: _modelController,
-              keyboardAppearance: Brightness.dark,
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Model',
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter a make';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(20),
+            ],
+            controller: _modelController,
+            keyboardAppearance: Brightness.dark,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a make';
-                }
-                return null;
-              },
+              hintText: 'Model',
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(4),
-              ],
-              keyboardType: TextInputType.number,
-              keyboardAppearance: Brightness.dark,
-              controller: _yearController,
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Year',
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter a make';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(4),
+            ],
+            keyboardType: TextInputType.number,
+            keyboardAppearance: Brightness.dark,
+            controller: _yearController,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'Enter year';
-                }
-                return null;
-              },
+              hintText: 'Year',
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(10),
-              ],
-              controller: _odometerController,
-              keyboardAppearance: Brightness.dark,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Miles',
+            validator: (value) {
+              if (value!.length != 4) {
+                return 'Please enter a valid year';
+              } else if (value[0] == '0' ||
+                  value[0] == '3' ||
+                  value[0] == '4' ||
+                  value[0] == '5' ||
+                  value[0] == '6' ||
+                  value[0] == '7' ||
+                  value[0] == '8' ||
+                  value[0] == '9') {
+                return 'Enter 2 digit valid year';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(10),
+            ],
+            controller: _odometerController,
+            keyboardAppearance: Brightness.dark,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a miles';
-                }
-                return null;
-              },
+              hintText: 'Miles',
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(10),
-                CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
-              ],
-              controller: _priceController,
-              keyboardAppearance: Brightness.dark,
-              keyboardType: TextInputType.number,
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Price',
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter a miles';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(10),
+              CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
+            ],
+            controller: _priceController,
+            keyboardAppearance: Brightness.dark,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a price';
-                }
-                return null;
-              },
+              hintText: 'Price',
             ),
-            const SizedBox(height: 20),
-            TextFormField(
-              controller: _descriptionController,
-              keyboardAppearance: Brightness.dark,
-              decoration: InputDecoration(
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Description',
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter a price';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
+            controller: _descriptionController,
+            keyboardAppearance: Brightness.dark,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
               ),
-              validator: (value) {
-                if (value!.isEmpty) {
-                  return 'Please enter a description';
-                }
-                return null;
-              },
+              hintText: 'Description',
             ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: pickImage,
-              child: const Text('Add Image'),
-            ),
-            const SizedBox(height: 20),
-            pickedImage != null
-                ? Image.file(pickedImage!, height: 200, width: 200)
-                : const Center(
-                    child: Text('Select an image'),
-                  ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    showModalBottomSheet(
-                      backgroundColor: HexColor('40434E'),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter a description';
+              }
+              return null;
+            },
+          ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+            onPressed: pickImage,
+            child: const Text('Add Image'),
+          ),
+          const SizedBox(height: 20),
+          pickedImage != null
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.file(pickedImage!, height: 200, width: 200))
+              : const Center(
+                  child: Text('Select an image'),
+                ),
+          const SizedBox(height: 20),
+          ElevatedButton(
+              onPressed: () {
+                if (_formKey.currentState!.validate()) {
+                  showModalBottomSheet(
+                    backgroundColor: HexColor('40434E'),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(20),
+                        topRight: Radius.circular(20),
                       ),
-                      context: context,
-                      builder: (context) => confirmModal(),
-                    );
-                  }
-                },
-                child: const Text('Confirm')),
-          ],
-        ),
+                    ),
+                    context: context,
+                    builder: (context) => confirmModal(),
+                  );
+                }
+              },
+              child: const Text('Confirm')),
+        ],
       ),
     );
   }
@@ -325,13 +323,6 @@ class _PostState extends State<Post> {
                 fit: BoxFit.fitWidth,
               ),
             ),
-            // Center(
-            //   child: Image(
-            //     image: AssetImage(pickedImage!.path),
-            //     height: 250,
-            //     width: 250,
-            //   ),
-            // ),
             Row(
               children: [
                 Text(
