@@ -26,8 +26,6 @@ sendEmail(String? email) {
 
 final String uid = FirebaseAuth.instance.currentUser!.uid;
 
-// String _currentUser = FirebaseAuth.instance.currentUser!.uid;
-
 class ViewCar extends StatefulWidget {
   final String make;
   final String model;
@@ -165,73 +163,85 @@ class _ViewCarState extends State<ViewCar> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 if (onLiked)
-                  IconButton(
-                    icon: Icon(Icons.favorite, color: Colors.red),
-                    onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection('posts')
-                          .doc(widget.docId)
-                          .update({
-                        'likedIds': FieldValue.arrayRemove([uid])
-                      });
-                      setState(() {
-                        onLiked = false;
-                      });
-                    },
+                  SizedBox(
+                    width: 100,
+                    child: ElevatedButton(
+                      child: Icon(Icons.favorite, color: Colors.red),
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(widget.docId)
+                            .update({
+                          'likedIds': FieldValue.arrayRemove([uid])
+                        });
+                        setState(() {
+                          onLiked = false;
+                        });
+                      },
+                    ),
                   )
                 else if (onLiked == false)
-                  IconButton(
-                    icon: Icon(Icons.favorite_border),
+                  SizedBox(
+                    width: 100,
+                    child: ElevatedButton(
+                      child: Icon(
+                        Icons.favorite,
+                        color: Colors.white,
+                      ),
+                      onPressed: () {
+                        FirebaseFirestore.instance
+                            .collection('posts')
+                            .doc(widget.docId)
+                            .update({
+                          'likedIds': FieldValue.arrayUnion([uid])
+                        });
+                        setState(() {
+                          onLiked = true;
+                        });
+                      },
+                    ),
+                  ),
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: HexColor('EE6C4D'),
+                    ),
+                    child: const Icon(Icons.message),
                     onPressed: () {
-                      FirebaseFirestore.instance
-                          .collection('posts')
-                          .doc(widget.docId)
-                          .update({
-                        'likedIds': FieldValue.arrayUnion([uid])
-                      });
-                      setState(() {
-                        onLiked = true;
-                      });
+                      if (FirebaseAuth.instance.currentUser == null) {
+                        // show dialog to login
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Login to send message'),
+                              content:
+                                  const Text('Go to the profile page to login'),
+                              actions: <Widget>[
+                                ElevatedButton(
+                                  child: const Text('Login'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                    // navigate to profile page
+                                    Navigator.of(context).pushNamed('/profile');
+                                  },
+                                ),
+                                ElevatedButton(
+                                  child: const Text('Cancel'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        sendEmail(widget.receiverEmail);
+                      }
                     },
                   ),
-                ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.blue,
-                  ),
-                  child: const Icon(Icons.message),
-                  onPressed: () {
-                    if (FirebaseAuth.instance.currentUser == null) {
-                      // show dialog to login
-                      showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Login to send message'),
-                            content:
-                                const Text('Go to the profile page to login'),
-                            actions: <Widget>[
-                              ElevatedButton(
-                                child: const Text('Login'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  // navigate to profile page
-                                  Navigator.of(context).pushNamed('/profile');
-                                },
-                              ),
-                              ElevatedButton(
-                                child: const Text('Cancel'),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                    } else {
-                      sendEmail(widget.receiverEmail);
-                    }
-                  },
                 ),
               ],
             ),
