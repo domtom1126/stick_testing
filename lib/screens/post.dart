@@ -346,37 +346,43 @@ class _PostState extends State<Post> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // TODO After post go to home screen
-                ElevatedButton(
-                    onPressed: () async {
-                      final _postListing = PostListing(
-                        make: _makeController.text,
-                        model: _modelController.text,
-                        year: _yearController.text,
-                        odometer: _odometerController.text,
-                        price: _priceController.text,
-                        // TODO Replace with email
-                        // email: '',
-                        description: _descriptionController.text,
-                        image: pickedImage!,
-                        dateAdded: DateTime.now().toString(),
-                      );
-                      await _postListing.addPost(
-                        _makeController.text,
-                        _modelController.text,
-                        _yearController.text,
-                        _odometerController.text,
-                        _priceController.text,
-                        _descriptionController.text,
-                        pickedImage!,
-                      );
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/home', (_) => false);
-                    },
-                    child: const Text('Yes')),
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                      onPressed: () async {
+                        final _postListing = PostListing(
+                          make: _makeController.text,
+                          model: _modelController.text,
+                          year: _yearController.text,
+                          odometer: _odometerController.text,
+                          price: _priceController.text,
+                          // TODO Replace with email
+                          // email: '',
+                          description: _descriptionController.text,
+                          image: pickedImage!,
+                          dateAdded: DateTime.now().toString(),
+                        );
+                        await _postListing.addPost(
+                          _makeController.text,
+                          _modelController.text,
+                          _yearController.text,
+                          _odometerController.text,
+                          _priceController.text,
+                          _descriptionController.text,
+                          pickedImage!,
+                        );
+                        Navigator.pushNamedAndRemoveUntil(
+                            context, '/home', (_) => false);
+                      },
+                      child: const Text('Yes')),
+                ),
 
-                ElevatedButton(
-                    onPressed: Navigator.of(context).pop,
-                    child: const Center(child: Text('No'))),
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                      onPressed: Navigator.of(context).pop,
+                      child: const Center(child: Text('Edit'))),
+                ),
               ],
             ),
           ],
