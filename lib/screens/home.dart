@@ -2,14 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/main.dart';
 import 'package:find_a_stick/screens/view_car.dart';
-import 'package:find_a_stick/widgets/bottom_bar.dart';
+import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
-// TODO this page will get the most recent listings. Wrap with BlocBuilder
-
-bool onLiked = false;
+// TODO Add explain page for first time runners
+// TODO * Add package is_first_run
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -19,6 +18,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  bool onLiked = false;
   final cars = FirebaseFirestore.instance
       .collection('posts')
       .orderBy('date_added', descending: true)
@@ -27,31 +27,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Home'),
-        actions: [
-          IconButton(
-              icon: Icon(
-                MyApp.themeNotifier.value == ThemeMode.light
-                    ? Icons.dark_mode
-                    : Icons.light_mode,
-                color: Colors.white,
-              ),
-              onPressed: () {
-                setState(() {
-                  MyApp.themeNotifier.value == ThemeMode.light
-                      ? MyApp.themeNotifier.value = ThemeMode.dark
-                      : MyApp.themeNotifier.value = ThemeMode.light;
-                });
-              })
-        ],
-        leading: IconButton(
-            icon: Icon(
-              Icons.search,
-              color: HexColor('EE6C4D'),
-            ),
-            onPressed: () {}),
-      ),
+      appBar: AppBar(title: const Text('Home'), centerTitle: false, actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {},
+        ),
+      ]),
       body: StreamBuilder(
         stream: cars,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
@@ -78,6 +59,9 @@ class _HomeState extends State<Home> {
       title: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          const SizedBox(
+            height: 10,
+          ),
           SizedBox(
             height: 200,
             width: double.infinity,
@@ -101,13 +85,34 @@ class _HomeState extends State<Home> {
           //   height: 10,
           // ),
 
-          Text(
-            '${publicList['year']} ${publicList['make']} ${publicList['model']}',
-            style: Theme.of(context).textTheme.titleLarge,
+          Row(
+            children: [
+              Text(
+                '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+                style: Theme.of(context).textTheme.bodyLarge,
+              ),
+              if (FirebaseAuth.instance.currentUser?.uid == null) Container()
+              // TODO add like button to let user know if theyve liked current car
+              // else
+              //   IconButton(
+              //     icon: Icon(Icons.favorite, color: Colors.red),
+              //     onPressed: () {
+              //       // FirebaseFirestore.instance
+              //       //     .collection('posts')
+              //       //     .doc(widget.docId)
+              //       //     .update({
+              //       //   'likedIds': FieldValue.arrayRemove([uid])
+              //       // });
+              //       // setState(() {
+              //       //   onLiked = false;
+              //       // });
+              //     },
+              //   )
+            ],
           ),
           Text(
             '${publicList['price']}',
-            style: Theme.of(context).textTheme.titleMedium,
+            style: Theme.of(context).textTheme.bodyMedium,
             textAlign: TextAlign.start,
           ),
           const SizedBox(
@@ -143,6 +148,7 @@ class _HomeState extends State<Home> {
         publicList['image'],
         publicList['description'],
         publicList['email'],
+        publicList.id,
       ),
     );
   }
