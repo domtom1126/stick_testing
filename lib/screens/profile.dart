@@ -40,73 +40,102 @@ class _ProfileState extends State<Profile> {
 
   Widget buildProfilePage(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser!;
-    return Center(
-      child: Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(children: [
-          const SizedBox(
-            height: 20,
-          ),
-          CircleAvatar(
-            backgroundImage: NetworkImage(user.photoURL ?? ''),
-            radius: 75,
-          ),
-          const SizedBox(
-            height: 40,
-          ),
-          Text(user.displayName ?? '',
-              style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
-          const SizedBox(
-            height: 10,
-          ),
-          Text(user.email ?? 'No email found',
-              style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
-          const SizedBox(
-            height: 30,
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ElevatedButton(
-                onPressed: () {
-                  null;
-                },
-                child: const Text('Edit Profile')),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            width: double.infinity,
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ElevatedButton(
-                  onPressed: () => showModalBottomSheet(
-                      backgroundColor: HexColor('40434E'),
-                      shape: const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(20),
-                          topRight: Radius.circular(20),
-                        ),
-                      ),
-                      context: context,
-                      builder: showUserCars),
-                  child: const Text('Your Cars')),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        const SizedBox(
+          height: 20,
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            CircleAvatar(
+              backgroundImage: NetworkImage(user.photoURL ?? ''),
+              radius: 75,
             ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: ElevatedButton(
-                onPressed: () {
-                  final provider =
-                      Provider.of<GoogleSignInProvider>(context, listen: false);
-                  provider.googleLogout();
-                },
-                child: const Text('Sign Out')),
-          ),
-        ]),
+            // const SizedBox(
+            //   width: 50,
+            // ),
+            Column(
+              children: [
+                // TODO make edit button work
+                // editButton(),
+                const SizedBox(
+                  height: 10,
+                ),
+                yourCarsButton(context),
+                const SizedBox(
+                  height: 10,
+                ),
+                signOutButton(context),
+              ],
+            )
+          ],
+        ),
+        const SizedBox(
+          height: 40,
+        ),
+        Text(user.displayName ?? '',
+            style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
+        const SizedBox(
+          height: 10,
+        ),
+        Text(user.email ?? 'No email found',
+            style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
+        const SizedBox(
+          height: 30,
+        ),
+      ]),
+    );
+  }
+
+  SizedBox signOutButton(BuildContext context) {
+    return SizedBox(
+      width: 125,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: ElevatedButton(
+            onPressed: () {
+              final provider =
+                  Provider.of<GoogleSignInProvider>(context, listen: false);
+              provider.googleLogout();
+            },
+            child: const Text('Sign Out')),
+      ),
+    );
+  }
+
+  SizedBox yourCarsButton(BuildContext context) {
+    return SizedBox(
+      width: 125,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: ElevatedButton(
+            onPressed: () => showModalBottomSheet(
+                backgroundColor: HexColor('40434E'),
+                shape: const RoundedRectangleBorder(
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(20),
+                    topRight: Radius.circular(20),
+                  ),
+                ),
+                context: context,
+                builder: showUserCars),
+            child: const Text('Your Cars')),
+      ),
+    );
+  }
+
+  SizedBox editButton() {
+    return SizedBox(
+      width: 125,
+      child: Align(
+        alignment: Alignment.bottomCenter,
+        child: ElevatedButton(
+            onPressed: () {
+              null;
+            },
+            child: const Text('Edit Profile')),
       ),
     );
   }
