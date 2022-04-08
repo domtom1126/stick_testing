@@ -76,19 +76,26 @@ class _ViewCarState extends State<ViewCar> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Hero(
-            tag: 'carImage',
-            child: SizedBox(
-              height: 200,
-              width: double.infinity,
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: CachedNetworkImage(
-                  imageUrl: widget.image,
-                  fit: BoxFit.fitWidth,
-                  placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+          GestureDetector(
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ExpandImage(image: widget.image)));
+            },
+            child: Hero(
+              tag: 'carImage',
+              child: SizedBox(
+                height: 200,
+                width: double.infinity,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: CachedNetworkImage(
+                    imageUrl: widget.image,
+                    fit: BoxFit.fitWidth,
+                    placeholder: (context, url) =>
+                        const Center(child: CircularProgressIndicator()),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
+                  ),
                 ),
               ),
             ),
@@ -98,17 +105,9 @@ class _ViewCarState extends State<ViewCar> {
           ),
           Row(
             children: [
-              Text('${widget.year} ',
-                  style: TextStyle(
-                      fontSize: 24,
-                      color: HexColor('FFFFFF'),
-                      fontWeight: FontWeight.bold)),
               Text(
-                '${widget.make} ${widget.model}',
-                style: TextStyle(
-                    fontSize: 24,
-                    color: HexColor('FFFFFF'),
-                    fontWeight: FontWeight.bold),
+                '${widget.year} ${widget.make} ${widget.model}',
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
             ],
           ),
@@ -117,10 +116,7 @@ class _ViewCarState extends State<ViewCar> {
           ),
           Text(
             widget.price,
-            style: TextStyle(
-                color: HexColor('FFFFFF'),
-                fontSize: 18,
-                fontWeight: FontWeight.bold),
+            style: Theme.of(context).textTheme.bodyMedium,
           ),
           const SizedBox(
             height: 5,
@@ -139,8 +135,8 @@ class _ViewCarState extends State<ViewCar> {
                 fontSize: 18,
                 fontWeight: FontWeight.bold),
           ),
-          const SizedBox(
-            height: 5,
+          Divider(
+            color: HexColor('ffffff'),
           ),
           ReadMoreText(
             '${widget.description} ',
@@ -247,6 +243,39 @@ class _ViewCarState extends State<ViewCar> {
             ),
           ),
         ],
+      ),
+    );
+  }
+}
+
+class ExpandImage extends StatefulWidget {
+  final String image;
+  const ExpandImage({Key? key, required this.image}) : super(key: key);
+
+  @override
+  State<ExpandImage> createState() => _ExpandImageState();
+}
+
+class _ExpandImageState extends State<ExpandImage> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Hero(
+        tag: 'carImage',
+        child: SizedBox(
+          height: 200,
+          width: double.infinity,
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: CachedNetworkImage(
+              imageUrl: widget.image,
+              fit: BoxFit.fitWidth,
+              placeholder: (context, url) =>
+                  const Center(child: CircularProgressIndicator()),
+              errorWidget: (context, url, error) => const Icon(Icons.error),
+            ),
+          ),
+        ),
       ),
     );
   }
