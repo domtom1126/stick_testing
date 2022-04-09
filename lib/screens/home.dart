@@ -27,22 +27,12 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-          title: const Text('Home'),
-          centerTitle: false,
-          bottom: PreferredSize(
-            child: Container(
-              color: HexColor('EE6C4D'),
-              height: 1,
-            ),
-            preferredSize: const Size.fromHeight(1),
-          ),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-            ),
-          ]),
+      appBar: AppBar(title: const Text('Home'), centerTitle: false, actions: [
+        IconButton(
+          icon: const Icon(Icons.search),
+          onPressed: () {},
+        ),
+      ]),
       body: StreamBuilder(
         stream: cars,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
