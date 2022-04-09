@@ -259,17 +259,20 @@ class ExpandImage extends StatefulWidget {
 class _ExpandImageState extends State<ExpandImage> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Hero(
-        tag: 'carImage',
-        child: SizedBox(
-          height: 200,
-          width: double.infinity,
-          child: ClipRRect(
-            borderRadius: BorderRadius.circular(10),
+    return Scaffold(
+      appBar: AppBar(
+          // title: const Text('Images'),
+          ),
+      body: InteractiveViewer(
+        panEnabled: true, // Set it to false
+        minScale: 0.5,
+        maxScale: 2,
+        child: Center(
+          child: Hero(
+            tag: 'carImage',
             child: CachedNetworkImage(
               imageUrl: widget.image,
-              fit: BoxFit.fitWidth,
+              // fit: BoxFit.fitWidth,
               placeholder: (context, url) =>
                   const Center(child: CircularProgressIndicator()),
               errorWidget: (context, url, error) => const Icon(Icons.error),
