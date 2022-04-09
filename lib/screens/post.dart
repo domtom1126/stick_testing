@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:find_a_stick/firebase_functions/post_listing.dart';
 import 'package:find_a_stick/widgets/bottom_bar.dart';
@@ -41,7 +42,7 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, 'Post a Car'),
+      appBar: appBar(context, 'Post Car'),
       body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
@@ -282,6 +283,25 @@ class _PostState extends State<Post> {
               : const Center(
                   child: Text('Select an image'),
                 ),
+          // * This actually works! but for now just do single image
+          // CarouselSlider.builder(
+          //   options: CarouselOptions(height: 200),
+          //   itemCount: pickedImage.length,
+          //   itemBuilder: (context, index, realIndex) {
+          //     final singleImage = pickedImage[index];
+
+          //     return Container(
+          //       margin: EdgeInsets.all(5.0),
+          //       child: ClipRRect(
+          //         borderRadius: BorderRadius.all(Radius.circular(5.0)),
+          //         child: Image.file(
+          //           singleImage!,
+          //           fit: BoxFit.cover,
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // ),
           const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
@@ -295,7 +315,7 @@ class _PostState extends State<Post> {
                       ),
                     ),
                     context: context,
-                    builder: (context) => confirmModal(),
+                    builder: (context) => Container(),
                   );
                 }
               },
