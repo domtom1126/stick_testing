@@ -164,15 +164,43 @@ class _ViewCarState extends State<ViewCar> {
                     child: ElevatedButton(
                       child: Icon(Icons.favorite, color: Colors.red),
                       onPressed: () {
-                        FirebaseFirestore.instance
-                            .collection('posts')
-                            .doc(widget.docId)
-                            .update({
-                          'likedIds': FieldValue.arrayRemove([uid])
-                        });
-                        setState(() {
-                          onLiked = false;
-                        });
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.black45,
+                                title: Text('Are you sure?'),
+                                content: Text(
+                                    'Do you want to remove this car from your likes?',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                                actions: [
+                                  ElevatedButton(
+                                    child: Text('Yes'),
+                                    onPressed: () {
+                                      FirebaseFirestore.instance
+                                          .collection('posts')
+                                          .doc(widget.docId)
+                                          .update({
+                                        'likedIds':
+                                            FieldValue.arrayRemove([uid])
+                                      }).then((value) {
+                                        setState(() {
+                                          onLiked = false;
+                                        });
+                                      });
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  ElevatedButton(
+                                    child: Text('No'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
                       },
                     ),
                   )
