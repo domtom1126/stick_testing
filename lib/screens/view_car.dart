@@ -7,23 +7,6 @@ import 'package:hexcolor/hexcolor.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-sendEmail(String? email) {
-  String? encodeQueryParameters(Map<String, String> params) {
-    return params.entries
-        .map((e) =>
-            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-        .join('&');
-  }
-
-  final emailLaunchUri = Uri(
-    scheme: 'mailto',
-    path: email,
-    query: encodeQueryParameters(
-        <String, String>{'subject': 'Example Subject & Symbols are allowed!'}),
-  );
-  launch(emailLaunchUri.toString());
-}
-
 final String uid = FirebaseAuth.instance.currentUser!.uid;
 
 class ViewCar extends StatefulWidget {
@@ -262,7 +245,8 @@ class _ViewCarState extends State<ViewCar> {
                           },
                         );
                       } else {
-                        sendEmail(widget.receiverEmail);
+                        sendEmail(widget.receiverEmail, widget.year,
+                            widget.make, widget.model, widget.price);
                       }
                     },
                   ),
@@ -274,6 +258,27 @@ class _ViewCarState extends State<ViewCar> {
       ),
     );
   }
+}
+
+sendEmail(
+    String? email, String? year, String? make, String? model, String? price) {
+  String? encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map((e) =>
+            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+        .join('&');
+  }
+
+  final emailLaunchUri = Uri(
+    scheme: 'mailto',
+    path: email,
+    query: encodeQueryParameters(<String, String>{
+      'subject': 'Hi! Is your $year $make $model still available?',
+      'body':
+          'I found your car for sale on Find a Stick. Is it still available at the price of $price',
+    }),
+  );
+  launch(emailLaunchUri.toString());
 }
 
 class ExpandImage extends StatefulWidget {
