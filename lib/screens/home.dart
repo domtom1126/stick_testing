@@ -4,6 +4,7 @@ import 'package:find_a_stick/main.dart';
 import 'package:find_a_stick/screens/view_car.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 
@@ -18,6 +19,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  @override
   bool onLiked = false;
   final cars = FirebaseFirestore.instance
       .collection('posts')
@@ -37,10 +39,24 @@ class _HomeState extends State<Home> {
         stream: cars,
         builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
           if (snapshot.hasData) {
-            return ListView(
-                children: snapshot.data!.docs.map((publicList) {
-              return buildCar(publicList, context);
-            }).toList());
+            return CustomScrollView(
+              physics: const BouncingScrollPhysics(),
+              slivers: [
+                CupertinoSliverRefreshControl(
+                  onRefresh: () async {
+                    await Future.delayed(const Duration(seconds: 1));
+                  },
+                ),
+                SliverToBoxAdapter(
+                  child: ListView(
+                      shrinkWrap: true,
+                      primary: false,
+                      children: snapshot.data!.docs.map((publicList) {
+                        return buildCar(publicList, context);
+                      }).toList()),
+                )
+              ],
+            );
           } else {
             return Center(
               child: CircularProgressIndicator(
@@ -151,5 +167,11 @@ class _HomeState extends State<Home> {
         publicList.id,
       ),
     );
+  }
+
+  //dispose
+  @override
+  void dispose() {
+    super.dispose();
   }
 }
