@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -146,7 +147,8 @@ class _ViewCarState extends State<ViewCar> {
                     width: 100,
                     child: ElevatedButton(
                       child: Icon(Icons.favorite, color: Colors.red),
-                      onPressed: () {
+                      onPressed: () async {
+                        await HapticFeedback.heavyImpact();
                         showDialog(
                             context: context,
                             builder: (context) {
@@ -195,7 +197,8 @@ class _ViewCarState extends State<ViewCar> {
                         Icons.favorite,
                         color: Colors.white,
                       ),
-                      onPressed: () {
+                      onPressed: () async {
+                        await HapticFeedback.heavyImpact();
                         FirebaseFirestore.instance
                             .collection('posts')
                             .doc(widget.docId)
