@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/main.dart';
+import 'package:find_a_stick/screens/search.dart';
 import 'package:find_a_stick/screens/view_car.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 // TODO Add explain page for first time runners
@@ -32,7 +34,9 @@ class _HomeState extends State<Home> {
       appBar: AppBar(title: const Text('Home'), centerTitle: false, actions: [
         IconButton(
           icon: const Icon(Icons.search),
-          onPressed: () {},
+          onPressed: () {
+            showSearch(context: context, delegate: Search());
+          },
         ),
       ]),
       body: StreamBuilder(
