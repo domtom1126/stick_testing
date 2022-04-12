@@ -14,6 +14,7 @@ import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:readmore/readmore.dart';
 import '../signin_controller.dart';
 
 class Post extends StatefulWidget {
@@ -307,6 +308,7 @@ class _PostState extends State<Post> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   showModalBottomSheet(
+                    isScrollControlled: true,
                     backgroundColor: HexColor('40434E'),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
@@ -315,7 +317,7 @@ class _PostState extends State<Post> {
                       ),
                     ),
                     context: context,
-                    builder: (context) => Container(),
+                    builder: (context) => confirmModal(),
                   );
                 }
               },
@@ -325,88 +327,126 @@ class _PostState extends State<Post> {
     );
   }
 
-  SizedBox confirmModal() {
-    return SizedBox(
-      // TODO change this height so its responsive
-      height: 500,
-      width: double.infinity,
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // TODO image goes here
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.asset(
-                pickedImage!.path,
-                fit: BoxFit.fitWidth,
+  SingleChildScrollView confirmModal() {
+    bool isLoading = false;
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(8.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              pickedImage!.path,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
+          Row(
+            children: [
+              Text(
+                '${_yearController.text} ${_makeController.text} ${_modelController.text}',
+                style: Theme.of(context).textTheme.bodyLarge,
               ),
-            ),
-            Row(
-              children: [
-                Text(
-                  _yearController.text,
-                  style: const TextStyle(fontSize: 20),
-                ),
-                Text(
-                  ' ${_makeController.text} ${_modelController.text}',
-                  style: const TextStyle(fontSize: 20),
-                ),
-              ],
-            ),
-            Text(_priceController.text),
-            Text('${_odometerController.text} Miles'),
-            Text(_descriptionController.text),
-            const SizedBox(
-              height: 20,
-            ),
-            const Text('Are you sure you want to post this car?'),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                // TODO After post go to home screen
-                SizedBox(
-                  width: 100,
-                  child: ElevatedButton(
-                      onPressed: () async {
-                        final _postListing = PostListing(
-                          make: _makeController.text,
-                          model: _modelController.text,
-                          year: _yearController.text,
-                          odometer: _odometerController.text,
-                          price: _priceController.text,
-                          // TODO Replace with email
-                          // email: '',
-                          description: _descriptionController.text,
-                          image: pickedImage!,
-                          dateAdded: DateTime.now().toString(),
-                        );
-                        await _postListing.addPost(
-                          _makeController.text,
-                          _modelController.text,
-                          _yearController.text,
-                          _odometerController.text,
-                          _priceController.text,
-                          _descriptionController.text,
-                          pickedImage!,
-                        );
-                        Navigator.pushNamedAndRemoveUntil(
-                            context, '/home', (_) => false);
-                      },
-                      child: const Text('Yes')),
-                ),
-
-                SizedBox(
-                  width: 100,
-                  child: ElevatedButton(
-                      onPressed: Navigator.of(context).pop,
-                      child: const Center(child: Text('Edit'))),
-                ),
-              ],
-            ),
-          ],
-        ),
+            ],
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(
+            _priceController.text,
+            style: Theme.of(context).textTheme.bodyMedium,
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text(
+            '${_odometerController.text} Miles',
+            style: TextStyle(color: HexColor('FFFFFF'), fontSize: 16),
+          ),
+          const SizedBox(
+            height: 15,
+          ),
+          Text(
+            'Some Details',
+            style: TextStyle(
+                color: HexColor('FFFFFF'),
+                fontSize: 18,
+                fontWeight: FontWeight.bold),
+          ),
+          Divider(
+            color: HexColor('ffffff'),
+          ),
+          ReadMoreText(
+            '${_descriptionController.text} ',
+            style: TextStyle(color: HexColor('FFFFFF'), fontSize: 18),
+            moreStyle: TextStyle(
+                color: HexColor('FFFFFF'),
+                fontSize: 15,
+                fontWeight: FontWeight.bold),
+            trimLines: 2,
+            trimMode: TrimMode.Line,
+            trimCollapsedText: 'Read More',
+            trimExpandedText: 'Read Less',
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Center(
+            child: Text('Are you sure you want to post this car?'),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              SizedBox(
+                width: 100,
+                child: ElevatedButton(
+                    onPressed: () async {
+                      setState(() {
+                        isLoading = true;
+                      });
+                      final _postListing = PostListing(
+                        make: _makeController.text,
+                        model: _modelController.text,
+                        year: _yearController.text,
+                        odometer: _odometerController.text,
+                        price: _priceController.text,
+                        // TODO Replace with email
+                        description: _descriptionController.text,
+                        image: pickedImage!,
+                        dateAdded: DateTime.now().toString(),
+                      );
+                      await _postListing.addPost(
+                        _makeController.text,
+                        _modelController.text,
+                        _yearController.text,
+                        _odometerController.text,
+                        _priceController.text,
+                        _descriptionController.text,
+                        pickedImage!,
+                      );
+                      await _postListing
+                          .addMake(_makeController.text.toTitleCase());
+                      setState(() {
+                        isLoading = false;
+                      });
+                      Navigator.pushNamedAndRemoveUntil(
+                          context, '/home', (_) => false);
+                    },
+                    child: const Text('Yes')),
+              ),
+              SizedBox(
+                width: 100,
+                child: ElevatedButton(
+                    onPressed: Navigator.of(context).pop,
+                    child: const Center(child: Text('Edit'))),
+              ),
+            ],
+          ),
+          SizedBox(height: 20),
+        ],
       ),
     );
   }
