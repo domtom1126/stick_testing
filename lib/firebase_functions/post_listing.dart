@@ -1,10 +1,7 @@
 import 'dart:io';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:get/get.dart';
-import '../signin_controller.dart';
 
 class PostListing {
   String make = '';
@@ -48,11 +45,18 @@ class PostListing {
           'image': value,
           'date_added': DateTime.now(),
           'likedIds': [],
-          // get collection id from firebase
           'id': FirebaseAuth.instance.currentUser!.uid,
           'sold': false,
         });
       });
+    });
+  }
+
+  addMake(String make) async {
+    CollectionReference addMake =
+        FirebaseFirestore.instance.collection('makes');
+    addMake.add({
+      'make': make,
     });
   }
 }
