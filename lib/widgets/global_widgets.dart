@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:hexcolor/hexcolor.dart';
 
-AppBar appBar(BuildContext context, String title) {
-  return AppBar(
+SliverAppBar appBar(BuildContext context, String title) {
+  return SliverAppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
     centerTitle: false,
@@ -11,4 +10,13 @@ AppBar appBar(BuildContext context, String title) {
       style: Theme.of(context).textTheme.titleLarge,
     ),
   );
+}
+
+extension StringCasingExtension on String {
+  String toCapitalized() =>
+      length > 0 ? '${this[0].toUpperCase()}${substring(1).toLowerCase()}' : '';
+  String toTitleCase() => replaceAll(RegExp(' +'), ' ')
+      .split(' ')
+      .map((str) => str.toCapitalized())
+      .join(' ');
 }
