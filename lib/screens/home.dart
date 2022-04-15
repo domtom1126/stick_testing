@@ -31,118 +31,126 @@ class _HomeState extends State<Home> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Home'), centerTitle: false, actions: [
-        IconButton(
-          icon: const Icon(Icons.search),
-          onPressed: () {
-            showSearch(context: context, delegate: Search());
-          },
-        ),
-      ]),
-      body: StreamBuilder(
-        stream: cars,
-        builder: (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-          if (snapshot.hasData) {
-            return CustomScrollView(
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                CupertinoSliverRefreshControl(
-                  onRefresh: () async {
-                    await Future.delayed(const Duration(seconds: 1));
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              actions: [
+                IconButton(
+                  icon: Icon(Icons.search),
+                  onPressed: () {
+                    showSearch(context: context, delegate: Search());
                   },
                 ),
-                SliverToBoxAdapter(
-                  child: ListView(
-                      shrinkWrap: true,
-                      primary: false,
-                      children: snapshot.data!.docs.map((publicList) {
-                        return buildCar(publicList, context);
-                      }).toList()),
-                )
               ],
-            );
-          } else {
-            return Center(
-              child: CircularProgressIndicator(
-                color: HexColor('4C6273'),
+              automaticallyImplyLeading: false,
+              centerTitle: false,
+              backgroundColor: Colors.transparent,
+              floating: true,
+              pinned: false,
+              snap: false,
+              title: Text(
+                'Find A Stick',
+                style: Theme.of(context).textTheme.headline6,
               ),
-            );
-          }
+            ),
+          ];
         },
+        body: StreamBuilder<QuerySnapshot<Map<String, dynamic>>>(
+          stream: cars,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (snapshot.hasData) {
+              return CustomScrollView(
+                  slivers: snapshot.data!.docs.map((publicList) {
+                return buildCar(publicList, context);
+              }).toList());
+            } else {
+              return Center(
+                child: CircularProgressIndicator(
+                  color: HexColor('4C6273'),
+                ),
+              );
+            }
+          },
+        ),
       ),
     );
   }
 
-  ListTile buildCar(
+  SliverToBoxAdapter buildCar(
       QueryDocumentSnapshot<Object?> publicList, BuildContext context) {
-    return ListTile(
-      title: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(
-            height: 10,
-          ),
-          SizedBox(
-            height: 200,
-            width: double.infinity,
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(10),
-                child: GestureDetector(
-                  onTap: () => {
-                    showCarModal(context, publicList),
-                  },
-                  child: CachedNetworkImage(
-                    imageUrl: publicList['image'],
-                    fit: BoxFit.fitWidth,
-                    placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
-                )),
-          ),
-          // const SizedBox(
-          //   height: 10,
-          // ),
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 200,
+              width: double.infinity,
+              child: ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: GestureDetector(
+                    onTap: () => {
+                      showCarModal(context, publicList),
+                    },
+                    child: CachedNetworkImage(
+                      imageUrl: publicList['image'],
+                      fit: BoxFit.fitWidth,
+                      placeholder: (context, url) =>
+                          const Center(child: CircularProgressIndicator()),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
+                    ),
+                  )),
+            ),
+            // const SizedBox(
+            //   height: 10,
+            // ),
 
-          Row(
-            children: [
-              Text(
-                '${publicList['year']} ${publicList['make']} ${publicList['model']}',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              if (FirebaseAuth.instance.currentUser?.uid == null) Container()
-              // TODO add like button to let user know if theyve liked current car
-              // else
-              //   IconButton(
-              //     icon: Icon(Icons.favorite, color: Colors.red),
-              //     onPressed: () {
-              //       // FirebaseFirestore.instance
-              //       //     .collection('posts')
-              //       //     .doc(widget.docId)
-              //       //     .update({
-              //       //   'likedIds': FieldValue.arrayRemove([uid])
-              //       // });
-              //       // setState(() {
-              //       //   onLiked = false;
-              //       // });
-              //     },
-              //   )
-            ],
-          ),
-          Text(
-            '${publicList['price']}',
-            style: Theme.of(context).textTheme.bodyMedium,
-            textAlign: TextAlign.start,
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-        ],
-      ),
-      subtitle: Text(
-        '${publicList['odometer']} Miles',
-        style: Theme.of(context).textTheme.bodySmall,
+            Row(
+              children: [
+                Text(
+                  '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                if (FirebaseAuth.instance.currentUser?.uid == null) Container()
+                // TODO add like button to let user know if theyve liked current car
+                // else
+                //   IconButton(
+                //     icon: Icon(Icons.favorite, color: Colors.red),
+                //     onPressed: () {
+                //       // FirebaseFirestore.instance
+                //       //     .collection('posts')
+                //       //     .doc(widget.docId)
+                //       //     .update({
+                //       //   'likedIds': FieldValue.arrayRemove([uid])
+                //       // });
+                //       // setState(() {
+                //       //   onLiked = false;
+                //       // });
+                //     },
+                //   )
+              ],
+            ),
+            Text(
+              '${publicList['price']}',
+              style: Theme.of(context).textTheme.bodyMedium,
+              textAlign: TextAlign.start,
+            ),
+            const SizedBox(
+              height: 5,
+            ),
+            Text(
+              '${publicList['odometer']} Miles',
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }
