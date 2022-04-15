@@ -43,20 +43,37 @@ class _PostState extends State<Post> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, 'Post Car'),
-      body: StreamBuilder(
-          stream: FirebaseAuth.instance.authStateChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            } else if (snapshot.hasData) {
-              return buildUserAuth(context);
-            } else {
-              return buildSignIn(context);
-            }
-          }),
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            SliverAppBar(
+              automaticallyImplyLeading: false,
+              centerTitle: false,
+              backgroundColor: Colors.transparent,
+              floating: true,
+              pinned: false,
+              snap: false,
+              title: Text(
+                'Post Car',
+                style: Theme.of(context).textTheme.headline6,
+              ),
+            ),
+          ];
+        },
+        body: StreamBuilder(
+            stream: FirebaseAuth.instance.authStateChanges(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else if (snapshot.hasData) {
+                return buildUserAuth(context);
+              } else {
+                return buildSignIn(context);
+              }
+            }),
+      ),
     );
   }
 
