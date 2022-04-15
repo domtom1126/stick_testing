@@ -1,13 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:find_a_stick/main.dart';
 import 'package:find_a_stick/screens/search.dart';
 import 'package:find_a_stick/screens/view_car.dart';
-import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 
 // TODO Add explain page for first time runners
@@ -21,8 +18,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  @override
-  bool onLiked = false;
   final cars = FirebaseFirestore.instance
       .collection('posts')
       .orderBy('date_added', descending: true)
@@ -37,7 +32,7 @@ class _HomeState extends State<Home> {
             SliverAppBar(
               actions: [
                 IconButton(
-                  icon: Icon(Icons.search),
+                  icon: const Icon(Icons.search),
                   onPressed: () {
                     showSearch(context: context, delegate: Search());
                   },
@@ -118,23 +113,39 @@ class _HomeState extends State<Home> {
                   '${publicList['year']} ${publicList['make']} ${publicList['model']}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                if (FirebaseAuth.instance.currentUser?.uid == null) Container()
+                if (FirebaseAuth.instance.currentUser?.uid == null)
+                  Container()
                 // TODO add like button to let user know if theyve liked current car
-                // else
-                //   IconButton(
-                //     icon: Icon(Icons.favorite, color: Colors.red),
-                //     onPressed: () {
-                //       // FirebaseFirestore.instance
-                //       //     .collection('posts')
-                //       //     .doc(widget.docId)
-                //       //     .update({
-                //       //   'likedIds': FieldValue.arrayRemove([uid])
-                //       // });
-                //       // setState(() {
-                //       //   onLiked = false;
-                //       // });
-                //     },
-                //   )
+                else if (publicList['likedIds']
+                    .contains(FirebaseAuth.instance.currentUser?.uid))
+                  IconButton(
+                    icon: const Icon(Icons.favorite, color: Colors.red),
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      FirebaseFirestore.instance
+                          .collection('posts')
+                          .doc(publicList.id)
+                          .update({
+                        'likedIds': FieldValue.arrayRemove(
+                            [FirebaseAuth.instance.currentUser?.uid])
+                      });
+                    },
+                  )
+                else
+                  IconButton(
+                    icon:
+                        const Icon(Icons.favorite_border, color: Colors.white),
+                    onPressed: () {
+                      HapticFeedback.mediumImpact();
+                      FirebaseFirestore.instance
+                          .collection('posts')
+                          .doc(publicList.id)
+                          .update({
+                        'likedIds': FieldValue.arrayUnion(
+                            [FirebaseAuth.instance.currentUser?.uid])
+                      });
+                    },
+                  ),
               ],
             ),
             Text(
