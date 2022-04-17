@@ -5,6 +5,7 @@ import 'package:find_a_stick/signin_controller.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
@@ -104,21 +105,63 @@ class _LikedState extends State<Liked> {
                         if (FirebaseAuth.instance.currentUser?.uid == null)
                           Container()
                         // TODO add like button to let user know if theyve liked current car
-                        // else
-                        //   IconButton(
-                        //     icon: Icon(Icons.favorite, color: Colors.red),
-                        //     onPressed: () {
-                        //       // FirebaseFirestore.instance
-                        //       //     .collection('posts')
-                        //       //     .doc(widget.docId)
-                        //       //     .update({
-                        //       //   'likedIds': FieldValue.arrayRemove([uid])
-                        //       // });
-                        //       // setState(() {
-                        //       //   onLiked = false;
-                        //       // });
-                        //     },
-                        //   )
+                        else if (publicList['likedIds']
+                            .contains(FirebaseAuth.instance.currentUser?.uid))
+                          IconButton(
+                            icon: const Icon(Icons.favorite, color: Colors.red),
+                            onPressed: () async {
+                              await HapticFeedback.heavyImpact();
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                      backgroundColor: Colors.black45,
+                                      title: Text('Are you sure?'),
+                                      content: Text(
+                                          'Do you want to remove this car from your likes?',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium),
+                                      actions: [
+                                        ElevatedButton(
+                                          child: Text('Yes'),
+                                          onPressed: () {
+                                            FirebaseFirestore.instance
+                                                .collection('posts')
+                                                .doc(publicList.id)
+                                                .update({
+                                              'likedIds':
+                                                  FieldValue.arrayRemove([uid])
+                                            });
+                                            Navigator.of(context).pop();
+                                          },
+                                        ),
+                                        ElevatedButton(
+                                          child: Text('No'),
+                                          onPressed: () {
+                                            Navigator.of(context).pop();
+                                          },
+                                        )
+                                      ],
+                                    );
+                                  });
+                            },
+                          )
+                        else
+                          IconButton(
+                            icon: const Icon(Icons.favorite_border,
+                                color: Colors.white),
+                            onPressed: () {
+                              HapticFeedback.mediumImpact();
+                              FirebaseFirestore.instance
+                                  .collection('posts')
+                                  .doc(publicList.id)
+                                  .update({
+                                'likedIds': FieldValue.arrayUnion(
+                                    [FirebaseAuth.instance.currentUser?.uid])
+                              });
+                            },
+                          ),
                       ],
                     ),
                     Text(
