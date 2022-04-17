@@ -65,7 +65,7 @@ class _LikedState extends State<Liked> {
               slivers: snapshot.data!.docs.map((publicList) {
             return SliverToBoxAdapter(
               child: Padding(
-                padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
