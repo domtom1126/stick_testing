@@ -290,9 +290,18 @@ class _PostState extends State<Post> {
           ),
           const SizedBox(height: 20),
           pickedImage != null
-              ? ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: Image.file(pickedImage!, height: 200, width: 200))
+              ? Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: pickImage,
+                      child: const Text('Add Another Image'),
+                    ),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child:
+                            Image.file(pickedImage!, height: 200, width: 200)),
+                  ],
+                )
               : SizedBox(
                   height: 200,
                   child: ElevatedButton(
