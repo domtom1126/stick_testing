@@ -31,12 +31,13 @@ class _PostState extends State<Post> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
-  List<File>? pickedImage;
+  File? pickedImage;
   Future pickImage() async {
     final _imagePicker = ImagePicker();
-    final pickedImage = await _imagePicker.pickMultiImage();
-    final imageTemp = pickedImage!.toList();
-    setState(() => this.pickedImage = imageTemp.cast<File>());
+    final pickedImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    final imageTemp = File(pickedImage!.path);
+    setState(() => this.pickedImage = imageTemp);
   }
 
   @override
@@ -146,7 +147,7 @@ class _PostState extends State<Post> {
     return Form(
       key: _formKey,
       child: ListView(
-        padding: const EdgeInsets.fromLTRB(10, 0, 10, 40),
+        padding: EdgeInsets.fromLTRB(10, 0, 10, 40),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: <Widget>[
           const SizedBox(
@@ -288,20 +289,52 @@ class _PostState extends State<Post> {
             },
           ),
           const SizedBox(height: 20),
-          ElevatedButton(
-            onPressed: pickImage,
-            child: const Text('Add Image'),
-          ),
-          const SizedBox(height: 20),
-          // pickedImage != null
-          // ? ClipRRect(
-          //     borderRadius: BorderRadius.circular(10),
-          //     child: Image.file(pickedImage!, height: 200, width: 200))
-          // : const Center(
-          //     child: Text('Select an image'),
-          //   ),
+          pickedImage != null
+              ? ClipRRect(
+                  borderRadius: BorderRadius.circular(10),
+                  child: Image.file(pickedImage!, height: 200, width: 200))
+              : SizedBox(
+                  height: 200,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: HexColor('23262F'), elevation: 15),
+                    onPressed: pickImage,
+                    child: Column(
+                      children: const [
+                        SizedBox(
+                          height: 65,
+                        ),
+                        Icon(
+                          Icons.add_circle_sharp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text('Add Image'),
+                      ],
+                    ),
+                  ),
+                ),
           // * This actually works! but for now just do single image
+          // CarouselSlider.builder(
+          //   options: CarouselOptions(height: 200),
+          //   itemCount: pickedImage.length,
+          //   itemBuilder: (context, index, realIndex) {
+          //     final singleImage = pickedImage[index];
 
+          //     return Container(
+          //       margin: EdgeInsets.all(5.0),
+          //       child: ClipRRect(
+          //         borderRadius: BorderRadius.all(Radius.circular(5.0)),
+          //         child: Image.file(
+          //           singleImage!,
+          //           fit: BoxFit.cover,
+          //         ),
+          //       ),
+          //     );
+          //   },
+          // ),
           const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
@@ -333,31 +366,13 @@ class _PostState extends State<Post> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          CarouselSlider.builder(
-            options: CarouselOptions(height: 200),
-            itemCount: pickedImage?.length,
-            itemBuilder: (context, index, realIndex) {
-              final singleImage = pickedImage![index];
-
-              return Container(
-                margin: EdgeInsets.all(5.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  child: Image.file(
-                    singleImage,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              );
-            },
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              pickedImage!.path,
+              fit: BoxFit.fitWidth,
+            ),
           ),
-          // ClipRRect(
-          //   borderRadius: BorderRadius.circular(10),
-          //   child: Image.asset(
-          //     pickedImage!.path,
-          //     fit: BoxFit.fitWidth,
-          //   ),
-          // ),
           Row(
             children: [
               Text(
@@ -432,7 +447,7 @@ class _PostState extends State<Post> {
                         price: _priceController.text,
                         // TODO Replace with email
                         description: _descriptionController.text,
-                        images: pickedImage!,
+                        image: pickedImage!,
                         dateAdded: DateTime.now().toString(),
                       );
                       await _postListing.addPost(
