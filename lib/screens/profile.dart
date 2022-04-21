@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:find_a_stick/screens/edit_user_car.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -21,24 +22,20 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[appBar(context, 'Profile')];
-        },
-        body: StreamBuilder(
-            stream: FirebaseAuth.instance.authStateChanges(),
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else if (snapshot.hasData) {
-                return buildProfilePage(context);
-              } else {
-                return buildSignIn(context);
-              }
-            }),
-      ),
+      appBar: appBar(context, 'Profile'),
+      body: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            } else if (snapshot.hasData) {
+              return buildProfilePage(context);
+            } else {
+              return buildSignIn(context);
+            }
+          }),
     );
   }
 
@@ -214,10 +211,23 @@ class _ProfileState extends State<Profile> {
         .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
     return ListView(
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       children: [
         Column(children: [
           const SizedBox(
-            height: 20,
+            height: 10,
+          ),
+          Text(
+            'Your Cars',
+            style: TextStyle(fontSize: 24, color: HexColor('FFFFFF')),
+          ),
+          const SizedBox(
+            height: 5,
+          ),
+          Text('Tap to Edit',
+              style: TextStyle(fontSize: 14, color: HexColor('FFFFFF'))),
+          const SizedBox(
+            height: 15,
           ),
           StreamBuilder(
             stream: userCars,
@@ -227,6 +237,23 @@ class _ProfileState extends State<Profile> {
                 return Column(
                   children: snapshot.data!.docs.map((userCars) {
                     return ListTile(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditUserCar(
+                              make: userCars['make'],
+                              model: userCars['model'],
+                              year: userCars['year'],
+                              price: userCars['price'],
+                              odometer: userCars['odometer'],
+                              image: userCars['image'],
+                              description: userCars['description'],
+                              id: userCars.id,
+                            ),
+                          ),
+                        );
+                      },
                       title: Text(
                         '${userCars['year']} ${userCars['make']} ${userCars['model']}',
                         style: Theme.of(context).textTheme.titleLarge,
