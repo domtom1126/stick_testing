@@ -22,7 +22,20 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: appBar(context, 'Profile'),
+      appBar:
+          AppBar(title: const Text('Profile'), centerTitle: false, actions: [
+        IconButton(
+          icon: Icon(
+            Icons.exit_to_app,
+            color: HexColor('EE6C4D'),
+          ),
+          onPressed: () {
+            final provider =
+                Provider.of<GoogleSignInProvider>(context, listen: false);
+            provider.googleLogout();
+          },
+        ),
+      ]),
       body: StreamBuilder(
           stream: FirebaseAuth.instance.authStateChanges(),
           builder: (context, snapshot) {
@@ -64,80 +77,37 @@ class _ProfileState extends State<Profile> {
                 const SizedBox(
                   height: 10,
                 ),
-                yourCarsButton(context),
+                Text(user.displayName ?? '',
+                    style: TextStyle(fontSize: 16, color: HexColor('FFFFFF'))),
                 const SizedBox(
                   height: 10,
                 ),
-                signOutButton(context),
+                Text(user.email ?? 'No email found',
+                    style: TextStyle(fontSize: 16, color: HexColor('FFFFFF'))),
+                const SizedBox(
+                  height: 30,
+                ),
               ],
             )
           ],
         ),
         const SizedBox(
-          height: 40,
+          height: 20,
         ),
-        Text(user.displayName ?? '',
-            style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
+        Center(
+          child:
+              Text('Your cars', style: Theme.of(context).textTheme.headline6),
+        ),
         const SizedBox(
-          height: 10,
+          height: 20,
         ),
-        Text(user.email ?? 'No email found',
-            style: TextStyle(fontSize: 20, color: HexColor('FFFFFF'))),
-        const SizedBox(
-          height: 30,
-        ),
+        ClipRRect(
+            borderRadius: BorderRadius.all(Radius.circular(10)),
+            child: Container(
+                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
+                color: Colors.grey,
+                child: showUserCars(context))),
       ]),
-    );
-  }
-
-  SizedBox signOutButton(BuildContext context) {
-    return SizedBox(
-      width: 125,
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: ElevatedButton(
-            onPressed: () {
-              final provider =
-                  Provider.of<GoogleSignInProvider>(context, listen: false);
-              provider.googleLogout();
-            },
-            child: const Text('Sign Out')),
-      ),
-    );
-  }
-
-  SizedBox yourCarsButton(BuildContext context) {
-    return SizedBox(
-      width: 125,
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: ElevatedButton(
-            onPressed: () => showModalBottomSheet(
-                backgroundColor: HexColor('40434E'),
-                shape: const RoundedRectangleBorder(
-                  borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(20),
-                    topRight: Radius.circular(20),
-                  ),
-                ),
-                context: context,
-                builder: showUserCars),
-            child: const Text('Your Cars')),
-      ),
-    );
-  }
-
-  SizedBox editButton() {
-    return SizedBox(
-      width: 125,
-      child: Align(
-        alignment: Alignment.bottomCenter,
-        child: ElevatedButton(
-            onPressed: () {
-              null;
-            },
-            child: const Text('Edit Profile')),
-      ),
     );
   }
 
@@ -174,7 +144,7 @@ class _ProfileState extends State<Profile> {
             const SizedBox(
               height: 20,
             ),
-            Divider(
+            const Divider(
               height: 50,
             ),
             Align(
@@ -211,24 +181,10 @@ class _ProfileState extends State<Profile> {
         .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
         .snapshots();
     return ListView(
-      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      shrinkWrap: true,
+      // padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
       children: [
         Column(children: [
-          const SizedBox(
-            height: 10,
-          ),
-          Text(
-            'Your Cars',
-            style: TextStyle(fontSize: 24, color: HexColor('FFFFFF')),
-          ),
-          const SizedBox(
-            height: 5,
-          ),
-          Text('Tap to Edit',
-              style: TextStyle(fontSize: 14, color: HexColor('FFFFFF'))),
-          const SizedBox(
-            height: 15,
-          ),
           StreamBuilder(
             stream: userCars,
             builder:
@@ -238,6 +194,7 @@ class _ProfileState extends State<Profile> {
                   children: snapshot.data!.docs.map((userCars) {
                     return ListTile(
                       onTap: () {
+                        Navigator.pop(context);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
