@@ -215,10 +215,19 @@ class _EditUserCarState extends State<EditUserCar> {
             const SizedBox(height: 20),
             // Show Image
             // pickedImage != null
-            // Image.network(
-            //   widget.image,
-            //   fit: BoxFit.cover,
-            // ),
+            ElevatedButton(
+              onPressed: () => pickImage(),
+              child: Text('Change Image'),
+            ),
+            const SizedBox(height: 20),
+            ClipRRect(
+              borderRadius: BorderRadius.circular(10),
+              child: Image.network(
+                widget.image,
+                fit: BoxFit.cover,
+                height: 200,
+              ),
+            ),
             Container(),
 
             // * This actually works! but for now just do single image
@@ -256,7 +265,13 @@ class _EditUserCarState extends State<EditUserCar> {
                       'price': _priceController.text,
                       'description': _descriptionController.text,
                       'image': widget.image,
-                    }).whenComplete(() => Navigator.pop(context));
+                    }).whenComplete(() {
+                      const snackBar = SnackBar(
+                        content: Text('Your post has been updated'),
+                      );
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                      Navigator.pop(context);
+                    });
                   }
                 },
                 child: const Text('Save')),
