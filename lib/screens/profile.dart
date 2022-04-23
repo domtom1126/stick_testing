@@ -5,6 +5,7 @@ import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -65,7 +66,7 @@ class _ProfileState extends State<Profile> {
           children: [
             CircleAvatar(
               backgroundImage: NetworkImage(user.photoURL ?? ''),
-              radius: 75,
+              radius: 60,
             ),
             // const SizedBox(
             //   width: 50,
@@ -78,12 +79,12 @@ class _ProfileState extends State<Profile> {
                   height: 10,
                 ),
                 Text(user.displayName ?? '',
-                    style: TextStyle(fontSize: 16, color: HexColor('FFFFFF'))),
+                    style: TextStyle(fontSize: 18, color: HexColor('FFFFFF'))),
                 const SizedBox(
                   height: 10,
                 ),
                 Text(user.email ?? 'No email found',
-                    style: TextStyle(fontSize: 16, color: HexColor('FFFFFF'))),
+                    style: TextStyle(fontSize: 18, color: HexColor('FFFFFF'))),
                 const SizedBox(
                   height: 30,
                 ),
@@ -105,7 +106,7 @@ class _ProfileState extends State<Profile> {
             borderRadius: BorderRadius.all(Radius.circular(10)),
             child: Container(
                 padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                color: Colors.grey,
+                color: HexColor('23262F'),
                 child: showUserCars(context))),
       ]),
     );
@@ -215,18 +216,56 @@ class _ProfileState extends State<Profile> {
                         '${userCars['year']} ${userCars['make']} ${userCars['model']}',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      subtitle: const TextButton(
+                      subtitle: TextButton(
                           // TODO add mark as sold button
-                          onPressed: null,
-                          child: Text('Mark as Sold')),
+                          onPressed: () {
+                            FirebaseFirestore.instance
+                                .collection('posts')
+                                .doc(userCars.id)
+                                .update({
+                              'sold': true,
+                            });
+                          },
+                          child: Text(
+                            'Mark as Sold',
+                            style: TextStyle(color: HexColor('FFFFFF')),
+                          )),
                       // Delete post button
                       trailing: IconButton(
-                        icon: const Icon(Icons.delete),
-                        onPressed: () {
-                          FirebaseFirestore.instance
-                              .collection('posts')
-                              .doc(userCars.id)
-                              .delete();
+                        icon: const Icon(Icons.delete, color: Colors.white),
+                        onPressed: () async {
+                          await HapticFeedback.heavyImpact();
+                          showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  backgroundColor: Colors.black45,
+                                  title: Text('Are you sure?'),
+                                  content: Text(
+                                      'Do you want to remove this car from your likes?',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
+                                  actions: [
+                                    ElevatedButton(
+                                      child: Text('Yes'),
+                                      onPressed: () {
+                                        FirebaseFirestore.instance
+                                            .collection('posts')
+                                            .doc(userCars.id)
+                                            .delete();
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                    ElevatedButton(
+                                      child: Text('No'),
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                      },
+                                    )
+                                  ],
+                                );
+                              });
                         },
                       ),
                     );
