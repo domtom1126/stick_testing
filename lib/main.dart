@@ -105,6 +105,8 @@ class MyApp extends StatelessWidget {
       // * END button theme
       // * START text form field theme
       inputDecorationTheme: InputDecorationTheme(
+        labelStyle:
+            TextStyle(color: HexColor('FFFFFF'), fontWeight: FontWeight.w300),
         hintStyle: TextStyle(
             color: HexColor('FFFFFF'),
             fontWeight: FontWeight.w300,
