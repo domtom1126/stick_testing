@@ -338,11 +338,12 @@ PODS:
     - abseil/base/base_internal
     - abseil/base/config
     - abseil/meta/type_traits
-  - AppAuth (1.4.0):
-    - AppAuth/Core (= 1.4.0)
-    - AppAuth/ExternalUserAgent (= 1.4.0)
-  - AppAuth/Core (1.4.0)
-  - AppAuth/ExternalUserAgent (1.4.0)
+  - AppAuth (1.5.0):
+    - AppAuth/Core (= 1.5.0)
+    - AppAuth/ExternalUserAgent (= 1.5.0)
+  - AppAuth/Core (1.5.0)
+  - AppAuth/ExternalUserAgent (1.5.0):
+    - AppAuth/Core
   - BoringSSL-GRPC (0.0.7):
     - BoringSSL-GRPC/Implementation (= 0.0.7)
     - BoringSSL-GRPC/Interface (= 0.0.7)
@@ -406,6 +407,11 @@ PODS:
     - FirebaseCore (~> 8.0)
     - GTMSessionFetcher/Core (~> 1.5)
   - Flutter (1.0.0)
+  - flutter_native_splash (0.0.1):
+    - Flutter
+  - FMDB (2.7.5):
+    - FMDB/standard (= 2.7.5)
+  - FMDB/standard (2.7.5)
   - google_sign_in (0.0.1):
     - Flutter
     - GoogleSignIn (~> 5.0)
@@ -470,7 +476,16 @@ PODS:
     - nanopb/encode (= 2.30908.0)
   - nanopb/decode (2.30908.0)
   - nanopb/encode (2.30908.0)
+  - path_provider_ios (0.0.1):
+    - Flutter
   - PromisesObjC (2.0.0)
+  - sign_in_with_apple (0.0.1):
+    - Flutter
+  - sqflite (0.0.2):
+    - Flutter
+    - FMDB (>= 2.7.5)
+  - url_launcher_ios (0.0.1):
+    - Flutter
 
 DEPENDENCIES:
   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
@@ -478,9 +493,14 @@ DEPENDENCIES:
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_storage (from `.symlinks/plugins/firebase_storage/ios`)
   - Flutter (from `Flutter`)
+  - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
   - google_sign_in (from `.symlinks/plugins/google_sign_in/ios`)
   - hexcolor (from `.symlinks/plugins/hexcolor/ios`)
   - image_picker (from `.symlinks/plugins/image_picker/ios`)
+  - path_provider_ios (from `.symlinks/plugins/path_provider_ios/ios`)
+  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
+  - sqflite (from `.symlinks/plugins/sqflite/ios`)
+  - url_launcher_ios (from `.symlinks/plugins/url_launcher_ios/ios`)
 
 SPEC REPOS:
   trunk:
@@ -493,6 +513,7 @@ SPEC REPOS:
     - FirebaseCoreDiagnostics
     - FirebaseFirestore
     - FirebaseStorage
+    - FMDB
     - GoogleDataTransport
     - GoogleSignIn
     - GoogleUtilities
@@ -515,16 +536,26 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/firebase_storage/ios"
   Flutter:
     :path: Flutter
+  flutter_native_splash:
+    :path: ".symlinks/plugins/flutter_native_splash/ios"
   google_sign_in:
     :path: ".symlinks/plugins/google_sign_in/ios"
   hexcolor:
     :path: ".symlinks/plugins/hexcolor/ios"
   image_picker:
     :path: ".symlinks/plugins/image_picker/ios"
+  path_provider_ios:
+    :path: ".symlinks/plugins/path_provider_ios/ios"
+  sign_in_with_apple:
+    :path: ".symlinks/plugins/sign_in_with_apple/ios"
+  sqflite:
+    :path: ".symlinks/plugins/sqflite/ios"
+  url_launcher_ios:
+    :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
   abseil: 6c8eb7892aefa08d929b39f9bb108e5367e3228f
-  AppAuth: 31bcec809a638d7bd2f86ea8a52bd45f6e81e7c7
+  AppAuth: 80317d99ac7ff2801a2f18ff86b48cd315ed465d
   BoringSSL-GRPC: 8edf627ee524575e2f8d19d56f068b448eea3879
   cloud_firestore: c6c42fe62809b7417aa3c45a6ef0c2812f7fb0d6
   Firebase: 44dd9724c84df18b486639e874f31436eaa9a20c
@@ -537,6 +568,8 @@ SPEC CHECKSUMS:
   FirebaseFirestore: 3b2e4b532c68809b3df5f8d39d28b3398ffc196b
   FirebaseStorage: 4d05cb1112ff8822a0f9f5090da8bd6d550602ec
   Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+  flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
+  FMDB: 2ce00b547f966261cd18927a3ddb07cb6f3db82a
   google_sign_in: f669f45933dad48cd218dc3e189726bced3d19f4
   GoogleDataTransport: 629c20a4d363167143f30ea78320d5a7eb8bd940
   GoogleSignIn: 7137d297ddc022a7e0aa4619c86d72c909fa7213
@@ -549,7 +582,11 @@ SPEC CHECKSUMS:
   image_picker: 541dcbb3b9cf32d87eacbd957845d8651d6c62c3
   leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
   nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
+  path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   PromisesObjC: 68159ce6952d93e17b2dfe273b8c40907db5ba58
+  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
+  sqflite: 6d358c025f5b867b29ed92fc697fd34924e11904
+  url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
 PODFILE CHECKSUM: 2b96e01cf94de462951651d957b6f627b223f690
 
