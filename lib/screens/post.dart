@@ -154,6 +154,7 @@ class _PostState extends State<Post> {
             height: 20,
           ),
           TextFormField(
+            textInputAction: TextInputAction.next,
             inputFormatters: [
               LengthLimitingTextInputFormatter(20),
             ],
@@ -175,6 +176,7 @@ class _PostState extends State<Post> {
           ),
           const SizedBox(height: 20),
           TextFormField(
+            textInputAction: TextInputAction.next,
             inputFormatters: [
               LengthLimitingTextInputFormatter(20),
             ],
@@ -196,6 +198,7 @@ class _PostState extends State<Post> {
           ),
           const SizedBox(height: 20),
           TextFormField(
+            textInputAction: TextInputAction.next,
             inputFormatters: [
               LengthLimitingTextInputFormatter(4),
             ],
@@ -227,6 +230,7 @@ class _PostState extends State<Post> {
           ),
           const SizedBox(height: 20),
           TextFormField(
+            textInputAction: TextInputAction.next,
             inputFormatters: [
               LengthLimitingTextInputFormatter(10),
             ],
@@ -249,6 +253,7 @@ class _PostState extends State<Post> {
           ),
           const SizedBox(height: 20),
           TextFormField(
+            textInputAction: TextInputAction.next,
             inputFormatters: [
               LengthLimitingTextInputFormatter(10),
               CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
@@ -272,6 +277,7 @@ class _PostState extends State<Post> {
           ),
           const SizedBox(height: 20),
           TextFormField(
+            textInputAction: TextInputAction.done,
             controller: _descriptionController,
             keyboardAppearance: Brightness.dark,
             decoration: InputDecoration(
