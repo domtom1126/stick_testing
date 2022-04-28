@@ -72,6 +72,7 @@ class _EditUserCarState extends State<EditUserCar> {
               height: 20,
             ),
             TextFormField(
+              textInputAction: TextInputAction.next,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(20),
               ],
@@ -94,6 +95,7 @@ class _EditUserCarState extends State<EditUserCar> {
             ),
             const SizedBox(height: 20),
             TextFormField(
+              textInputAction: TextInputAction.next,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(20),
               ],
@@ -116,6 +118,7 @@ class _EditUserCarState extends State<EditUserCar> {
             ),
             const SizedBox(height: 20),
             TextFormField(
+              textInputAction: TextInputAction.next,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(4),
               ],
@@ -148,6 +151,7 @@ class _EditUserCarState extends State<EditUserCar> {
             ),
             const SizedBox(height: 20),
             TextFormField(
+              textInputAction: TextInputAction.next,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(10),
               ],
@@ -170,7 +174,9 @@ class _EditUserCarState extends State<EditUserCar> {
               },
             ),
             const SizedBox(height: 20),
+            // TODO When user changes price add price to list in firebase to show history of price changes
             TextFormField(
+              textInputAction: TextInputAction.next,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(10),
                 CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
@@ -195,6 +201,7 @@ class _EditUserCarState extends State<EditUserCar> {
             ),
             const SizedBox(height: 20),
             TextFormField(
+              textInputAction: TextInputAction.done,
               controller: _descriptionController,
               keyboardAppearance: Brightness.dark,
               decoration: InputDecoration(
