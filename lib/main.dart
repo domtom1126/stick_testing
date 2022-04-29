@@ -61,7 +61,7 @@ class MyApp extends StatelessWidget {
       scaffoldBackgroundColor: HexColor('2D2D30'),
       textTheme: TextTheme(
         bodyLarge: TextStyle(
-            fontSize: 24,
+            fontSize: 20,
             color: HexColor('FFFFFF'),
             fontWeight: FontWeight.w300),
         bodyMedium: TextStyle(
@@ -79,9 +79,9 @@ class MyApp extends StatelessWidget {
           fontWeight: FontWeight.w300,
         ),
         titleMedium: TextStyle(
-          fontSize: 18,
+          fontSize: 16,
           color: HexColor('FFFFFF'),
-          fontWeight: FontWeight.bold,
+          fontWeight: FontWeight.w300,
         ),
       ),
       // * START button theme
