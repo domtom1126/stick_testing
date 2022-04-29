@@ -32,7 +32,10 @@ class _HomeState extends State<Home> {
             SliverAppBar(
               actions: [
                 IconButton(
-                  icon: const Icon(Icons.search),
+                  icon: Icon(
+                    Icons.search,
+                    color: HexColor('EE6C4D'),
+                  ),
                   onPressed: () {
                     showSearch(context: context, delegate: Search());
                   },
@@ -150,7 +153,7 @@ class _HomeState extends State<Home> {
             ),
             Text(
               '${publicList['price']}',
-              style: Theme.of(context).textTheme.bodyMedium,
+              style: Theme.of(context).textTheme.titleMedium,
               textAlign: TextAlign.start,
             ),
             const SizedBox(
