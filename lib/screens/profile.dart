@@ -195,7 +195,7 @@ class _ProfileState extends State<Profile> {
                   children: snapshot.data!.docs.map((userCars) {
                     return ListTile(
                       onTap: () {
-                        Navigator.pop(context);
+                        // Navigator.pop(context);
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -229,6 +229,7 @@ class _ProfileState extends State<Profile> {
                           child: Text(
                             'Mark as Sold',
                             style: TextStyle(color: HexColor('FFFFFF')),
+                            textAlign: TextAlign.left,
                           )),
                       // Delete post button
                       trailing: IconButton(
