@@ -137,16 +137,27 @@ class _ProfileState extends State<Profile> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Sign in below with Google. \n You\'ll see your profile after you sign in.',
+                'Sign in below and you will see your profile after you sign in.',
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
             ),
-            const SizedBox(
-              height: 20,
-            ),
             const Divider(
               height: 50,
+            ),
+            TextFormField(
+              decoration: InputDecoration(
+                labelText: 'Email',
+                labelStyle: TextStyle(color: HexColor('FFFFFF')),
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: HexColor('FFFFFF')),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: HexColor('FFFFFF')),
+                ),
+              ),
+              style: TextStyle(color: HexColor('FFFFFF')),
+              keyboardType: TextInputType.emailAddress,
             ),
             Align(
               alignment: Alignment.bottomCenter,
