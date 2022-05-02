@@ -20,6 +20,22 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  bool isSold = false;
+  final userCars = FirebaseFirestore.instance
+      .collection('posts')
+      .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .snapshots();
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance.collection('posts').doc().update({
+      'sold': true,
+    });
+    setState(() {
+      isSold = true;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -227,21 +243,43 @@ class _ProfileState extends State<Profile> {
                         '${userCars['year']} ${userCars['make']} ${userCars['model']}',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      subtitle: TextButton(
-                          // TODO add mark as sold button
-                          onPressed: () {
-                            FirebaseFirestore.instance
-                                .collection('posts')
-                                .doc(userCars.id)
-                                .update({
-                              'sold': true,
-                            });
-                          },
-                          child: Text(
-                            'Mark as Sold',
-                            style: TextStyle(color: HexColor('FFFFFF')),
-                            textAlign: TextAlign.left,
-                          )),
+                      subtitle: (isSold)
+                          ? TextButton(
+                              // TODO add mark as sold button
+                              onPressed: () {
+                                FirebaseFirestore.instance
+                                    .collection('posts')
+                                    .doc(userCars.id)
+                                    .update({
+                                  'sold': false,
+                                });
+                                setState(() {
+                                  isSold = false;
+                                });
+                              },
+                              child: Text(
+                                'Mark as not sold',
+                                style: TextStyle(color: HexColor('FFFFFF')),
+                                textAlign: TextAlign.left,
+                              ))
+                          : TextButton(
+                              // TODO add mark as sold button
+                              onPressed: () {
+                                FirebaseFirestore.instance
+                                    .collection('posts')
+                                    .doc(userCars.id)
+                                    .update({
+                                  'sold': true,
+                                });
+                                setState(() {
+                                  isSold = true;
+                                });
+                              },
+                              child: Text(
+                                'Mark as Sold',
+                                style: TextStyle(color: HexColor('FFFFFF')),
+                                textAlign: TextAlign.left,
+                              )),
                       // Delete post button
                       trailing: IconButton(
                         icon: const Icon(Icons.delete, color: Colors.white),
@@ -254,7 +292,7 @@ class _ProfileState extends State<Profile> {
                                   backgroundColor: Colors.black45,
                                   title: Text('Are you sure?'),
                                   content: Text(
-                                      'Do you want to remove this car from your likes?',
+                                      'Do you want to delete this car?',
                                       style: Theme.of(context)
                                           .textTheme
                                           .bodyMedium),
