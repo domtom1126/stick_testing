@@ -153,6 +153,12 @@ class _PostState extends State<Post> {
           const SizedBox(
             height: 20,
           ),
+          Text('Manual vehicles only',
+              style: Theme.of(context).textTheme.titleLarge,
+              textAlign: TextAlign.center),
+          const SizedBox(
+            height: 20,
+          ),
           TextFormField(
             textInputAction: TextInputAction.next,
             inputFormatters: [
@@ -260,7 +266,8 @@ class _PostState extends State<Post> {
             ],
             controller: _priceController,
             keyboardAppearance: Brightness.dark,
-            keyboardType: TextInputType.number,
+            keyboardType: const TextInputType.numberWithOptions(
+                decimal: true, signed: true),
             decoration: InputDecoration(
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
