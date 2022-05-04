@@ -93,6 +93,44 @@ class _ViewCarState extends State<ViewCar> {
                 '${widget.year} ${widget.make} ${widget.model}',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
+              // TODO report vehicle for not being stick shift
+              IconButton(
+                  onPressed: () {
+                    // open alert dialog
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text('Report vehicle'),
+                          content: Text(
+                              'Are you sure you want to report this vehicle?'),
+                          actions: [
+                            ElevatedButton(
+                              child: Text('Yes'),
+                              onPressed: () {
+                                FirebaseFirestore.instance
+                                    .collection('posts')
+                                    .doc(widget.docId)
+                                    .update({
+                                  'reported': true,
+                                });
+                                // send email
+
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                            ElevatedButton(
+                              child: Text('No'),
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                            ),
+                          ],
+                        );
+                      },
+                    );
+                  },
+                  icon: const Icon(Icons.error))
             ],
           ),
           const SizedBox(
