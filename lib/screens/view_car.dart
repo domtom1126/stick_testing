@@ -1,10 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:find_a_stick/signin_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:mailer/mailer.dart';
+import 'package:mailer/smtp_server.dart';
+import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -30,6 +34,7 @@ class ViewCar extends StatefulWidget {
 
 class _ViewCarState extends State<ViewCar> {
   bool onLiked = false;
+  final user = FirebaseAuth.instance.currentUser!;
 
   @override
   void initState() {
@@ -94,7 +99,8 @@ class _ViewCarState extends State<ViewCar> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               // TODO report vehicle for not being stick shift
-              IconButton(
+              if (widget.receiverEmail != null)
+                IconButton(
                   onPressed: () {
                     // open alert dialog
                     showDialog(
@@ -108,14 +114,7 @@ class _ViewCarState extends State<ViewCar> {
                             ElevatedButton(
                               child: Text('Yes'),
                               onPressed: () {
-                                FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .doc(widget.docId)
-                                    .update({
-                                  'reported': true,
-                                });
-                                // send email
-
+                                sendReportedEmail();
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -130,7 +129,10 @@ class _ViewCarState extends State<ViewCar> {
                       },
                     );
                   },
-                  icon: const Icon(Icons.error))
+                  icon: const Icon(Icons.error),
+                )
+              else
+                Container(),
             ],
           ),
           const SizedBox(
@@ -297,6 +299,40 @@ class _ViewCarState extends State<ViewCar> {
           ),
         ],
       ),
+    );
+  }
+
+  Future sendReportedEmail() async {
+    final userInfo = await GoogleAuthApi.signIn();
+    if (userInfo == null) return;
+    final auth = await userInfo.authentication;
+    final token = auth.accessToken!;
+
+    final smtpServer = gmailSaslXoauth2(userInfo.email, token);
+    final message = Message()
+      ..from = Address(userInfo.email, 'Find a Stick')
+      ..recipients = ['domtom1126@gmail.com']
+      ..subject = 'Car Reported'
+      ..text = 'Car Reported';
+
+    await send(message, smtpServer);
+    // show dialog to confirm for 2 seconds
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Car Reported'),
+          content: const Text('Thank you for reporting this car'),
+          actions: <Widget>[
+            ElevatedButton(
+              child: const Text('Ok'),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
