@@ -32,6 +32,17 @@ class GoogleSignInProvider extends ChangeNotifier {
   }
 }
 
+class GoogleAuthApi {
+  static final _googleSignIn = GoogleSignIn();
+  static Future<GoogleSignInAccount?> signIn() async {
+    if (await _googleSignIn.isSignedIn()) {
+      return _googleSignIn.currentUser;
+    } else {
+      return await _googleSignIn.signIn();
+    }
+  }
+}
+
 class AppleSignInProvider extends ChangeNotifier {
   Future appleLogin() async {
     final appleCredential = await SignInWithApple.getAppleIDCredential(
