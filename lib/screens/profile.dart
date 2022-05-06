@@ -26,17 +26,6 @@ class _ProfileState extends State<Profile> {
       .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
       .snapshots();
   @override
-  void initState() {
-    super.initState();
-    FirebaseFirestore.instance.collection('posts').doc().update({
-      'sold': true,
-    });
-    setState(() {
-      isSold = true;
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar:
@@ -119,11 +108,131 @@ class _ProfileState extends State<Profile> {
           height: 20,
         ),
         ClipRRect(
-            borderRadius: BorderRadius.all(Radius.circular(10)),
-            child: Container(
-                padding: EdgeInsets.fromLTRB(0, 20, 0, 20),
-                color: HexColor('23262F'),
-                child: showUserCars(context))),
+          borderRadius: const BorderRadius.all(Radius.circular(10)),
+          child: Container(
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+            color: HexColor('23262F'),
+            child: StreamBuilder(
+              stream: userCars,
+              builder: (BuildContext context,
+                  AsyncSnapshot<QuerySnapshot> snapshot) {
+                if (!snapshot.hasData) {
+                  return const Center(
+                    child: Text(
+                      'You have not posted any cars yet.',
+                    ),
+                  );
+                } else if (snapshot.hasData) {
+                  return Column(
+                    children: snapshot.data!.docs.map((userCars) {
+                      return ListTile(
+                        onTap: () {
+                          // Navigator.pop(context);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditUserCar(
+                                make: userCars['make'],
+                                model: userCars['model'],
+                                year: userCars['year'],
+                                price: userCars['price'],
+                                odometer: userCars['odometer'],
+                                image: userCars['image'],
+                                description: userCars['description'],
+                                id: userCars.id,
+                              ),
+                            ),
+                          );
+                        },
+                        title: Text(
+                          '${userCars['year']} ${userCars['make']} ${userCars['model']}',
+                          style: Theme.of(context).textTheme.titleLarge,
+                        ),
+                        subtitle: (isSold)
+                            ? TextButton(
+                                // TODO add mark as sold button
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(userCars.id)
+                                      .update({
+                                    'sold': false,
+                                  });
+                                  setState(() {
+                                    isSold = false;
+                                  });
+                                },
+                                child: Text(
+                                  'Mark as not sold',
+                                  style: TextStyle(color: HexColor('FFFFFF')),
+                                  textAlign: TextAlign.left,
+                                ))
+                            : TextButton(
+                                // TODO add mark as sold button
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(userCars.id)
+                                      .update({
+                                    'sold': true,
+                                  });
+                                  setState(() {
+                                    isSold = true;
+                                  });
+                                },
+                                child: Text(
+                                  'Mark as Sold',
+                                  style: TextStyle(color: HexColor('FFFFFF')),
+                                  textAlign: TextAlign.left,
+                                )),
+                        // Delete post button
+                        trailing: IconButton(
+                          icon: const Icon(Icons.delete, color: Colors.white),
+                          onPressed: () async {
+                            await HapticFeedback.heavyImpact();
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return AlertDialog(
+                                    backgroundColor: Colors.black45,
+                                    title: const Text('Are you sure?'),
+                                    content: Text(
+                                        'Do you want to delete this car?',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium),
+                                    actions: [
+                                      ElevatedButton(
+                                        child: const Text('Yes'),
+                                        onPressed: () {
+                                          FirebaseFirestore.instance
+                                              .collection('posts')
+                                              .doc(userCars.id)
+                                              .delete();
+                                          Navigator.of(context).pop();
+                                        },
+                                      ),
+                                      ElevatedButton(
+                                        child: const Text('No'),
+                                        onPressed: () {
+                                          Navigator.of(context).pop();
+                                        },
+                                      )
+                                    ],
+                                  );
+                                });
+                          },
+                        ),
+                      );
+                    }).toList(),
+                  );
+                } else {
+                  return const Text('Loading...');
+                }
+              },
+            ),
+          ),
+        ),
       ]),
     );
   }
@@ -161,20 +270,6 @@ class _ProfileState extends State<Profile> {
             const Divider(
               height: 50,
             ),
-            TextFormField(
-              decoration: InputDecoration(
-                labelText: 'Email',
-                labelStyle: TextStyle(color: HexColor('FFFFFF')),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('FFFFFF')),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('FFFFFF')),
-                ),
-              ),
-              style: TextStyle(color: HexColor('FFFFFF')),
-              keyboardType: TextInputType.emailAddress,
-            ),
             Align(
               alignment: Alignment.bottomCenter,
               child: SignInButton(Buttons.Google,
@@ -203,131 +298,7 @@ class _ProfileState extends State<Profile> {
     );
   }
 
-  ListView showUserCars(BuildContext context) {
-    final userCars = FirebaseFirestore.instance
-        .collection('posts')
-        .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
-        .snapshots();
-    return ListView(
-      shrinkWrap: true,
-      // padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      children: [
-        Column(children: [
-          StreamBuilder(
-            stream: userCars,
-            builder:
-                (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
-              if (snapshot.hasData) {
-                return Column(
-                  children: snapshot.data!.docs.map((userCars) {
-                    return ListTile(
-                      onTap: () {
-                        // Navigator.pop(context);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditUserCar(
-                              make: userCars['make'],
-                              model: userCars['model'],
-                              year: userCars['year'],
-                              price: userCars['price'],
-                              odometer: userCars['odometer'],
-                              image: userCars['image'],
-                              description: userCars['description'],
-                              id: userCars.id,
-                            ),
-                          ),
-                        );
-                      },
-                      title: Text(
-                        '${userCars['year']} ${userCars['make']} ${userCars['model']}',
-                        style: Theme.of(context).textTheme.titleLarge,
-                      ),
-                      subtitle: (isSold)
-                          ? TextButton(
-                              // TODO add mark as sold button
-                              onPressed: () {
-                                FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .doc(userCars.id)
-                                    .update({
-                                  'sold': false,
-                                });
-                                setState(() {
-                                  isSold = false;
-                                });
-                              },
-                              child: Text(
-                                'Mark as not sold',
-                                style: TextStyle(color: HexColor('FFFFFF')),
-                                textAlign: TextAlign.left,
-                              ))
-                          : TextButton(
-                              // TODO add mark as sold button
-                              onPressed: () {
-                                FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .doc(userCars.id)
-                                    .update({
-                                  'sold': true,
-                                });
-                                setState(() {
-                                  isSold = true;
-                                });
-                              },
-                              child: Text(
-                                'Mark as Sold',
-                                style: TextStyle(color: HexColor('FFFFFF')),
-                                textAlign: TextAlign.left,
-                              )),
-                      // Delete post button
-                      trailing: IconButton(
-                        icon: const Icon(Icons.delete, color: Colors.white),
-                        onPressed: () async {
-                          await HapticFeedback.heavyImpact();
-                          showDialog(
-                              context: context,
-                              builder: (context) {
-                                return AlertDialog(
-                                  backgroundColor: Colors.black45,
-                                  title: Text('Are you sure?'),
-                                  content: Text(
-                                      'Do you want to delete this car?',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium),
-                                  actions: [
-                                    ElevatedButton(
-                                      child: Text('Yes'),
-                                      onPressed: () {
-                                        FirebaseFirestore.instance
-                                            .collection('posts')
-                                            .doc(userCars.id)
-                                            .delete();
-                                        Navigator.of(context).pop();
-                                      },
-                                    ),
-                                    ElevatedButton(
-                                      child: Text('No'),
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                      },
-                                    )
-                                  ],
-                                );
-                              });
-                        },
-                      ),
-                    );
-                  }).toList(),
-                );
-              } else {
-                return const Text('You haven\'t posted any cars yet!');
-              }
-            },
-          )
-        ])
-      ],
-    );
-  }
+  // StreamBuilder showUserCars() {
+  //   return
+  // }
 }
