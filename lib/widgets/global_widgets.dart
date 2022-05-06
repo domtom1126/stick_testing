@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-SliverAppBar appBar(BuildContext context, String title) {
-  return SliverAppBar(
+AppBar appBar(BuildContext context, String title) {
+  return AppBar(
     backgroundColor: Colors.transparent,
     elevation: 0,
     centerTitle: false,
