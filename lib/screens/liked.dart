@@ -116,7 +116,7 @@ class _LikedState extends State<Liked> {
                                   builder: (context) {
                                     return AlertDialog(
                                       backgroundColor: Colors.black45,
-                                      title: Text('Are you sure?'),
+                                      title: const Text('Are you sure?'),
                                       content: Text(
                                           'Do you want to remove this car from your likes?',
                                           style: Theme.of(context)
@@ -124,7 +124,7 @@ class _LikedState extends State<Liked> {
                                               .bodyMedium),
                                       actions: [
                                         ElevatedButton(
-                                          child: Text('Yes'),
+                                          child: const Text('Yes'),
                                           onPressed: () {
                                             FirebaseFirestore.instance
                                                 .collection('posts')
@@ -137,7 +137,7 @@ class _LikedState extends State<Liked> {
                                           },
                                         ),
                                         ElevatedButton(
-                                          child: Text('No'),
+                                          child: const Text('No'),
                                           onPressed: () {
                                             Navigator.of(context).pop();
                                           },
@@ -249,7 +249,7 @@ class _LikedState extends State<Liked> {
             const SizedBox(
               height: 20,
             ),
-            Divider(
+            const Divider(
               height: 50,
             ),
             Align(

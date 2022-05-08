@@ -142,12 +142,13 @@ class _PostState extends State<Post> {
   }
 
   Form buildUserAuth(BuildContext context) {
+    // TODO add loading circle when user posts
     bool uploading = false;
     // resizeToAvoidBottomInset: false,
     return Form(
       key: _formKey,
       child: ListView(
-        padding: EdgeInsets.fromLTRB(10, 0, 10, 40),
+        padding: const EdgeInsets.fromLTRB(10, 0, 10, 40),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: <Widget>[
           const SizedBox(

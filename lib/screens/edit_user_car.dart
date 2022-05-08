@@ -65,7 +65,7 @@ class _EditUserCarState extends State<EditUserCar> {
       body: Form(
         key: _formKey,
         child: ListView(
-          padding: EdgeInsets.fromLTRB(10, 0, 10, 40),
+          padding: const EdgeInsets.fromLTRB(10, 0, 10, 40),
           keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
           children: <Widget>[
             const SizedBox(
@@ -224,7 +224,7 @@ class _EditUserCarState extends State<EditUserCar> {
             // pickedImage != null
             ElevatedButton(
               onPressed: () => pickImage(),
-              child: Text('Change Image'),
+              child: const Text('Change Image'),
             ),
             const SizedBox(height: 20),
             ClipRRect(
@@ -277,7 +277,7 @@ class _EditUserCarState extends State<EditUserCar> {
                         content: Text('Your post has been updated'),
                       );
                       ScaffoldMessenger.of(context).showSnackBar(snackBar);
-                      Navigator.pop(context);
+                      // navigate to profile page
                     });
                   }
                 },

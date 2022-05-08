@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 class Search extends SearchDelegate {
   @override
   PreferredSizeWidget? buildBottom(BuildContext context) {
-    return PreferredSize(
+    return const PreferredSize(
       preferredSize: Size.fromHeight(20),
-      child: Container(child: Text('Search make or model')),
+      child: Text('Search make or model'),
     );
   }
 
+  @override
   ThemeData appBarTheme(BuildContext context) {
     final ThemeData theme = Theme.of(context);
     final ColorScheme colorScheme = theme.colorScheme;
@@ -30,7 +30,7 @@ class Search extends SearchDelegate {
   List<Widget> buildActions(BuildContext context) {
     return [
       IconButton(
-        icon: Icon(Icons.clear),
+        icon: const Icon(Icons.clear),
         onPressed: () {
           query = '';
         },
@@ -41,7 +41,7 @@ class Search extends SearchDelegate {
   @override
   Widget buildLeading(BuildContext context) {
     return IconButton(
-      icon: Icon(Icons.arrow_back),
+      icon: const Icon(Icons.arrow_back),
       onPressed: () {
         close(context, null);
       },
@@ -55,6 +55,9 @@ class Search extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
-    return Container();
+    return Center(
+        child: Column(
+      children: const [Text('Ford')],
+    ));
   }
 }
