@@ -288,6 +288,7 @@ class _PostState extends State<Post> {
             textInputAction: TextInputAction.done,
             controller: _descriptionController,
             keyboardAppearance: Brightness.dark,
+            maxLines: 5,
             decoration: InputDecoration(
               focusedBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
