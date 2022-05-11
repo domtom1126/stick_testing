@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:testing/screens/home.dart';
-import 'package:testing/screens/liked.dart';
-import 'package:testing/screens/post.dart';
-import 'package:testing/screens/profile.dart';
-import 'package:testing/signin_controller.dart';
+import '../screens/home.dart';
+import '../screens/liked.dart';
+import '../screens/post.dart';
+import '../screens/profile.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);
@@ -28,37 +26,38 @@ class _BottomBarState extends State<BottomBar> {
     });
   }
 
-  final controller = Get.put(LoginController());
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: _children[_selectedIndex],
       bottomNavigationBar: BottomNavigationBar(
+        backgroundColor: Colors.transparent,
+        selectedFontSize: 12,
+        iconSize: 22,
         type: BottomNavigationBarType.fixed,
         elevation: 0,
-        enableFeedback: false,
+        enableFeedback: true,
         onTap: _onItemTapped,
         currentIndex: _selectedIndex,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.home,
+              Icons.home_outlined,
             ),
             label: 'Home',
           ),
           BottomNavigationBarItem(
             icon: Icon(
-              Icons.add_circle,
+              Icons.add_circle_outline,
             ),
             label: 'Post',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.favorite),
+            icon: Icon(Icons.favorite_border),
             label: 'Liked',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person),
+            icon: Icon(Icons.perm_identity_sharp),
             label: 'Profile',
           ),
         ],
