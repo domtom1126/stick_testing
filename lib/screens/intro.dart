@@ -16,6 +16,11 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       appBar: AppBar(backgroundColor: Colors.transparent),
       body: Column(
         children: [
+          Image.asset(
+            '/Users/dominic./dev/testing/assets/appstore.png',
+            height: 200,
+            width: 200,
+          ),
           Align(
               child: Text(
                 'Welcome to Find a Stick',
@@ -23,7 +28,9 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
               ),
               alignment: Alignment.center),
           const SizedBox(height: 10),
-          Align(
+          // image
+
+          const Align(
               child: Text(
                 'The only app to find manual cars',
                 style: TextStyle(fontSize: 18, color: Colors.grey),
@@ -73,18 +80,6 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                   ],
                 ),
               ],
-            ),
-          ),
-          // button on bottom of screen
-          SafeArea(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ElevatedButton(
-                onPressed: () {
-                  Navigator.pop(context);
-                },
-                child: Text('Get Started'),
-              ),
             ),
           ),
         ],
