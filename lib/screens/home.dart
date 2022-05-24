@@ -1,11 +1,14 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:find_a_stick/screens/intro.dart';
 import 'package:find_a_stick/screens/search.dart';
 import 'package:find_a_stick/screens/view_car.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:is_first_run/is_first_run.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // TODO Add explain page for first time runners
 // TODO * Add package is_first_run
@@ -18,6 +21,19 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  Future firstUse() async {
+    bool firstRun = await IsFirstRun.isFirstRun();
+    if (firstRun) {
+      // Open page
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const IntroductionScreen(),
+        ),
+      );
+    }
+  }
+
   final cars = FirebaseFirestore.instance
       .collection('posts')
       .orderBy('date_added', descending: true)
@@ -25,6 +41,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    firstUse();
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
