@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:hexcolor/hexcolor.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class IntroductionScreen extends StatefulWidget {
@@ -42,6 +43,8 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             child: ListView(
               children: [
                 ExpansionTile(
+                  collapsedIconColor: HexColor('EE6C4D'),
+                  iconColor: HexColor('EE6C4D'),
                   title: Text(
                     'Getting Started',
                     style: Theme.of(context).textTheme.bodyLarge,
@@ -54,6 +57,8 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                   ],
                 ),
                 ExpansionTile(
+                  collapsedIconColor: HexColor('EE6C4D'),
+                  iconColor: HexColor('EE6C4D'),
                   title: Text('Get involved!',
                       style: Theme.of(context).textTheme.bodyLarge),
                   children: [
@@ -77,8 +82,10 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                         ],
                       ),
                     ),
+                    const SizedBox(height: 20),
                   ],
                 ),
+                const SizedBox(height: 20),
               ],
             ),
           ),
