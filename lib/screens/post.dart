@@ -1,16 +1,11 @@
 import 'dart:io';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:find_a_stick/firebase_functions/post_listing.dart';
-import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
-import 'package:get/get.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
@@ -110,7 +105,7 @@ class _PostState extends State<Post> {
             const SizedBox(
               height: 20,
             ),
-            Divider(
+            const Divider(
               height: 50,
             ),
             Align(
@@ -143,7 +138,6 @@ class _PostState extends State<Post> {
 
   Form buildUserAuth(BuildContext context) {
     // TODO add loading circle when user posts
-    bool uploading = false;
     // resizeToAvoidBottomInset: false,
     return Form(
       key: _formKey,
