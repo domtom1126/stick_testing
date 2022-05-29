@@ -138,19 +138,12 @@ class _PostState extends State<Post> {
 
   Form buildUserAuth(BuildContext context) {
     // TODO add loading circle when user posts
-    // resizeToAvoidBottomInset: false,
     return Form(
       key: _formKey,
       child: ListView(
         padding: const EdgeInsets.fromLTRB(10, 0, 10, 40),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         children: <Widget>[
-          const SizedBox(
-            height: 20,
-          ),
-          Text('Manual vehicles only',
-              style: Theme.of(context).textTheme.titleLarge,
-              textAlign: TextAlign.center),
           const SizedBox(
             height: 20,
           ),
@@ -367,7 +360,40 @@ class _PostState extends State<Post> {
                       ),
                     ),
                     context: context,
-                    builder: (context) => confirmModal(),
+                    builder: (context) => Container(
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Text(
+                            'Are you sure you want to post this car?',
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                },
+                                child: const Text('Cancel'),
+                              ),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.pop(context);
+                                  confirmModal();
+                                },
+                                child: const Text('Post'),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                   );
                 }
               },
