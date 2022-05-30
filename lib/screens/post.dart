@@ -360,39 +360,29 @@ class _PostState extends State<Post> {
                       ),
                     ),
                     context: context,
-                    builder: (context) => Container(
-                      padding: const EdgeInsets.all(20),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Text(
-                            'Are you sure you want to post this car?',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          const SizedBox(height: 20),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: const Text('Cancel'),
-                              ),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                  confirmModal();
-                                },
-                                child: const Text('Post'),
-                              ),
-                            ],
-                          ),
-                        ],
+                    builder: (context) => AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
                       ),
+                      backgroundColor: HexColor('333333'),
+                      title: const Text('Confirm'),
+                      content: const Text(
+                          'Please make sure this car is a manual. If it is not it will be deleted.'),
+                      actions: [
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text('Cancel'),
+                        ),
+                        ElevatedButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            confirmModal();
+                          },
+                          child: const Text('Confirm'),
+                        ),
+                      ],
                     ),
                   );
                 }
