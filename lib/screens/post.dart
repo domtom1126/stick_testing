@@ -400,6 +400,8 @@ class _PostState extends State<Post> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Visibility(
+              visible: isLoading, child: const CircularProgressIndicator()),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.asset(
