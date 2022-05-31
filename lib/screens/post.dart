@@ -4,6 +4,7 @@ import 'package:find_a_stick/firebase_functions/post_listing.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -19,6 +20,8 @@ class Post extends StatefulWidget {
 }
 
 class _PostState extends State<Post> {
+  bool isLoading = false;
+
   final TextEditingController _makeController = TextEditingController();
   final TextEditingController _modelController = TextEditingController();
   final TextEditingController _yearController = TextEditingController();
@@ -351,40 +354,42 @@ class _PostState extends State<Post> {
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
                   showModalBottomSheet(
-                    isScrollControlled: true,
-                    backgroundColor: HexColor('40434E'),
-                    shape: const RoundedRectangleBorder(
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(20),
-                        topRight: Radius.circular(20),
-                      ),
-                    ),
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      backgroundColor: HexColor('333333'),
-                      title: const Text('Confirm'),
-                      content: const Text(
-                          'Please make sure this car is a manual. If it is not it will be deleted.'),
-                      actions: [
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text('Cancel'),
+                      isScrollControlled: true,
+                      backgroundColor: HexColor('40434E'),
+                      shape: const RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(20),
+                          topRight: Radius.circular(20),
                         ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            confirmModal();
-                          },
-                          child: const Text('Confirm'),
-                        ),
-                      ],
-                    ),
-                  );
+                      ),
+                      context: context,
+                      builder: (context) => confirmModal()
+                      // AlertDialog(
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(10),
+                      //   ),
+                      //   backgroundColor: HexColor('333333'),
+                      //   title: const Text('Confirm'),
+                      //   content: const Text(
+                      //       'Please make sure this car is a manual. If it is not it will be deleted.'),
+                      //   actions: [
+                      //     ElevatedButton(
+                      //       onPressed: () {
+                      //         Navigator.of(context).pop();
+                      //       },
+                      //       child: const Text('Cancel'),
+                      //     ),
+                      //     ElevatedButton(
+                      //       onPressed: () {
+                      //         Navigator.of(context).pop();
+                      //         confirmModal();
+                      //         // Navigator.of(context).pop();
+                      //       },
+                      //       child: const Text('Confirm'),
+                      //     ),
+                      //   ],
+                      // ),
+                      );
                 }
               },
               child: const Text('Confirm')),
@@ -394,14 +399,11 @@ class _PostState extends State<Post> {
   }
 
   SingleChildScrollView confirmModal() {
-    bool isLoading = false;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(8.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Visibility(
-              visible: isLoading, child: const CircularProgressIndicator()),
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: Image.asset(
@@ -468,43 +470,46 @@ class _PostState extends State<Post> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                    onPressed: () async {
-                      setState(() {
-                        isLoading = true;
-                      });
-                      final _postListing = PostListing(
-                        make: _makeController.text,
-                        model: _modelController.text,
-                        year: _yearController.text,
-                        odometer: _odometerController.text,
-                        price: _priceController.text,
-                        // TODO Replace with email
-                        description: _descriptionController.text,
-                        image: pickedImage!,
-                        dateAdded: DateTime.now().toString(),
-                      );
-                      await _postListing.addPost(
-                        _makeController.text,
-                        _modelController.text,
-                        _yearController.text,
-                        _odometerController.text,
-                        _priceController.text,
-                        _descriptionController.text,
-                        pickedImage!,
-                      );
-                      await _postListing
-                          .addMake(_makeController.text.toTitleCase());
-                      setState(() {
-                        isLoading = false;
-                      });
-                      Navigator.pushNamedAndRemoveUntil(
-                          context, '/home', (_) => false);
-                    },
-                    child: const Text('Yes')),
-              ),
+              isLoading
+                  ? CircularProgressIndicator()
+                  : SizedBox(
+                      width: 100,
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            final _postListing = PostListing(
+                              make: _makeController.text,
+                              model: _modelController.text,
+                              year: _yearController.text,
+                              odometer: _odometerController.text,
+                              price: _priceController.text,
+                              // TODO Replace with email
+                              description: _descriptionController.text,
+                              image: pickedImage!,
+                              dateAdded: DateTime.now().toString(),
+                            );
+
+                            await _postListing.addPost(
+                              _makeController.text,
+                              _modelController.text,
+                              _yearController.text,
+                              _odometerController.text,
+                              _priceController.text,
+                              _descriptionController.text,
+                              pickedImage!,
+                            );
+                            await _postListing
+                                .addMake(_makeController.text.toTitleCase());
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/home', (_) => false);
+                          },
+                          child: const Text('Yes')),
+                    ),
               SizedBox(
                 width: 100,
                 child: ElevatedButton(
