@@ -24,6 +24,7 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       appBar:
           AppBar(title: const Text('Profile'), centerTitle: false, actions: [
         IconButton(
@@ -90,7 +91,7 @@ class _ProfileState extends State<Profile> {
                   height: 30,
                 ),
               ],
-            )
+            ),
           ],
         ),
         const SizedBox(
@@ -100,12 +101,14 @@ class _ProfileState extends State<Profile> {
           child:
               Text('Your cars', style: Theme.of(context).textTheme.headline6),
         ),
+        const Center(child: Text('Click to edit details')),
         const SizedBox(
           height: 20,
         ),
         ClipRRect(
           borderRadius: const BorderRadius.all(Radius.circular(10)),
           child: Container(
+            height: MediaQuery.of(context).size.height * 0.4,
             padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
             color: HexColor('23262F'),
             child: StreamBuilder(
@@ -119,7 +122,8 @@ class _ProfileState extends State<Profile> {
                     ),
                   );
                 } else if (snapshot.hasData) {
-                  return Column(
+                  return ListView(
+                    shrinkWrap: true,
                     children: snapshot.data!.docs.map((userCars) {
                       return ListTile(
                         onTap: () {
