@@ -36,7 +36,7 @@ class _PostFormState extends State<PostForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return postForm(context);
   }
 
   Form postForm(BuildContext context) {
