@@ -14,7 +14,7 @@ class ProfileSignIn extends StatefulWidget {
 class _ProfileSignInState extends State<ProfileSignIn> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return buildSignIn(context);
   }
 
   Widget buildSignIn(BuildContext context) {
