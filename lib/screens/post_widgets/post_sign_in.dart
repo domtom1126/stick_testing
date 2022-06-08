@@ -23,6 +23,8 @@ class _PostSignInState extends State<PostSignIn> {
         decoration: BoxDecoration(
           color: Colors.grey[800],
           borderRadius: const BorderRadius.all(Radius.circular(20)),
+          border: Border.all(color: HexColor('EE6C4D'), width: 
+          1),
         ),
         height: 400,
         width: 300,
