@@ -23,6 +23,7 @@ class _ProfileSignInState extends State<ProfileSignIn> {
         decoration: BoxDecoration(
           color: Colors.grey[800],
           borderRadius: const BorderRadius.all(Radius.circular(20)),
+          border: Border.all(color: HexColor('EE6C4D'))
         ),
         height: 400,
         width: 300,
