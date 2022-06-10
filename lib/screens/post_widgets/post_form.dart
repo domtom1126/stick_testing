@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:find_a_stick/firebase_functions/post_listing.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
@@ -193,61 +194,61 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          pickedImage != null
-              ? Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: pickImage,
-                      child: const Text('Add Another Image'),
-                    ),
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child:
-                            Image.file(pickedImage!, height: 200, width: 200)),
-                  ],
-                )
-              : SizedBox(
-                  height: 200,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: HexColor('23262F'), elevation: 15),
-                    onPressed: pickImage,
-                    child: Column(
-                      children: const [
-                        SizedBox(
-                          height: 65,
-                        ),
-                        Icon(
-                          Icons.add_circle_sharp,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text('Add Image'),
-                      ],
-                    ),
-                  ),
-                ),
-          // * This actually works! but for now just do single image
-          // CarouselSlider.builder(
-          //   options: CarouselOptions(height: 200),
-          //   itemCount: pickedImage.length,
-          //   itemBuilder: (context, index, realIndex) {
-          //     final singleImage = pickedImage[index];
-
-          //     return Container(
-          //       margin: EdgeInsets.all(5.0),
-          //       child: ClipRRect(
-          //         borderRadius: BorderRadius.all(Radius.circular(5.0)),
-          //         child: Image.file(
-          //           singleImage!,
-          //           fit: BoxFit.cover,
+          // pickedImage != null
+          //     ? Column(
+          //         children: [
+          //           ElevatedButton(
+          //             onPressed: pickImage,
+          //             child: const Text('Add Another Image'),
+          //           ),
+          //           ClipRRect(
+          //               borderRadius: BorderRadius.circular(10),
+          //               child:
+          //                   Image.file(pickedImage!, height: 200, width: 200)),
+          //         ],
+          //       )
+          //     : SizedBox(
+          //         height: 200,
+          //         child: ElevatedButton(
+          //           style: ElevatedButton.styleFrom(
+          //               primary: HexColor('23262F'), elevation: 15),
+          //           onPressed: pickImage,
+          //           child: Column(
+          //             children: const [
+          //               SizedBox(
+          //                 height: 65,
+          //               ),
+          //               Icon(
+          //                 Icons.add_circle_sharp,
+          //                 color: Colors.white,
+          //               ),
+          //               SizedBox(
+          //                 height: 5,
+          //               ),
+          //               Text('Add Image'),
+          //             ],
+          //           ),
           //         ),
           //       ),
-          //     );
-          //   },
-          // ),
+          // * This actually works! but for now just do single image
+          CarouselSlider.builder(
+            options: CarouselOptions(height: 200),
+            itemCount: pickedImage.length,
+            itemBuilder: (context, index, realIndex) {
+              final singleImage = pickedImage[index];
+
+              return Container(
+                margin: EdgeInsets.all(5.0),
+                child: ClipRRect(
+                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  child: Image.file(
+                    singleImage!,
+                    fit: BoxFit.cover,
+                  ),
+                ),
+              );
+            },
+          ),
           const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
