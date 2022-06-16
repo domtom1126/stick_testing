@@ -231,24 +231,24 @@ class _PostFormState extends State<PostForm> {
           //         ),
           //       ),
           // * This actually works! but for now just do single image
-          CarouselSlider.builder(
-            options: CarouselOptions(height: 200),
-            itemCount: pickedImage.length,
-            itemBuilder: (context, index, realIndex) {
-              final singleImage = pickedImage[index];
+          // CarouselSlider.builder(
+            // options: CarouselOptions(height: 200),
+            // itemCount: pickedImage.length,
+            // itemBuilder: (context, index, realIndex) {
+              // final singleImage = pickedImage[index];
 
-              return Container(
-                margin: EdgeInsets.all(5.0),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  child: Image.file(
-                    singleImage!,
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              );
-            },
-          ),
+              // return Container(
+                // margin: EdgeInsets.all(5.0),
+                // child: ClipRRect(
+                  // borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                  // child: Image.file(
+                    // singleImage!,
+                    // fit: BoxFit.cover,
+                  // ),
+                // ),
+              // );
+            // },
+          // ),
           const SizedBox(height: 20),
           ElevatedButton(
               onPressed: () {
