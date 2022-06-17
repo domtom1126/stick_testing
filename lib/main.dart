@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
         showUnselectedLabels: false,
         elevation: 0,
         backgroundColor: HexColor('2D2D30'),
-        selectedItemColor: HexColor('EE6C4D'),
+        selectedItemColor: HexColor('EE6CC4D'),
         unselectedItemColor: Colors.grey[400],
       ),
       // * END bottom bar theme
