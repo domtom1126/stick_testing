@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       ),
       // * Scaffold Theme
       // scaffoldBackgroundColor: HexColor('7E8987'),
-      scaffoldBackgroundColor: HexColor('2D2D30'),
+      scaffoldBackgroundColor: HexColor('4E5166'),
       textTheme: TextTheme(
         bodyLarge: TextStyle(
             fontSize: 20,
@@ -88,7 +88,7 @@ class MyApp extends StatelessWidget {
           elevation: MaterialStateProperty.all<double>(0),
           minimumSize: MaterialStateProperty.all<Size>(const Size(500, 40)),
           backgroundColor: MaterialStateProperty.all<Color>(
-            HexColor('EE6C4D'),
+            HexColor('7C90A0'),
           ),
           foregroundColor: MaterialStateProperty.all<Color>(
             HexColor('ffffff'),
@@ -203,7 +203,7 @@ class MyApp extends StatelessWidget {
         showUnselectedLabels: false,
         elevation: 0,
         backgroundColor: HexColor('2D2D30'),
-        selectedItemColor: HexColor('EE6C4D'),
+        selectedItemColor: HexColor('7C90A0'),
         unselectedItemColor: Colors.grey[400],
       ),
       // * END bottom bar theme
