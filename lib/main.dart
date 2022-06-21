@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       ),
       // * Scaffold Theme
       // scaffoldBackgroundColor: HexColor('7E8987'),
-      scaffoldBackgroundColor: HexColor('4E5166'),
+      scaffoldBackgroundColor: HexColor('424C55'),
       textTheme: TextTheme(
         bodyLarge: TextStyle(
             fontSize: 20,
@@ -119,7 +119,7 @@ class MyApp extends StatelessWidget {
         showUnselectedLabels: false,
         elevation: 0,
         backgroundColor: HexColor('2D2D30'),
-        selectedItemColor: HexColor('EE6CC4D'),
+        selectedItemColor: HexColor('DDDDDD'),
         unselectedItemColor: Colors.grey[400],
       ),
       // * END bottom bar theme
