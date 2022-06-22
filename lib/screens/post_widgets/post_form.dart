@@ -194,42 +194,42 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          // pickedImage != null
-          //     ? Column(
-          //         children: [
-          //           ElevatedButton(
-          //             onPressed: pickImage,
-          //             child: const Text('Add Another Image'),
-          //           ),
-          //           ClipRRect(
-          //               borderRadius: BorderRadius.circular(10),
-          //               child:
-          //                   Image.file(pickedImage!, height: 200, width: 200)),
-          //         ],
-          //       )
-          //     : SizedBox(
-          //         height: 200,
-          //         child: ElevatedButton(
-          //           style: ElevatedButton.styleFrom(
-          //               primary: HexColor('23262F'), elevation: 15),
-          //           onPressed: pickImage,
-          //           child: Column(
-          //             children: const [
-          //               SizedBox(
-          //                 height: 65,
-          //               ),
-          //               Icon(
-          //                 Icons.add_circle_sharp,
-          //                 color: Colors.white,
-          //               ),
-          //               SizedBox(
-          //                 height: 5,
-          //               ),
-          //               Text('Add Image'),
-          //             ],
-          //           ),
-          //         ),
-          //       ),
+          pickedImage != null
+              ? Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: pickImage,
+                      child: const Text('Add Another Image'),
+                    ),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child:
+                            Image.file(pickedImage!, height: 200, width: 200)),
+                  ],
+                )
+              : SizedBox(
+                  height: 200,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        primary: HexColor('23262F'), elevation: 15),
+                    onPressed: pickImage,
+                    child: Column(
+                      children: const [
+                        SizedBox(
+                          height: 65,
+                        ),
+                        Icon(
+                          Icons.add_circle_sharp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text('Add Image'),
+                      ],
+                    ),
+                  ),
+                ),
           // * This actually works! but for now just do single image
           // CarouselSlider.builder(
             // options: CarouselOptions(height: 200),
