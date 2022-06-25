@@ -62,9 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
             ),
           ],
         ),
-        const SizedBox(
-          height: 20,
-        ),
+        const SizedBox(height: 20),
         Center(
           child:
               Text('Your cars', style: Theme.of(context).textTheme.headline6),
