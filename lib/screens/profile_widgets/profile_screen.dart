@@ -153,7 +153,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 )),
                         // Delete post button
                         trailing: IconButton(
-                          icon: const Icon(Icons.delete, color: Colors.white),
+                          icon: Icon(Icons.delete, color: HexColor('EE6C4D')),
                           onPressed: () async {
                             await HapticFeedback.heavyImpact();
                             showDialog(
