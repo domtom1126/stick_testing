@@ -203,8 +203,8 @@ class MyApp extends StatelessWidget {
         showUnselectedLabels: false,
         elevation: 0,
         backgroundColor: HexColor('2D2D30'),
-        selectedItemColor: HexColor('7C90A0'),
-        unselectedItemColor: Colors.grey[400],
+        selectedItemColor: HexColor('EE6C4D'),
+        unselectedItemColor: HexColor('EE6C4D'),
       ),
       // * END bottom bar theme
     );
