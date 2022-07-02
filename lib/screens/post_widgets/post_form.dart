@@ -26,6 +26,7 @@ class _PostFormState extends State<PostForm> {
   final TextEditingController _odometerController = TextEditingController();
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
+  final TextEditingController _zipCodeController = TextEditingController();
   File? pickedImage;
   Future pickImage() async {
     final _imagePicker = ImagePicker();
@@ -175,6 +176,23 @@ class _PostFormState extends State<PostForm> {
           ),
           const SizedBox(height: 20),
           TextFormField(
+            textInputAction: TextInputAction.next,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(5),
+            ],
+            controller: _zipCodeController,
+            keyboardAppearance: Brightness.dark,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              hintText: 'Zip Code (optional)',
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextFormField(
             textInputAction: TextInputAction.done,
             controller: _descriptionController,
             keyboardAppearance: Brightness.dark,
@@ -232,22 +250,22 @@ class _PostFormState extends State<PostForm> {
                 ),
           // * This actually works! but for now just do single image
           // CarouselSlider.builder(
-            // options: CarouselOptions(height: 200),
-            // itemCount: pickedImage.length,
-            // itemBuilder: (context, index, realIndex) {
-              // final singleImage = pickedImage[index];
+          // options: CarouselOptions(height: 200),
+          // itemCount: pickedImage.length,
+          // itemBuilder: (context, index, realIndex) {
+          // final singleImage = pickedImage[index];
 
-              // return Container(
-                // margin: EdgeInsets.all(5.0),
-                // child: ClipRRect(
-                  // borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                  // child: Image.file(
-                    // singleImage!,
-                    // fit: BoxFit.cover,
-                  // ),
-                // ),
-              // );
-            // },
+          // return Container(
+          // margin: EdgeInsets.all(5.0),
+          // child: ClipRRect(
+          // borderRadius: BorderRadius.all(Radius.circular(5.0)),
+          // child: Image.file(
+          // singleImage!,
+          // fit: BoxFit.cover,
+          // ),
+          // ),
+          // );
+          // },
           // ),
           const SizedBox(height: 20),
           ElevatedButton(
