@@ -354,6 +354,7 @@ class _PostFormState extends State<PostForm> {
           const SizedBox(
             height: 15,
           ),
+          Text('Zip code: ${_zipCodeController.text} '),
           Text(
             'Some Details',
             style: TextStyle(
