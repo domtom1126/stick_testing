@@ -58,6 +58,21 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 30,
                 ),
+                // * Button to enter zipcode
+                SizedBox(
+                  width: 200,
+                  child: ElevatedButton(
+                      child: Text('Enter Zip Code'),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            // TODO  change to to alert dialog
+                            builder: (context) => null!,
+                          ),
+                        );
+                      }),
+                ),
               ],
             ),
           ],
@@ -202,4 +217,32 @@ class _ProfilePageState extends State<ProfilePage> {
       ]),
     );
   }
+  // TODO This might return null
+  // Alert dialog
+  // StatelessWidget enterZipCode() {
+  // showDialog(
+  // context: context,
+  // builder: (BuildContext context) {
+  // return AlertDialog(
+  // title: const Text('Are you sure?'),
+  // content: Text('Do you want to delete this car?',
+  // style: Theme.of(context).textTheme.bodyMedium),
+  // actions: [
+  // ElevatedButton(
+  // child: const Text('Yes'),
+  // onPressed: () {
+  // Navigator.of(context).pop();
+  // },
+  // ),
+  // ElevatedButton(
+  // child: const Text('No'),
+  // onPressed: () {
+  // Navigator.of(context).pop();
+  // },
+  // )
+  // ],
+  // );
+  // },
+  // );
+  // }
 }
