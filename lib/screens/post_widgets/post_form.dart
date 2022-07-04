@@ -405,6 +405,7 @@ class _PostFormState extends State<PostForm> {
                               odometer: _odometerController.text,
                               price: _priceController.text,
                               // TODO Replace with email
+                              zipCode: _zipCodeController.text,
                               description: _descriptionController.text,
                               image: pickedImage!,
                               dateAdded: DateTime.now().toString(),
@@ -416,6 +417,7 @@ class _PostFormState extends State<PostForm> {
                               _yearController.text,
                               _odometerController.text,
                               _priceController.text,
+                              _zipCodeController.text,
                               _descriptionController.text,
                               pickedImage!,
                             );
