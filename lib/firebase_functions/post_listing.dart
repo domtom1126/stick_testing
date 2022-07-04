@@ -9,6 +9,7 @@ class PostListing {
   String year = '';
   String odometer = '';
   String price = '';
+  String zipCode = '';
   String description = '';
   File image;
   String dateAdded = '';
@@ -19,13 +20,14 @@ class PostListing {
     required this.year,
     required this.odometer,
     required this.price,
+    required this.zipCode,
     required this.description,
     required this.image,
     required this.dateAdded,
   });
 
   addPost(String make, String model, String year, String odometer, String price,
-      String description, File image) async {
+      String zipCode, String description, File image) async {
     CollectionReference addPost =
         FirebaseFirestore.instance.collection('posts');
     String? email = FirebaseAuth.instance.currentUser!.email;
@@ -40,6 +42,7 @@ class PostListing {
           'year': year,
           'odometer': odometer,
           'price': price,
+          'zipCode': zipCode,
           'description': description,
           'email': email,
           'image': value,
@@ -53,6 +56,7 @@ class PostListing {
     });
   }
 
+  // * Puts the make of each post in db for search purposes
   addMake(String make) async {
     CollectionReference addMake =
         FirebaseFirestore.instance.collection('makes');
