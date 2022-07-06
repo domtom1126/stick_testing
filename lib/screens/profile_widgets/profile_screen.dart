@@ -64,13 +64,11 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ElevatedButton(
                       child: Text('Enter Zip Code'),
                       onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            // TODO  change to to alert dialog
-                            builder: (context) => null!,
-                          ),
-                        );
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(title: Text('Enter Zip Code'));
+                            });
                       }),
                 ),
               ],
