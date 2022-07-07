@@ -12,6 +12,8 @@ class ProfilePage extends StatefulWidget {
   State<ProfilePage> createState() => _ProfilePageState();
 }
 
+TextEditingController _zipcodeController = TextEditingController();
+
 class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
@@ -62,12 +64,33 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   width: 200,
                   child: ElevatedButton(
-                      child: Text('Enter Zip Code'),
+                      child: const Text('Enter Zip Code'),
                       onPressed: () {
                         showDialog(
                             context: context,
                             builder: (context) {
-                              return AlertDialog(title: Text('Enter Zip Code'));
+                              return AlertDialog(
+                                title: const Text('Enter Zip Code'),
+                                backgroundColor: HexColor('7C90A0'),
+                                content: Column(
+                                  // * This controls the height so it doesnt fill the whole screen(for reference)
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    const Text(
+                                        'Your zip code IS NOT required to view or post a car but it helps to find cars near you.)'),
+                                    const SizedBox(
+                                      height: 10,
+                                    ),
+                                    TextFormField(
+                                      controller: _zipcodeController,
+                                      keyboardType: TextInputType.number,
+                                      decoration: const InputDecoration(
+                                        labelText: 'Zip Code',
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
                             });
                       }),
                 ),
