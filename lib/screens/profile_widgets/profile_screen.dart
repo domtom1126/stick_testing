@@ -88,6 +88,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                         labelText: 'Zip Code',
                                       ),
                                     ),
+                                    ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor:
+                                              MaterialStateProperty.all(
+                                                  Colors.black),
+                                        ),
+                                        onPressed: () {},
+                                        child: const Text('Save')),
                                   ],
                                 ),
                               );
