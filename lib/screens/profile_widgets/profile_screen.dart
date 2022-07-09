@@ -197,7 +197,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 )),
                         // Delete post button
                         trailing: IconButton(
-                          icon: Icon(Icons.delete, color: HexColor('EE6C4D')),
+                          icon: Icon(Icons.delete, color: HexColor('EE6C4F')),
                           onPressed: () async {
                             await HapticFeedback.heavyImpact();
                             showDialog(
