@@ -45,8 +45,6 @@ class _ProfilePageState extends State<ProfilePage> {
             // ),
             Column(
               children: [
-                // TODO make edit button work
-                // editButton(),
                 const SizedBox(
                   height: 10,
                 ),
