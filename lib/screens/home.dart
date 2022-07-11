@@ -47,17 +47,17 @@ class _HomeState extends State<Home> {
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             SliverAppBar(
-              // actions: [
-              //   IconButton(
-              //     icon: Icon(
-              //       Icons.search,
-              //       color: HexColor('EE6C4D'),
-              //     ),
-              //     onPressed: () {
-              //       showSearch(context: context, delegate: Search());
-              //     },
-              //   ),
-              // ],
+              actions: [
+                IconButton(
+                  icon: Icon(
+                    Icons.search,
+                    color: HexColor('EE6C4D'),
+                  ),
+                  onPressed: () {
+                    showSearch(context: context, delegate: Search());
+                  },
+                ),
+              ],
               automaticallyImplyLeading: false,
               centerTitle: false,
               backgroundColor: Colors.transparent,
