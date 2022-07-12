@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Search extends SearchDelegate {
@@ -55,9 +56,14 @@ class Search extends SearchDelegate {
 
   @override
   Widget buildSuggestions(BuildContext context) {
+    // firebase instance
+    final cars = FirebaseFirestore.instance
+        .collection('makes')
+        .orderBy('date_added', descending: true)
+        .snapshots();
     return Center(
         child: Column(
-      children: const [Text('Ford')],
+      children: const [],
     ));
   }
 }
