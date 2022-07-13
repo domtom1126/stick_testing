@@ -21,10 +21,9 @@ class _ProfileSignInState extends State<ProfileSignIn> {
     return Center(
       child: Container(
         decoration: BoxDecoration(
-          color: Colors.grey[800],
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(color: HexColor('EE6C4D'))
-        ),
+            color: Colors.grey[800],
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            border: Border.all(color: HexColor('EE6C4D'))),
         height: 400,
         width: 300,
         child: Column(
@@ -48,7 +47,8 @@ class _ProfileSignInState extends State<ProfileSignIn> {
                 textAlign: TextAlign.center,
               ),
             ),
-            const Divider(
+            Divider(
+              color: Colors.grey[800],
               height: 50,
             ),
             Align(
