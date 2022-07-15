@@ -48,7 +48,7 @@ class _ProfileSignInState extends State<ProfileSignIn> {
               ),
             ),
             Divider(
-              color: Colors.grey[700],
+              color: Colors.grey[800],
               height: 50,
             ),
             Align(
