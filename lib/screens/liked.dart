@@ -222,7 +222,9 @@ class _LikedState extends State<Liked> {
         decoration: BoxDecoration(
           color: Colors.grey[800],
           borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(color: HexColor('EE6C4D'),),
+          border: Border.all(
+            color: HexColor('EE6C4D'),
+          ),
         ),
         height: 400,
         width: 300,
@@ -250,7 +252,8 @@ class _LikedState extends State<Liked> {
             const SizedBox(
               height: 20,
             ),
-            const Divider(
+            Divider(
+              color: Colors.grey[800],
               height: 50,
             ),
             Align(
