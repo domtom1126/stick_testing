@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
       ),
       // * Scaffold Theme
       // scaffoldBackgroundColor: HexColor('7E8987'),
-      scaffoldBackgroundColor: HexColor('424C55'),
+      scaffoldBackgroundColor: HexColor('2B303A'),
       textTheme: TextTheme(
         bodyLarge: TextStyle(
             fontSize: 20,
@@ -135,7 +135,7 @@ class MyApp extends StatelessWidget {
         elevation: 0,
       ),
       // * Scaffold Theme
-      scaffoldBackgroundColor: HexColor('383D45'),
+      scaffoldBackgroundColor: HexColor('2B303A'),
       // scaffoldBackgroundColor: HexColor('F5F8F2'),
       textTheme: TextTheme(
         bodyLarge: TextStyle(
