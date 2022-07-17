@@ -45,6 +45,8 @@ class _ProfilePageState extends State<ProfilePage> {
             // ),
             Column(
               children: [
+                IconButton(
+                    onPressed: null, icon: Icon(Icons.light_mode_outlined)),
                 const SizedBox(
                   height: 10,
                 ),
