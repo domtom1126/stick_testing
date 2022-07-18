@@ -45,13 +45,15 @@ class _ProfilePageState extends State<ProfilePage> {
             // ),
             Column(
               children: [
-                IconButton(
-                    onPressed: null, icon: Icon(Icons.light_mode_outlined)),
-                const SizedBox(
-                  height: 10,
+                Row(
+                  children: [
+                    IconButton(
+                        onPressed: null, icon: Icon(Icons.light_mode_outlined)),
+                    Text(user.displayName ?? '',
+                        style:
+                            TextStyle(fontSize: 18, color: HexColor('FFFFFF'))),
+                  ],
                 ),
-                Text(user.displayName ?? '',
-                    style: TextStyle(fontSize: 18, color: HexColor('FFFFFF'))),
                 const SizedBox(
                   height: 10,
                 ),
