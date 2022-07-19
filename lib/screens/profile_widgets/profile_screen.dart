@@ -47,8 +47,12 @@ class _ProfilePageState extends State<ProfilePage> {
               children: [
                 Row(
                   children: [
-                    IconButton(
-                        onPressed: null, icon: Icon(Icons.light_mode_outlined)),
+                    const IconButton(
+                        onPressed: null,
+                        icon: Icon(
+                          Icons.light_mode_outlined,
+                          color: Colors.white,
+                        )),
                     Text(user.displayName ?? '',
                         style:
                             TextStyle(fontSize: 18, color: HexColor('FFFFFF'))),
@@ -68,212 +72,173 @@ class _ProfilePageState extends State<ProfilePage> {
                   child: ElevatedButton(
                       child: const Text('Enter Zip Code'),
                       onPressed: () {
-                        showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text('Enter Zip Code'),
-                                backgroundColor: HexColor('7C90A0'),
-                                content: Column(
-                                  // * This controls the height so it doesnt fill the whole screen(for reference)
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    const Text(
-                                        'Your zip code IS NOT required to view or post a car but it helps to find cars near you.)'),
-                                    const SizedBox(
-                                      height: 10,
-                                    ),
-                                    TextFormField(
-                                      controller: _zipcodeController,
-                                      keyboardType: TextInputType.number,
-                                      decoration: const InputDecoration(
-                                        labelText: 'Zip Code',
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                        style: ButtonStyle(
-                                          backgroundColor:
-                                              MaterialStateProperty.all(
-                                                  Colors.black),
-                                        ),
-                                        onPressed: () {},
-                                        child: const Text('Save')),
-                                  ],
-                                ),
-                              );
-                            });
+                        enterZipCodeDialog(context);
                       }),
                 ),
               ],
             ),
           ],
         ),
-        const SizedBox(height: 20),
-        Center(
-          child:
-              Text('Your cars', style: Theme.of(context).textTheme.headline6),
-        ),
-        const Center(child: Text('Click to edit details')),
-        const SizedBox(
-          height: 20,
-        ),
-        ClipRRect(
-          borderRadius: const BorderRadius.all(Radius.circular(10)),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.4,
-            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-            color: HexColor('23262F'),
-            child: StreamBuilder(
-              stream: userCars,
-              builder: (BuildContext context,
-                  AsyncSnapshot<QuerySnapshot> snapshot) {
-                if (!snapshot.hasData) {
-                  return const Center(
-                    child: Text(
-                      'You have not posted any cars yet.',
-                    ),
-                  );
-                } else if (snapshot.hasData) {
-                  return ListView(
-                    shrinkWrap: true,
-                    children: snapshot.data!.docs.map((userCars) {
-                      return ListTile(
-                        onTap: () {
-                          // Navigator.pop(context);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => EditUserCar(
-                                make: userCars['make'],
-                                model: userCars['model'],
-                                year: userCars['year'],
-                                price: userCars['price'],
-                                odometer: userCars['odometer'],
-                                image: userCars['image'],
-                                description: userCars['description'],
-                                id: userCars.id,
-                              ),
-                            ),
-                          );
-                        },
-                        title: Text(
-                          '${userCars['year']} ${userCars['make']} ${userCars['model']}',
-                          style: Theme.of(context).textTheme.titleLarge,
-                        ),
-                        subtitle: (isSold)
-                            ? TextButton(
-                                // TODO add mark as sold button
-                                onPressed: () {
-                                  FirebaseFirestore.instance
-                                      .collection('posts')
-                                      .doc(userCars.id)
-                                      .update({
-                                    'sold': false,
-                                  });
-                                  setState(() {
-                                    isSold = false;
-                                  });
-                                },
-                                child: Text(
-                                  'Mark as not sold',
-                                  style: TextStyle(color: HexColor('FFFFFF')),
-                                  textAlign: TextAlign.left,
-                                ))
-                            : TextButton(
-                                // TODO add mark as sold button
-                                onPressed: () {
-                                  FirebaseFirestore.instance
-                                      .collection('posts')
-                                      .doc(userCars.id)
-                                      .update({
-                                    'sold': true,
-                                  });
-                                  setState(() {
-                                    isSold = true;
-                                  });
-                                },
-                                child: Text(
-                                  'Mark as Sold',
-                                  style: TextStyle(color: HexColor('FFFFFF')),
-                                  textAlign: TextAlign.left,
-                                )),
-                        // Delete post button
-                        trailing: IconButton(
-                          icon: Icon(Icons.delete, color: HexColor('EE6C4F')),
-                          onPressed: () async {
-                            await HapticFeedback.heavyImpact();
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    backgroundColor: Colors.black45,
-                                    title: const Text('Are you sure?'),
-                                    content: Text(
-                                        'Do you want to delete this car?',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium),
-                                    actions: [
-                                      ElevatedButton(
-                                        child: const Text('Yes'),
-                                        onPressed: () {
-                                          FirebaseFirestore.instance
-                                              .collection('posts')
-                                              .doc(userCars.id)
-                                              .delete();
-                                          Navigator.of(context).pop();
-                                        },
-                                      ),
-                                      ElevatedButton(
-                                        child: const Text('No'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                        },
-                                      )
-                                    ],
-                                  );
-                                });
-                          },
+
+        // You have not posted any cars yet works but it disappears
+        StreamBuilder(
+          stream: userCars,
+          builder:
+              (BuildContext context, AsyncSnapshot<QuerySnapshot> snapshot) {
+            if (!snapshot.hasData) {
+              return const Center(
+                child: Text(
+                  'You have not posted any cars yet.',
+                ),
+              );
+            } else if (snapshot.hasData) {
+              return ListView(
+                shrinkWrap: true,
+                children: snapshot.data!.docs.map((userCars) {
+                  return ListTile(
+                    onTap: () {
+                      // Navigator.pop(context);
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditUserCar(
+                            make: userCars['make'],
+                            model: userCars['model'],
+                            year: userCars['year'],
+                            price: userCars['price'],
+                            odometer: userCars['odometer'],
+                            image: userCars['image'],
+                            description: userCars['description'],
+                            id: userCars.id,
+                          ),
                         ),
                       );
-                    }).toList(),
+                    },
+                    title: Text(
+                      '${userCars['year']} ${userCars['make']} ${userCars['model']}',
+                      style: Theme.of(context).textTheme.titleLarge,
+                    ),
+                    subtitle: (isSold)
+                        ? TextButton(
+                            // TODO add mark as sold button
+                            onPressed: () {
+                              FirebaseFirestore.instance
+                                  .collection('posts')
+                                  .doc(userCars.id)
+                                  .update({
+                                'sold': false,
+                              });
+                              setState(() {
+                                isSold = false;
+                              });
+                            },
+                            child: Text(
+                              'Mark as not sold',
+                              style: TextStyle(color: HexColor('FFFFFF')),
+                              textAlign: TextAlign.left,
+                            ))
+                        : TextButton(
+                            // TODO add mark as sold button
+                            onPressed: () {
+                              FirebaseFirestore.instance
+                                  .collection('posts')
+                                  .doc(userCars.id)
+                                  .update({
+                                'sold': true,
+                              });
+                              setState(() {
+                                isSold = true;
+                              });
+                            },
+                            child: Text(
+                              'Mark as Sold',
+                              style: TextStyle(color: HexColor('FFFFFF')),
+                              textAlign: TextAlign.left,
+                            )),
+                    // Delete post button
+                    trailing: IconButton(
+                      icon: Icon(Icons.delete, color: HexColor('EE6C4F')),
+                      onPressed: () async {
+                        await HapticFeedback.heavyImpact();
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                backgroundColor: Colors.black45,
+                                title: const Text('Are you sure?'),
+                                content: Text('Do you want to delete this car?',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium),
+                                actions: [
+                                  ElevatedButton(
+                                    child: const Text('Yes'),
+                                    onPressed: () {
+                                      FirebaseFirestore.instance
+                                          .collection('posts')
+                                          .doc(userCars.id)
+                                          .delete();
+                                      Navigator.of(context).pop();
+                                    },
+                                  ),
+                                  ElevatedButton(
+                                    child: const Text('No'),
+                                    onPressed: () {
+                                      Navigator.of(context).pop();
+                                    },
+                                  )
+                                ],
+                              );
+                            });
+                      },
+                    ),
                   );
-                } else {
-                  return const Text('Loading...');
-                }
-              },
-            ),
-          ),
+                }).toList(),
+              );
+            } else {
+              return const Text('Loading...');
+            }
+          },
         ),
       ]),
     );
   }
-  // TODO This might return null
-  // Alert dialog
-  // StatelessWidget enterZipCode() {
-  // showDialog(
-  // context: context,
-  // builder: (BuildContext context) {
-  // return AlertDialog(
-  // title: const Text('Are you sure?'),
-  // content: Text('Do you want to delete this car?',
-  // style: Theme.of(context).textTheme.bodyMedium),
-  // actions: [
-  // ElevatedButton(
-  // child: const Text('Yes'),
-  // onPressed: () {
-  // Navigator.of(context).pop();
-  // },
-  // ),
-  // ElevatedButton(
-  // child: const Text('No'),
-  // onPressed: () {
-  // Navigator.of(context).pop();
-  // },
-  // )
-  // ],
-  // );
-  // },
-  // );
-  // }
+
+  Future<dynamic> enterZipCodeDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return AlertDialog(
+            title: const Text('Enter Zip Code'),
+            backgroundColor: HexColor('23262F'),
+            content: Column(
+              // * This controls the height so it doesnt fill the whole screen(for reference)
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Text(
+                    'Your zip code IS NOT required to view or post a car but it helps to find cars near you.'),
+                const SizedBox(
+                  height: 20,
+                ),
+                TextFormField(
+                  controller: _zipcodeController,
+                  keyboardType: TextInputType.number,
+                  decoration: const InputDecoration(
+                    fillColor: Colors.white30,
+                    label: Text('Zip Code'),
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                ElevatedButton(
+                    style: ButtonStyle(
+                        // backgroundColor: MaterialStateProperty.all(EE6C4F),
+                        ),
+                    onPressed: () {},
+                    child: const Text('Save')),
+              ],
+            ),
+          );
+        });
+  }
 }
