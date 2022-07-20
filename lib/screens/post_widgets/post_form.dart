@@ -127,28 +127,30 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(10),
-            ],
-            controller: _odometerController,
-            keyboardAppearance: Brightness.dark,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: 'Miles',
-            ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter a miles';
-              }
-              return null;
-            },
-          ),
+
+          // dropdown list for miles
+          // TextFormField(
+          // textInputAction: TextInputAction.next,
+          // inputFormatters: [
+          // LengthLimitingTextInputFormatter(10),
+          // ],
+          // controller: _odometerController,
+          // keyboardAppearance: Brightness.dark,
+          // keyboardType: TextInputType.number,
+          // decoration: InputDecoration(
+          // focusedBorder: OutlineInputBorder(
+          // borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+          // borderRadius: BorderRadius.circular(25.0),
+          // ),
+          // hintText: 'Miles',
+          // ),
+          // validator: (value) {
+          // if (value!.isEmpty) {
+          // return 'Please enter a miles';
+          // }
+          // return null;
+          // },
+          // ),
           const SizedBox(height: 20),
           TextFormField(
             textInputAction: TextInputAction.next,
