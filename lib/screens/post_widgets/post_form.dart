@@ -95,62 +95,93 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(4),
-            ],
-            keyboardType: TextInputType.number,
-            keyboardAppearance: Brightness.dark,
-            controller: _yearController,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
+          DropdownButtonHideUnderline(
+            child: DropdownButton2(
+              hint: Text(
+                'Select Item',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).hintColor,
+                ),
               ),
-              hintText: 'Year',
+              items: items
+                  .map((item) => DropdownMenuItem<String>(
+                        value: item,
+                        child: Text(
+                          item,
+                          style: const TextStyle(
+                            fontSize: 14,
+                          ),
+                        ),
+                      ))
+                  .toList(),
+              value: selectedValue,
+              onChanged: (value) {
+                setState(() {
+                  selectedValue = value as String;
+                });
+              },
+              buttonHeight: 40,
+              buttonWidth: 140,
+              itemHeight: 40,
             ),
-            validator: (value) {
-              if (value!.length != 4) {
-                return 'Please enter a valid year';
-              } else if (value[0] == '0' ||
-                  value[0] == '3' ||
-                  value[0] == '4' ||
-                  value[0] == '5' ||
-                  value[0] == '6' ||
-                  value[0] == '7' ||
-                  value[0] == '8' ||
-                  value[0] == '9') {
-                return 'Enter 2 digit valid year';
-              }
-              return null;
-            },
           ),
-          const SizedBox(height: 20),
-
-          // dropdown list for miles
           // TextFormField(
           // textInputAction: TextInputAction.next,
           // inputFormatters: [
-          // LengthLimitingTextInputFormatter(10),
+          // LengthLimitingTextInputFormatter(4),
           // ],
-          // controller: _odometerController,
-          // keyboardAppearance: Brightness.dark,
           // keyboardType: TextInputType.number,
+          // keyboardAppearance: Brightness.dark,
+          // controller: _yearController,
           // decoration: InputDecoration(
           // focusedBorder: OutlineInputBorder(
           // borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
           // borderRadius: BorderRadius.circular(25.0),
           // ),
-          // hintText: 'Miles',
+          // hintText: 'Year',
           // ),
           // validator: (value) {
-          // if (value!.isEmpty) {
-          // return 'Please enter a miles';
+          // if (value!.length != 4) {
+          // return 'Please enter a valid year';
+          // } else if (value[0] == '0' ||
+          // value[0] == '3' ||
+          // value[0] == '4' ||
+          // value[0] == '5' ||
+          // value[0] == '6' ||
+          // value[0] == '7' ||
+          // value[0] == '8' ||
+          // value[0] == '9') {
+          // return 'Enter 2 digit valid year';
           // }
           // return null;
           // },
           // ),
+          const SizedBox(height: 20),
+
+          // dropdown list for miles
+          TextFormField(
+            textInputAction: TextInputAction.next,
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(10),
+            ],
+            controller: _odometerController,
+            keyboardAppearance: Brightness.dark,
+            keyboardType: TextInputType.number,
+            decoration: InputDecoration(
+              focusedBorder: OutlineInputBorder(
+                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+                borderRadius: BorderRadius.circular(25.0),
+              ),
+              hintText: 'Miles',
+            ),
+            validator: (value) {
+              if (value!.isEmpty) {
+                return 'Please enter a miles';
+              }
+              return null;
+            },
+          ),
           const SizedBox(height: 20),
           TextFormField(
             textInputAction: TextInputAction.next,
