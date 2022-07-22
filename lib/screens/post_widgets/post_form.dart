@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:find_a_stick/firebase_functions/post_listing.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
@@ -42,6 +43,8 @@ class _PostFormState extends State<PostForm> {
   }
 
   Form postForm(BuildContext context) {
+    var years =
+        List<String>.generate(2020 - 1900, (i) => (1900 + i).toString());
     return Form(
       key: _formKey,
       child: ListView(
