@@ -45,6 +45,7 @@ class _PostFormState extends State<PostForm> {
   Form postForm(BuildContext context) {
     var years =
         List<String>.generate(2020 - 1900, (i) => (1900 + i).toString());
+    String? selectedValue;
     return Form(
       key: _formKey,
       child: ListView(
@@ -107,12 +108,13 @@ class _PostFormState extends State<PostForm> {
                   color: Theme.of(context).hintColor,
                 ),
               ),
-              items: items
+              items: years
                   .map((item) => DropdownMenuItem<String>(
-                        value: item,
+                        value: years[1],
                         child: Text(
                           item,
                           style: const TextStyle(
+                            color: Colors.black,
                             fontSize: 14,
                           ),
                         ),
