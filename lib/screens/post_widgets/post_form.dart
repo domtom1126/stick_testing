@@ -127,8 +127,21 @@ class _PostFormState extends State<PostForm> {
                 });
               },
               buttonHeight: 40,
-              buttonWidth: 140,
+              buttonWidth: 100,
               itemHeight: 40,
+              dropdownMaxHeight: 300,
+              buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+              buttonDecoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(15),
+                border: Border.all(
+                  color: Colors.black26,
+                ),
+                color: Colors.redAccent,
+              ),
+              dropdownDecoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(14),
+                color: Colors.black45,
+              ),
             ),
           ),
           // TextFormField(
