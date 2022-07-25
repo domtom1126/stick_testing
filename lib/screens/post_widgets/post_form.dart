@@ -136,7 +136,7 @@ class _PostFormState extends State<PostForm> {
                 border: Border.all(
                   color: Colors.black26,
                 ),
-                color: Colors.redAccent,
+                color: Colors.black45,
               ),
               dropdownDecoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(14),
