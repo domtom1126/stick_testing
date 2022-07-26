@@ -101,11 +101,11 @@ class _PostFormState extends State<PostForm> {
           const SizedBox(height: 20),
           DropdownButtonHideUnderline(
             child: DropdownButton2(
-              hint: Text(
+              hint: const Text(
                 'Select Item',
                 style: TextStyle(
-                  fontSize: 14,
-                  color: Theme.of(context).hintColor,
+                  fontSize: 16,
+                  color: Colors.white,
                 ),
               ),
               items: years
@@ -114,8 +114,8 @@ class _PostFormState extends State<PostForm> {
                         child: Text(
                           item,
                           style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 14,
+                            color: Colors.white,
+                            fontSize: 16,
                           ),
                         ),
                       ))
@@ -126,55 +126,24 @@ class _PostFormState extends State<PostForm> {
                   selectedValue = value as String;
                 });
               },
-              buttonHeight: 40,
+              buttonHeight: 63,
               buttonWidth: 100,
               itemHeight: 40,
               dropdownMaxHeight: 300,
               buttonPadding: const EdgeInsets.only(left: 14, right: 14),
               buttonDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(15),
+                color: Colors.transparent,
+                borderRadius: BorderRadius.circular(25),
                 border: Border.all(
-                  color: Colors.black26,
+                  color: Colors.black54,
                 ),
-                color: Colors.black45,
               ),
               dropdownDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(14),
+                borderRadius: BorderRadius.circular(25),
                 color: Colors.black45,
               ),
             ),
           ),
-          // TextFormField(
-          // textInputAction: TextInputAction.next,
-          // inputFormatters: [
-          // LengthLimitingTextInputFormatter(4),
-          // ],
-          // keyboardType: TextInputType.number,
-          // keyboardAppearance: Brightness.dark,
-          // controller: _yearController,
-          // decoration: InputDecoration(
-          // focusedBorder: OutlineInputBorder(
-          // borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-          // borderRadius: BorderRadius.circular(25.0),
-          // ),
-          // hintText: 'Year',
-          // ),
-          // validator: (value) {
-          // if (value!.length != 4) {
-          // return 'Please enter a valid year';
-          // } else if (value[0] == '0' ||
-          // value[0] == '3' ||
-          // value[0] == '4' ||
-          // value[0] == '5' ||
-          // value[0] == '6' ||
-          // value[0] == '7' ||
-          // value[0] == '8' ||
-          // value[0] == '9') {
-          // return 'Enter 2 digit valid year';
-          // }
-          // return null;
-          // },
-          // ),
           const SizedBox(height: 20),
 
           // dropdown list for miles
