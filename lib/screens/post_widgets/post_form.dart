@@ -44,7 +44,7 @@ class _PostFormState extends State<PostForm> {
 
   Form postForm(BuildContext context) {
     var years =
-        List<String>.generate(2020 - 1900, (i) => (1900 + i).toString());
+        List<String>.generate(2024 - 1900, (i) => (1900 + i).toString());
     String? selectedValue;
     return Form(
       key: _formKey,
@@ -119,6 +119,8 @@ class _PostFormState extends State<PostForm> {
                           ),
                         ),
                       ))
+                  .toList()
+                  .reversed
                   .toList(),
               value: selectedValue,
               onChanged: (value) {
@@ -140,7 +142,7 @@ class _PostFormState extends State<PostForm> {
               ),
               dropdownDecoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(25),
-                color: Colors.black45,
+                color: HexColor('23262F'),
               ),
             ),
           ),
