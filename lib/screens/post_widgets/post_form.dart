@@ -102,7 +102,7 @@ class _PostFormState extends State<PostForm> {
           DropdownButtonHideUnderline(
             child: DropdownButton2(
               hint: const Text(
-                'Select Item',
+                'Select Year',
                 style: TextStyle(
                   fontSize: 16,
                   color: Colors.white,
@@ -125,7 +125,7 @@ class _PostFormState extends State<PostForm> {
               value: selectedValue,
               onChanged: (value) {
                 setState(() {
-                  selectedValue = value as String;
+                  selectedValue = value.text;
                 });
               },
               buttonHeight: 63,
