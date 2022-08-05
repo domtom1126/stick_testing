@@ -125,7 +125,7 @@ class _PostFormState extends State<PostForm> {
               value: selectedValue,
               onChanged: (value) {
                 setState(() {
-                  selectedValue = value.text;
+                 selectedValue = value.toString();
                 });
               },
               buttonHeight: 63,
