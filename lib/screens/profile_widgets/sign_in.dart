@@ -73,8 +73,208 @@ class _ProfileSignInState extends State<ProfileSignIn> {
                 appleProvider.appleLogin();
               }, text: 'Sign in with Apple'),
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            SizedBox(
+              height: 35,
+              width: 220,
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                    onPressed: () {
+                      // show dialog
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              backgroundColor: Colors.black,
+                              title: const Text('Coming Soon!'),
+                              content: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  SizedBox(
+                                    width: 100,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        showModalBottomSheet(
+                                            isScrollControlled: true,
+                                            backgroundColor: HexColor('40434E'),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                topRight: Radius.circular(20),
+                                              ),
+                                            ),
+                                            context: context,
+                                            builder: (BuildContext context) =>
+                                                signUpModal(context));
+                                      },
+                                      child: const Text('Sign Up'),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: 100,
+                                    child: ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.of(context).pop();
+                                        // show bottommodal
+                                        showModalBottomSheet(
+                                            backgroundColor: HexColor('40434E'),
+                                            shape: const RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.only(
+                                                topLeft: Radius.circular(20),
+                                                topRight: Radius.circular(20),
+                                              ),
+                                            ),
+                                            context: context,
+                                            builder: (BuildContext context) {
+                                              return signInModal(context);
+                                            });
+                                      },
+                                      child: const Text('Sign In'),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            );
+                          });
+                    },
+                    child: const Text('Sign in with email')),
+              ),
+            ),
           ],
         ),
+      ),
+    );
+  }
+
+  SingleChildScrollView signInModal(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          const Text(
+            'Sign In',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Email Address',
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          SizedBox(
+            width: 100,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Sign In'),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+        ],
+      ),
+    );
+  }
+
+  SingleChildScrollView signUpModal(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 20,
+          ),
+          const Text(
+            'Sign In',
+            style: TextStyle(color: Colors.white, fontSize: 20),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'First Name',
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Last Name',
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Email Address',
+              ),
+            ),
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Password',
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 20,
+          ),
+          const Padding(
+            padding: EdgeInsets.all(8.0),
+            child: TextField(
+              decoration: InputDecoration(
+                border: OutlineInputBorder(),
+                labelText: 'Confirm Password',
+              ),
+            ),
+          ),
+          SizedBox(
+            width: 100,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('Sign In'),
+            ),
+          ),
+        ],
       ),
     );
   }
