@@ -199,6 +199,32 @@ class _ProfilePageState extends State<ProfilePage> {
             }
           },
         ),
+        // privacy policy button
+        const SizedBox(
+          height: 20,
+        ),
+        Expanded(
+          child: Align(
+            alignment: Alignment.bottomCenter,
+            child: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor:
+                      MaterialStateProperty.all<Color>(Colors.transparent),
+                ),
+                child: const Text('Privacy Policy'),
+                onPressed: () {
+                  // show dialog
+                  showDialog(
+                      context: context,
+                      builder: (context) {
+                        return const AlertDialog(
+                            backgroundColor: Colors.black45,
+                            title: Text('Privacy Policy'),
+                            content: Text('hello'));
+                      });
+                }),
+          ),
+        ),
       ]),
     );
   }
