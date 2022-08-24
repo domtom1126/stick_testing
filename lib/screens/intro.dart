@@ -17,11 +17,11 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       appBar: AppBar(backgroundColor: Colors.transparent),
       body: Column(
         children: [
-          Image.asset(
-            '/Users/dominic./dev/testing/assets/appstore.png',
-            height: 200,
-            width: 200,
-          ),
+          // Image.asset(
+          //   '/Users/dominic./dev/testing/assets/appstore.png',
+          //   height: 200,
+          //   width: 200,
+          // ),
           Align(
               child: Text(
                 'Welcome to Find a Stick',
@@ -38,57 +38,18 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
               ),
               alignment: Alignment.center),
           const SizedBox(height: 30),
-          // Show expansion panel
           Expanded(
-            child: ListView(
-              children: [
-                ExpansionTile(
-                  collapsedIconColor: HexColor('EE6C4D'),
-                  iconColor: HexColor('EE6C4D'),
-                  title: Text(
-                    'Getting Started',
-                    style: Theme.of(context).textTheme.bodyLarge,
-                  ),
-                  children: const [
-                    Text(
-                      '1. Sign in\n\n2. Post a car\n\n3. Like a car\n\n4.Email the owner\n\n5. Get to shiftin those gears!',
-                    ),
-                    SizedBox(height: 20),
-                  ],
-                ),
-                ExpansionTile(
-                  collapsedIconColor: HexColor('EE6C4D'),
-                  iconColor: HexColor('EE6C4D'),
-                  title: Text('Get involved!',
-                      style: Theme.of(context).textTheme.bodyLarge),
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: 'All source code is available on ',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          TextSpan(
-                            text: 'GitHub',
-                            style: const TextStyle(
-                                color: Colors.blue, fontSize: 20),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                launch(
-                                    'https://github.com/domtom1126/stick_testing');
-                              },
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 20),
-                  ],
-                ),
-                const SizedBox(height: 20),
-              ],
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: ElevatedButton(
+                onPressed: () => {},
+                child: Text('REGISTER'),
+              ),
             ),
           ),
+          SizedBox(
+            height: 200,
+          )
         ],
       ),
     );
