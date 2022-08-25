@@ -15,42 +15,35 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(backgroundColor: Colors.transparent),
-      body: Column(
-        children: [
-          // Image.asset(
-          //   '/Users/dominic./dev/testing/assets/appstore.png',
-          //   height: 200,
-          //   width: 200,
-          // ),
-          Align(
-              child: Text(
-                'Welcome to Find a Stick',
-                style: Theme.of(context).textTheme.bodyLarge,
-              ),
-              alignment: Alignment.center),
-          const SizedBox(height: 10),
-          // image
-
-          const Align(
-              child: Text(
-                'The only app to find manual cars',
-                style: TextStyle(fontSize: 18, color: Colors.grey),
-              ),
-              alignment: Alignment.center),
-          const SizedBox(height: 30),
-          Expanded(
-            child: Align(
-              alignment: Alignment.bottomCenter,
-              child: ElevatedButton(
-                onPressed: () => {},
-                child: Text('REGISTER'),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Welcome to Find a Stick',
+              style: Theme.of(context).textTheme.bodyLarge,
+            ),
+            const SizedBox(height: 10),
+            // image
+            Text(
+              'The only app to find manual cars',
+              style: TextStyle(fontSize: 18, color: Colors.grey),
+            ),
+            const SizedBox(height: 30),
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: ElevatedButton(
+                  onPressed: () => {},
+                  child: Text('REGISTER'),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: 200,
-          )
-        ],
+            SizedBox(
+              height: 200,
+            )
+          ],
+        ),
       ),
     );
   }
