@@ -46,43 +46,85 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                 ),
               ),
               const SizedBox(
-                height: 100,
+                height: 25,
               ),
-              TextFormField(
-                textInputAction: TextInputAction.next,
-                inputFormatters: [
-                  LengthLimitingTextInputFormatter(20),
-                ],
-                controller: _emailController,
-                keyboardAppearance: Brightness.dark,
-                decoration: InputDecoration(
-                  focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: HexColor('EE815A'), width: 2.0),
-                    borderRadius: BorderRadius.circular(25.0),
+              SizedBox(
+                width: 300,
+                child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(20),
+                  ],
+                  controller: _emailController,
+                  keyboardAppearance: Brightness.dark,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: HexColor('EE815A'), width: 2.0),
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    hintText: 'Email',
                   ),
-                  hintText: 'Email',
+                  validator: (value) {
+                    if (value!.isEmpty) {
+                      return 'Please enter an email';
+                    }
+                    return null;
+                  },
                 ),
-                validator: (value) {
-                  if (value!.isEmpty) {
-                    return 'Please enter an email';
-                  }
-                  return null;
-                },
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: SignInButton(Buttons.Google,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ), onPressed: () {
-                  final provider =
-                      Provider.of<GoogleSignInProvider>(context, listen: false);
-                  provider.googleLogin();
-                }),
+              const SizedBox(
+                height: 15,
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
+              SizedBox(
+                width: 300,
+                child: TextFormField(
+                  textInputAction: TextInputAction.next,
+                  inputFormatters: [
+                    LengthLimitingTextInputFormatter(20),
+                  ],
+                  controller: _emailController,
+                  keyboardAppearance: Brightness.dark,
+                  decoration: InputDecoration(
+                    focusedBorder: OutlineInputBorder(
+                      borderSide:
+                          BorderSide(color: HexColor('EE815A'), width: 2.0),
+                      borderRadius: BorderRadius.circular(25.0),
+                    ),
+                    hintText: 'Password',
+                  ),
+                  validator: (value) {
+                    // TODO put proper validation for password
+                    if (value!.isEmpty) {
+                      return 'Please enter a password';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              SizedBox(
+                  width: 250,
+                  child: ElevatedButton(
+                      onPressed: null, child: Text('Sign in / up'))),
+              SizedBox(
+                width: 250,
+                child: ElevatedButton(
+                    style:
+                        ElevatedButton.styleFrom(primary: Colors.transparent),
+                    child: const Image(
+                        image: AssetImage('graphics/icons8-google-48.png')),
+                    onPressed: () {
+                      final provider = Provider.of<GoogleSignInProvider>(
+                          context,
+                          listen: false);
+                      provider.googleLogin();
+                    }),
+              ),
+              SizedBox(
+                width: 250,
                 child: SignInButton(Buttons.Apple,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(10),
@@ -94,79 +136,6 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
               ),
               const SizedBox(
                 height: 10,
-              ),
-              SizedBox(
-                height: 35,
-                width: 220,
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: ElevatedButton(
-                      onPressed: () {
-                        // show dialog
-                        showDialog(
-                            context: context,
-                            builder: (BuildContext context) {
-                              return AlertDialog(
-                                backgroundColor: Colors.black,
-                                title: const Text('Coming Soon!'),
-                                content: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceEvenly,
-                                  children: [
-                                    SizedBox(
-                                      width: 100,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          showModalBottomSheet(
-                                              isScrollControlled: true,
-                                              backgroundColor:
-                                                  HexColor('40434E'),
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(20),
-                                                  topRight: Radius.circular(20),
-                                                ),
-                                              ),
-                                              context: context,
-                                              builder: (BuildContext context) =>
-                                                  signUpModal(context));
-                                        },
-                                        child: const Text('Sign Up'),
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: 100,
-                                      child: ElevatedButton(
-                                        onPressed: () {
-                                          Navigator.of(context).pop();
-                                          // show bottommodal
-                                          showModalBottomSheet(
-                                              backgroundColor:
-                                                  HexColor('40434E'),
-                                              shape:
-                                                  const RoundedRectangleBorder(
-                                                borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(20),
-                                                  topRight: Radius.circular(20),
-                                                ),
-                                              ),
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return signInModal(context);
-                                              });
-                                        },
-                                        child: const Text('Sign In'),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              );
-                            });
-                      },
-                      child: const Text('Sign in with email')),
-                ),
               ),
             ],
           ),
@@ -308,14 +277,13 @@ class OrangeLines extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = Colors.teal
-      ..strokeWidth = 5
+      ..color = HexColor('EE6C4D')
+      ..strokeWidth = 15
       ..strokeCap = StrokeCap.round;
 
-    Offset startingPoint = const Offset(100, 0);
-    Offset endPoint = Offset(size.width, 150);
+    canvas.drawLine(Offset(120, -75), Offset(550, 300), paint);
 
-    canvas.drawLine(startingPoint, endPoint, paint);
+    canvas.drawLine(const Offset(120, 0), Offset(400, 250), paint);
   }
 
   @override
