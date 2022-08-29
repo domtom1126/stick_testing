@@ -1,3 +1,4 @@
+import 'package:find_a_stick/screens/enter_zip.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -105,34 +106,68 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
               const SizedBox(
                 height: 20,
               ),
-              SizedBox(
-                  width: 250,
-                  child: ElevatedButton(
-                      onPressed: null, child: Text('Sign in / up'))),
-              SizedBox(
+              const SizedBox(
                 width: 250,
                 child: ElevatedButton(
-                    style:
-                        ElevatedButton.styleFrom(primary: Colors.transparent),
-                    child: const Image(
-                        image: AssetImage('graphics/icons8-google-48.png')),
-                    onPressed: () {
-                      final provider = Provider.of<GoogleSignInProvider>(
-                          context,
-                          listen: false);
-                      provider.googleLogin();
-                    }),
+                  onPressed: null,
+                  child: Text('Sign in / up'),
+                ),
               ),
               SizedBox(
                 width: 250,
-                child: SignInButton(Buttons.Apple,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ), onPressed: () {
-                  final appleProvider =
-                      Provider.of<AppleSignInProvider>(context, listen: false);
-                  appleProvider.appleLogin();
-                }, text: 'Sign in with Apple'),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.transparent,
+                  ),
+                  onPressed: () {
+                    Navigator.pop;
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const EnterZipCode()));
+                  },
+                  child: Text('Skip this step'),
+                ),
+              ),
+              const SizedBox(
+                height: 25,
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  SizedBox(
+                    width: 100,
+                    child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.transparent,
+                        ),
+                        child: const Image(
+                            image: AssetImage('graphics/icons8-google-48.png')),
+                        onPressed: () {
+                          final provider = Provider.of<GoogleSignInProvider>(
+                              context,
+                              listen: false);
+                          provider.googleLogin();
+                        }),
+                  ),
+                  SizedBox(
+                    width: 100,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.transparent,
+                      ),
+                      onPressed: () {
+                        final appleProvider = Provider.of<AppleSignInProvider>(
+                            context,
+                            listen: false);
+                        appleProvider.appleLogin();
+                      },
+                      child: Image(
+                        image: AssetImage('graphics/icons8-apple-logo-50.png'),
+                      ),
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(
                 height: 10,
@@ -140,134 +175,6 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  SingleChildScrollView signInModal(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          const Text(
-            'Sign In',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email Address',
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            width: 100,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Sign In'),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  SingleChildScrollView signUpModal(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          const Text(
-            'Sign In',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'First Name',
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Last Name',
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email Address',
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Confirm Password',
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 100,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Sign In'),
-            ),
-          ),
-        ],
       ),
     );
   }
