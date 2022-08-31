@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
@@ -60,7 +59,7 @@ class MyApp extends StatelessWidget {
       scaffoldBackgroundColor: HexColor('2B303A'),
       textTheme: TextTheme(
         bodyLarge: TextStyle(
-            fontSize: 20,
+            fontSize: 25,
             color: HexColor('FFFFFF'),
             fontWeight: FontWeight.w300),
         bodyMedium: TextStyle(
@@ -69,7 +68,7 @@ class MyApp extends StatelessWidget {
           fontWeight: FontWeight.w300,
         ),
         bodySmall: TextStyle(
-          fontSize: 13,
+          fontSize: 15,
           color: HexColor('FFFFFF'),
           fontWeight: FontWeight.w300,
         ),
@@ -90,7 +89,7 @@ class MyApp extends StatelessWidget {
           elevation: MaterialStateProperty.all<double>(0),
           minimumSize: MaterialStateProperty.all<Size>(const Size(500, 40)),
           backgroundColor: MaterialStateProperty.all<Color>(
-            HexColor('7C90A0'),
+            HexColor('EE6C4D'),
           ),
           foregroundColor: MaterialStateProperty.all<Color>(
             HexColor('ffffff'),
