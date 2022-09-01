@@ -126,7 +126,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                         MaterialPageRoute(
                             builder: (context) => const EnterZipCode()));
                   },
-                  child: Text('Skip this step'),
+                  child: const Text('Skip this step'),
                 ),
               ),
               const SizedBox(
@@ -162,7 +162,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                             listen: false);
                         appleProvider.appleLogin();
                       },
-                      child: Image(
+                      child: const Image(
                         image: AssetImage('graphics/icons8-apple-logo-50.png'),
                       ),
                     ),
@@ -188,9 +188,9 @@ class OrangeLines extends CustomPainter {
       ..strokeWidth = 15
       ..strokeCap = StrokeCap.round;
 
-    canvas.drawLine(Offset(120, -75), Offset(550, 300), paint);
+    canvas.drawLine(const Offset(120, -75), const Offset(550, 300), paint);
 
-    canvas.drawLine(const Offset(120, 0), Offset(400, 250), paint);
+    canvas.drawLine(const Offset(120, 0), const Offset(400, 250), paint);
   }
 
   @override
