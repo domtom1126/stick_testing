@@ -18,6 +18,8 @@ class Liked extends StatefulWidget {
 }
 
 class _LikedState extends State<Liked> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -218,137 +220,136 @@ class _LikedState extends State<Liked> {
 
   Center buildSignIn(BuildContext context) {
     return Center(
-      child: Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[800],
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          border: Border.all(
-            color: HexColor('EE6C4D'),
-          ),
-        ),
-        height: 400,
-        width: 300,
+      child: CustomPaint(
+        painter: OrangeLines(),
         child: Column(
           children: [
             const SizedBox(
-              height: 25,
+              height: 100,
             ),
             Text(
-              'You\'re not logged in!',
+              'Log in below to post',
               style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
-              height: 50,
+              height: 25,
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Text(
-                'Sign in below with Google. \n You\'ll see your liked cars after you sign in.',
-                style: Theme.of(context).textTheme.bodyMedium,
-                textAlign: TextAlign.center,
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: 300,
+              child: TextFormField(
+                textInputAction: TextInputAction.next,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
+                controller: _emailController,
+                keyboardAppearance: Brightness.dark,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: HexColor('EE815A'), width: 2.0),
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  hintText: 'Email',
+                ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter an email';
+                  }
+                  return null;
+                },
+              ),
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            SizedBox(
+              width: 300,
+              child: TextFormField(
+                textInputAction: TextInputAction.next,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
+                controller: _passwordController,
+                keyboardAppearance: Brightness.dark,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: HexColor('EE815A'), width: 2.0),
+                    borderRadius: BorderRadius.circular(25.0),
+                  ),
+                  hintText: 'Password',
+                ),
+                validator: (value) {
+                  // TODO put proper validation for password
+                  if (value!.isEmpty) {
+                    return 'Please enter a password';
+                  }
+                  return null;
+                },
               ),
             ),
             const SizedBox(
               height: 20,
             ),
-            Divider(
-              color: Colors.grey[800],
-              height: 50,
+            SizedBox(
+              width: 250,
+              child: ElevatedButton(
+                onPressed: () {
+                  signInUp(
+                    _emailController.toString(),
+                    _passwordController.toString(),
+                  );
+                  // TODO Update to the signed in page
+                },
+                child: Text('Sign in / up'),
+              ),
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SignInButton(Buttons.Google,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ), onPressed: () {
-                final provider =
-                    Provider.of<GoogleSignInProvider>(context, listen: false);
-                provider.googleLogin();
-              }),
+            const SizedBox(
+              height: 25,
             ),
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: SignInButton(Buttons.Apple,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ), onPressed: () {
-                final appleProvider =
-                    Provider.of<AppleSignInProvider>(context, listen: false);
-                appleProvider.appleLogin();
-              }, text: 'Sign in with Apple'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.transparent,
+                      ),
+                      child: const Image(
+                          image: AssetImage('graphics/icons8-google-48.png')),
+                      onPressed: () {
+                        final provider = Provider.of<GoogleSignInProvider>(
+                            context,
+                            listen: false);
+                        provider.googleLogin();
+                      }),
+                ),
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.transparent,
+                    ),
+                    onPressed: () {
+                      final appleProvider = Provider.of<AppleSignInProvider>(
+                          context,
+                          listen: false);
+                      appleProvider.appleLogin();
+                    },
+                    child: const Image(
+                      image: AssetImage('graphics/icons8-apple-logo-50.png'),
+                    ),
+                  ),
+                ),
+              ],
             ),
             const SizedBox(
               height: 10,
-            ),
-            SizedBox(
-              height: 35,
-              width: 220,
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: ElevatedButton(
-                    onPressed: () {
-                      // show dialog
-                      showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              backgroundColor: Colors.black,
-                              title: const Text('Coming Soon!'),
-                              content: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                children: [
-                                  SizedBox(
-                                    width: 100,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        showModalBottomSheet(
-                                            isScrollControlled: true,
-                                            backgroundColor: HexColor('40434E'),
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20),
-                                                topRight: Radius.circular(20),
-                                              ),
-                                            ),
-                                            context: context,
-                                            builder: (BuildContext context) =>
-                                                signUpModal(context));
-                                      },
-                                      child: const Text('Sign Up'),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: 100,
-                                    child: ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.of(context).pop();
-                                        // show bottommodal
-                                        showModalBottomSheet(
-                                            backgroundColor: HexColor('40434E'),
-                                            shape: const RoundedRectangleBorder(
-                                              borderRadius: BorderRadius.only(
-                                                topLeft: Radius.circular(20),
-                                                topRight: Radius.circular(20),
-                                              ),
-                                            ),
-                                            context: context,
-                                            builder: (BuildContext context) {
-                                              return signInModal(context);
-                                            });
-                                      },
-                                      child: const Text('Sign In'),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            );
-                          });
-                    },
-                    child: const Text('Sign in with email')),
-              ),
             ),
           ],
         ),
@@ -483,4 +484,21 @@ class _LikedState extends State<Liked> {
       ),
     );
   }
+}
+
+class OrangeLines extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    var paint = Paint()
+      ..color = HexColor('EE6C4D')
+      ..strokeWidth = 15
+      ..strokeCap = StrokeCap.round;
+
+    canvas.drawLine(const Offset(200, -125), const Offset(550, 200), paint);
+
+    canvas.drawLine(const Offset(120, -110), const Offset(400, 150), paint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
