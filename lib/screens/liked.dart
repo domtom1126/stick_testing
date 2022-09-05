@@ -228,7 +228,7 @@ class _LikedState extends State<Liked> {
               height: 100,
             ),
             Text(
-              'Log in below to post',
+              'Log in to view liked cars',
               style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
               textAlign: TextAlign.center,
             ),
