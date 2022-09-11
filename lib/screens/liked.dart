@@ -229,7 +229,7 @@ class _LikedState extends State<Liked> {
             ),
             Text(
               'Log in to view liked cars',
-              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 24),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
@@ -305,7 +305,7 @@ class _LikedState extends State<Liked> {
                   );
                   // TODO Update to the signed in page
                 },
-                child: Text('Sign in / up'),
+                child: const Text('Sign in / up'),
               ),
             ),
             const SizedBox(
@@ -318,7 +318,7 @@ class _LikedState extends State<Liked> {
                   width: 100,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
+                        backgroundColor: Colors.transparent,
                       ),
                       child: const Image(
                           image: AssetImage('graphics/icons8-google-48.png')),
@@ -333,7 +333,7 @@ class _LikedState extends State<Liked> {
                   width: 100,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent,
+                      backgroundColor: Colors.transparent,
                     ),
                     onPressed: () {
                       final appleProvider = Provider.of<AppleSignInProvider>(
