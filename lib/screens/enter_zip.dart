@@ -109,7 +109,7 @@ class _EnterZipCodeState extends State<EnterZipCode> {
                 width: 250,
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
-                    primary: Colors.transparent,
+                    backgroundColor: Colors.transparent,
                   ),
                   onPressed: () {
                     Navigator.push(
@@ -130,7 +130,7 @@ class _EnterZipCodeState extends State<EnterZipCode> {
                     width: 100,
                     child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          primary: Colors.transparent,
+                          backgroundColor: Colors.transparent,
                         ),
                         child: const Image(
                             image: AssetImage('graphics/icons8-google-48.png')),
@@ -145,7 +145,7 @@ class _EnterZipCodeState extends State<EnterZipCode> {
                     width: 100,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
+                        backgroundColor: Colors.transparent,
                       ),
                       onPressed: () {
                         final appleProvider = Provider.of<AppleSignInProvider>(
