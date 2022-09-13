@@ -1,11 +1,9 @@
-import 'dart:io';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:find_a_stick/firebase_functions/post_listing.dart';
-import 'package:find_a_stick/screens/profile_widgets/sign_in.dart';
+import 'package:find_a_stick/screens/profile_widgets/profile_sign_in.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:hexcolor/hexcolor.dart';
