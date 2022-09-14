@@ -234,53 +234,70 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          pickedImage != null
-              ? Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: pickImage,
-                      child: const Text('Add Another Image'),
-                    ),
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child:
-                            Image.file(pickedImage!, height: 200, width: 200)),
-                  ],
-                )
-              : SizedBox(
-                  height: 200,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        primary: HexColor('23262F'), elevation: 15),
-                    onPressed: pickImage,
-                    child: Column(
-                      children: const [
-                        SizedBox(
-                          height: 65,
-                        ),
-                        Icon(
-                          Icons.add_circle_sharp,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text('Add Image'),
-                      ],
-                    ),
-                  ),
-                ),
+          CarouselSlider(
+            options: CarouselOptions(height: 200),
+            items: [1, 2, 3, 4, 5].map((i) {
+              return Builder(
+                builder: (BuildContext context) {
+                  return Container(
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(horizontal: 5.0),
+                      decoration: BoxDecoration(color: Colors.amber),
+                      child: Text(
+                        'text $i',
+                        style: TextStyle(fontSize: 16.0),
+                      ));
+                },
+              );
+            }).toList(),
+          ),
+          // pickedImage != null
+          //     ? Column(
+          //         children: [
+          //           ElevatedButton(
+          //             onPressed: pickImage,
+          //             child: const Text('Add Another Image'),
+          //           ),
+          //           ClipRRect(
+          //               borderRadius: BorderRadius.circular(10),
+          //               child:
+          //                   Image.file(pickedImage!, height: 200, width: 200)),
+          //         ],
+          //       )
+          // : SizedBox(
+          //     height: 200,
+          //     child: ElevatedButton(
+          //       style: ElevatedButton.styleFrom(
+          //           backgroundColor: HexColor('23262F'), elevation: 15),
+          //       onPressed: pickImage,
+          //       child: Column(
+          //         children: const [
+          //           SizedBox(
+          //             height: 65,
+          //           ),
+          //           Icon(
+          //             Icons.add_circle_sharp,
+          //             color: Colors.white,
+          //           ),
+          //           SizedBox(
+          //             height: 5,
+          //           ),
+          //           Text('Add Image'),
+          //         ],
+          //       ),
+          //     ),
+          //   ),
           // * This actually works! but for now just do single image
-          // CarouselSlider.builder(
+          // : CarouselSlider.builder(
           // options: CarouselOptions(height: 200),
           // itemCount: pickedImage.length,
           // itemBuilder: (context, index, realIndex) {
           // final singleImage = pickedImage[index];
 
           // return Container(
-          // margin: EdgeInsets.all(5.0),
+          // margin: const EdgeInsets.all(5.0),
           // child: ClipRRect(
-          // borderRadius: BorderRadius.all(Radius.circular(5.0)),
+          // borderRadius: const BorderRadius.all(Radius.circular(5.0)),
           // child: Image.file(
           // singleImage!,
           // fit: BoxFit.cover,
@@ -412,7 +429,7 @@ class _PostFormState extends State<PostForm> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               isLoading
-                  ? CircularProgressIndicator()
+                  ? const CircularProgressIndicator()
                   : SizedBox(
                       width: 100,
                       child: ElevatedButton(
