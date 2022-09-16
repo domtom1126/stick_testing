@@ -28,13 +28,10 @@ class _PostFormState extends State<PostForm> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _zipCodeController = TextEditingController();
-  File? pickedImage;
+  List<XFile>? pickedImages;
   Future pickImage() async {
     final _imagePicker = ImagePicker();
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-    final imageTemp = File(pickedImage!.path);
-    setState(() => this.pickedImage = imageTemp);
+    pickedImages = await _imagePicker.pickMultiImage();
   }
 
   @override
@@ -234,59 +231,60 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          CarouselSlider(
-            options: CarouselOptions(height: 200),
-            items: [1, 2, 3, 4, 5].map((i) {
-              return Builder(
-                builder: (BuildContext context) {
-                  return Container(
-                      width: MediaQuery.of(context).size.width,
-                      margin: EdgeInsets.symmetric(horizontal: 5.0),
-                      decoration: BoxDecoration(color: Colors.amber),
-                      child: Text(
-                        'text $i',
-                        style: TextStyle(fontSize: 16.0),
-                      ));
-                },
-              );
-            }).toList(),
-          ),
-          // pickedImage != null
-          //     ? Column(
-          //         children: [
-          //           ElevatedButton(
-          //             onPressed: pickImage,
-          //             child: const Text('Add Another Image'),
-          //           ),
-          //           ClipRRect(
-          //               borderRadius: BorderRadius.circular(10),
-          //               child:
-          //                   Image.file(pickedImage!, height: 200, width: 200)),
-          //         ],
-          //       )
-          // : SizedBox(
-          //     height: 200,
-          //     child: ElevatedButton(
-          //       style: ElevatedButton.styleFrom(
-          //           backgroundColor: HexColor('23262F'), elevation: 15),
-          //       onPressed: pickImage,
-          //       child: Column(
-          //         children: const [
-          //           SizedBox(
-          //             height: 65,
-          //           ),
-          //           Icon(
-          //             Icons.add_circle_sharp,
-          //             color: Colors.white,
-          //           ),
-          //           SizedBox(
-          //             height: 5,
-          //           ),
-          //           Text('Add Image'),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
+          pickedImages != null
+              ? CarouselSlider(
+                  options: CarouselOptions(height: 200),
+                  items: [1, 2, 3, 4, 5].map((i) {
+                    return Builder(
+                      builder: (BuildContext context) {
+                        return Container(
+                            width: MediaQuery.of(context).size.width,
+                            margin: EdgeInsets.symmetric(horizontal: 5.0),
+                            decoration: BoxDecoration(color: Colors.amber),
+                            child: Text(
+                              'text $i',
+                              style: TextStyle(fontSize: 16.0),
+                            ));
+                      },
+                    );
+                  }).toList(),
+                )
+              // pickedImage != null
+              //     ? Column(
+              //         children: [
+              //           ElevatedButton(
+              //             onPressed: pickImage,
+              //             child: const Text('Add Another Image'),
+              //           ),
+              //           ClipRRect(
+              //               borderRadius: BorderRadius.circular(10),
+              //               child:
+              //                   Image.file(pickedImage!, height: 200, width: 200)),
+              //         ],
+              //       )
+              : SizedBox(
+                  height: 200,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: HexColor('23262F'), elevation: 15),
+                    onPressed: pickImage,
+                    child: Column(
+                      children: const [
+                        SizedBox(
+                          height: 65,
+                        ),
+                        Icon(
+                          Icons.add_circle_sharp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text('Add Image'),
+                      ],
+                    ),
+                  ),
+                ),
           // * This actually works! but for now just do single image
           // : CarouselSlider.builder(
           // options: CarouselOptions(height: 200),
@@ -361,13 +359,13 @@ class _PostFormState extends State<PostForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              pickedImage!.path,
-              fit: BoxFit.fitWidth,
-            ),
-          ),
+          // ClipRRect(
+          //   borderRadius: BorderRadius.circular(10),
+          //   child: Image.asset(
+          //     pickedImage!.path,
+          //     fit: BoxFit.fitWidth,
+          //   ),
+          // ),
           Row(
             children: [
               Text(
@@ -425,59 +423,59 @@ class _PostFormState extends State<PostForm> {
           const SizedBox(
             height: 20,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              isLoading
-                  ? const CircularProgressIndicator()
-                  : SizedBox(
-                      width: 100,
-                      child: ElevatedButton(
-                          onPressed: () async {
-                            setState(() {
-                              isLoading = true;
-                            });
-                            final _postListing = PostListing(
-                              make: _makeController.text,
-                              model: _modelController.text,
-                              year: _yearController.text,
-                              odometer: _odometerController.text,
-                              price: _priceController.text,
-                              // TODO Replace with email
-                              zipCode: _zipCodeController.text,
-                              description: _descriptionController.text,
-                              image: pickedImage!,
-                              dateAdded: DateTime.now().toString(),
-                            );
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //   children: [
+          //     isLoading
+          //         ? const CircularProgressIndicator()
+          //         : SizedBox(
+          //             width: 100,
+          //             child: ElevatedButton(
+          //                 onPressed: () async {
+          //                   setState(() {
+          //                     isLoading = true;
+          //                   });
+          //                   final _postListing = PostListing(
+          //                     make: _makeController.text,
+          //                     model: _modelController.text,
+          //                     year: _yearController.text,
+          //                     odometer: _odometerController.text,
+          //                     price: _priceController.text,
+          //                     // TODO Replace with email
+          //                     zipCode: _zipCodeController.text,
+          //                     description: _descriptionController.text,
+          //                     image: pickedImages!,
+          //                     dateAdded: DateTime.now().toString(),
+          //                   );
 
-                            await _postListing.addPost(
-                              _makeController.text,
-                              _modelController.text,
-                              _yearController.text,
-                              _odometerController.text,
-                              _priceController.text,
-                              _zipCodeController.text,
-                              _descriptionController.text,
-                              pickedImage!,
-                            );
-                            await _postListing
-                                .addMake(_makeController.text.toTitleCase());
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, '/home', (_) => false);
-                          },
-                          child: const Text('Yes')),
-                    ),
-              SizedBox(
-                width: 100,
-                child: ElevatedButton(
-                    onPressed: Navigator.of(context).pop,
-                    child: const Center(child: Text('Edit'))),
-              ),
-            ],
-          ),
+          //                   await _postListing.addPost(
+          //                     _makeController.text,
+          //                     _modelController.text,
+          //                     _yearController.text,
+          //                     _odometerController.text,
+          //                     _priceController.text,
+          //                     _zipCodeController.text,
+          //                     _descriptionController.text,
+          //                     pickedImage!,
+          //                   );
+          //                   await _postListing
+          //                       .addMake(_makeController.text.toTitleCase());
+          //                   setState(() {
+          //                     isLoading = false;
+          //                   });
+          //                   Navigator.pushNamedAndRemoveUntil(
+          //                       context, '/home', (_) => false);
+          //                 },
+          //                 child: const Text('Yes')),
+          //           ),
+          //     SizedBox(
+          //       width: 100,
+          //       child: ElevatedButton(
+          //           onPressed: Navigator.of(context).pop,
+          //           child: const Center(child: Text('Edit'))),
+          //     ),
+          //   ],
+          // ),
           const SizedBox(height: 20),
         ],
       ),
