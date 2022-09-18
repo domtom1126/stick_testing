@@ -234,17 +234,18 @@ class _PostFormState extends State<PostForm> {
           pickedImages != null
               ? CarouselSlider(
                   options: CarouselOptions(height: 200),
-                  items: [1, 2, 3, 4, 5].map((i) {
+                  items: [pickedImages].map((i) {
                     return Builder(
                       builder: (BuildContext context) {
                         return Container(
-                            width: MediaQuery.of(context).size.width,
-                            margin: EdgeInsets.symmetric(horizontal: 5.0),
-                            decoration: BoxDecoration(color: Colors.amber),
-                            child: Text(
-                              'text $i',
-                              style: TextStyle(fontSize: 16.0),
-                            ));
+                          width: MediaQuery.of(context).size.width,
+                          margin: EdgeInsets.symmetric(horizontal: 5.0),
+                          decoration: BoxDecoration(color: Colors.amber),
+                          child: Text(
+                            'text $i',
+                            style: TextStyle(fontSize: 16.0),
+                          ),
+                        );
                       },
                     );
                   }).toList(),
@@ -305,6 +306,7 @@ class _PostFormState extends State<PostForm> {
           // },
           // ),
           const SizedBox(height: 20),
+          // Confirm BUtton
           ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
@@ -347,7 +349,7 @@ class _PostFormState extends State<PostForm> {
                       );
                 }
               },
-              child: const Text('Confirm')),
+              child: const Text('Post Car')),
         ],
       ),
     );
