@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -36,8 +34,8 @@ class _PostSignInState extends State<PostSignIn> {
               height: 100,
             ),
             Text(
-              'Log in below to post',
-              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+              'Log in to post',
+              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 24),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
@@ -126,7 +124,7 @@ class _PostSignInState extends State<PostSignIn> {
                   width: 100,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
+                        backgroundColor: Colors.transparent,
                       ),
                       child: const Image(
                           image: AssetImage('graphics/icons8-google-48.png')),
@@ -141,7 +139,7 @@ class _PostSignInState extends State<PostSignIn> {
                   width: 100,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent,
+                      backgroundColor: Colors.transparent,
                     ),
                     onPressed: () {
                       final appleProvider = Provider.of<AppleSignInProvider>(
@@ -161,134 +159,6 @@ class _PostSignInState extends State<PostSignIn> {
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  SingleChildScrollView signInModal(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          const Text(
-            'Sign In',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email Address',
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          SizedBox(
-            width: 100,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Sign In'),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-        ],
-      ),
-    );
-  }
-
-  SingleChildScrollView signUpModal(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          const SizedBox(
-            height: 20,
-          ),
-          const Text(
-            'Sign In',
-            style: TextStyle(color: Colors.white, fontSize: 20),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'First Name',
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Last Name',
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Email Address',
-              ),
-            ),
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Password',
-              ),
-            ),
-          ),
-          const SizedBox(
-            height: 20,
-          ),
-          const Padding(
-            padding: EdgeInsets.all(8.0),
-            child: TextField(
-              decoration: InputDecoration(
-                border: OutlineInputBorder(),
-                labelText: 'Confirm Password',
-              ),
-            ),
-          ),
-          SizedBox(
-            width: 100,
-            child: ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Sign In'),
-            ),
-          ),
-        ],
       ),
     );
   }
