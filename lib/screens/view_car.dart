@@ -107,19 +107,19 @@ class _ViewCarState extends State<ViewCar> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
-                          title: Text('Report vehicle'),
-                          content: Text(
+                          title: const Text('Report vehicle'),
+                          content: const Text(
                               'Are you sure you want to report this vehicle?'),
                           actions: [
                             ElevatedButton(
-                              child: Text('Yes'),
+                              child: const Text('Yes'),
                               onPressed: () {
                                 sendReportedEmail();
                                 Navigator.of(context).pop();
                               },
                             ),
                             ElevatedButton(
-                              child: Text('No'),
+                              child: const Text('No'),
                               onPressed: () {
                                 Navigator.of(context).pop();
                               },
@@ -186,7 +186,7 @@ class _ViewCarState extends State<ViewCar> {
                   SizedBox(
                     width: 100,
                     child: ElevatedButton(
-                      child: Icon(Icons.favorite, color: Colors.red),
+                      child: const Icon(Icons.favorite, color: Colors.red),
                       onPressed: () async {
                         await HapticFeedback.heavyImpact();
                         showDialog(
@@ -194,14 +194,14 @@ class _ViewCarState extends State<ViewCar> {
                             builder: (context) {
                               return AlertDialog(
                                 backgroundColor: Colors.black45,
-                                title: Text('Are you sure?'),
+                                title: const Text('Are you sure?'),
                                 content: Text(
                                     'Do you want to remove this car from your likes?',
                                     style:
                                         Theme.of(context).textTheme.bodyMedium),
                                 actions: [
                                   ElevatedButton(
-                                    child: Text('Yes'),
+                                    child: const Text('Yes'),
                                     onPressed: () {
                                       FirebaseFirestore.instance
                                           .collection('posts')
@@ -218,7 +218,7 @@ class _ViewCarState extends State<ViewCar> {
                                     },
                                   ),
                                   ElevatedButton(
-                                    child: Text('No'),
+                                    child: const Text('No'),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
@@ -233,7 +233,7 @@ class _ViewCarState extends State<ViewCar> {
                   SizedBox(
                     width: 100,
                     child: ElevatedButton(
-                      child: Icon(
+                      child: const Icon(
                         Icons.favorite,
                         color: Colors.white,
                       ),
@@ -255,7 +255,7 @@ class _ViewCarState extends State<ViewCar> {
                   width: 100,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: HexColor('EE6C4D'),
+                      backgroundColor: HexColor('EE6C4D'),
                     ),
                     child: const Icon(Icons.message),
                     onPressed: () {
