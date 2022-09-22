@@ -1,3 +1,5 @@
+import 'package:find_a_stick/screens/profile.dart';
+import 'package:find_a_stick/screens/profile_widgets/profile_screen.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +35,7 @@ class _ProfileSignInState extends State<ProfileSignIn> {
             ),
             Text(
               'Log in to view profile',
-              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 24),
               textAlign: TextAlign.center,
             ),
             const SizedBox(
@@ -60,7 +62,9 @@ class _ProfileSignInState extends State<ProfileSignIn> {
                   hintText: 'Email',
                 ),
                 validator: (value) {
-                  if (value!.isEmpty) {
+                  final emailRegex = RegExp(
+                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+                  if (value!.isEmpty || !emailRegex.hasMatch(value)) {
                     return 'Please enter an email';
                   }
                   return null;
@@ -88,8 +92,10 @@ class _ProfileSignInState extends State<ProfileSignIn> {
                   hintText: 'Password',
                 ),
                 validator: (value) {
+                  final passwordRegex = RegExp(
+                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
                   // TODO put proper validation for password
-                  if (value!.isEmpty) {
+                  if (value!.isEmpty || !passwordRegex.hasMatch(value)) {
                     return 'Please enter a password';
                   }
                   return null;
@@ -107,9 +113,14 @@ class _ProfileSignInState extends State<ProfileSignIn> {
                     _emailController.toString(),
                     _passwordController.toString(),
                   );
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfilePage()));
                   // TODO Update to the signed in page
                 },
-                child: Text('Sign in / up'),
+                child: const Text('Sign in / up'),
               ),
             ),
             const SizedBox(
@@ -122,7 +133,7 @@ class _ProfileSignInState extends State<ProfileSignIn> {
                   width: 100,
                   child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
+                        backgroundColor: Colors.transparent,
                       ),
                       child: const Image(
                           image: AssetImage('graphics/icons8-google-48.png')),
@@ -137,7 +148,7 @@ class _ProfileSignInState extends State<ProfileSignIn> {
                   width: 100,
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      primary: Colors.transparent,
+                      backgroundColor: Colors.transparent,
                     ),
                     onPressed: () {
                       final appleProvider = Provider.of<AppleSignInProvider>(
