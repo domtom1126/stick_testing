@@ -21,13 +21,21 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  Future firstUse() async {
-    bool firstRun = await IsFirstRun.isFirstRun();
-    if (firstRun) {
-      // Open page
-      const IntroductionScreen();
+  Future checkFirstSeen() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool _seen = (prefs.getBool('seen') ?? false);
+
+    if (_seen) {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const Home()));
+    } else {
+      await prefs.setBool('seen', true);
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const IntroductionScreen()));
     }
   }
+
+  void afterFirstLayout(BuildContext context) => checkFirstSeen();
 
   final cars = FirebaseFirestore.instance
       .collection('posts')
@@ -36,7 +44,6 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    firstUse();
     return Scaffold(
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
