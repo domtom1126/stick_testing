@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -28,10 +26,12 @@ class _PostFormState extends State<PostForm> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _zipCodeController = TextEditingController();
-  List<XFile>? pickedImages;
+  List<XFile>? userPickedImages;
+  late PageController _pageController;
   Future pickImage() async {
     final _imagePicker = ImagePicker();
-    pickedImages = await _imagePicker.pickMultiImage();
+    userPickedImages = await _imagePicker.pickMultiImage();
+    List<XFile>? imagePaths = userPickedImages;
   }
 
   @override
@@ -231,24 +231,16 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          pickedImages != null
-              ? CarouselSlider(
-                  options: CarouselOptions(height: 200),
-                  items: [pickedImages].map((i) {
-                    return Builder(
-                      builder: (BuildContext context) {
-                        return Container(
-                          width: MediaQuery.of(context).size.width,
-                          margin: EdgeInsets.symmetric(horizontal: 5.0),
-                          decoration: BoxDecoration(color: Colors.amber),
-                          child: Text(
-                            'text $i',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        );
-                      },
+          userPickedImages != null
+              ? PageView.builder(
+                  itemCount: userPickedImages?.length,
+                  itemBuilder: (context, pagePostion) {
+                    return Container(
+                      margin: const EdgeInsets.all(10),
+                      child: Image.network(
+                          userPickedImages![pagePostion].toString()),
                     );
-                  }).toList(),
+                  },
                 )
               // pickedImage != null
               //     ? Column(
