@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:is_first_run/is_first_run.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:after_layout/after_layout.dart';
 
 // TODO Add explain page for first time runners
 // TODO * Add package is_first_run
@@ -20,7 +21,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with AfterLayoutMixin<Home> {
   Future checkFirstSeen() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool _seen = (prefs.getBool('seen') ?? false);
@@ -35,6 +36,7 @@ class _HomeState extends State<Home> {
     }
   }
 
+  @override
   void afterFirstLayout(BuildContext context) => checkFirstSeen();
 
   final cars = FirebaseFirestore.instance
