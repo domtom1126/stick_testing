@@ -10,6 +10,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import '../signin_controller.dart';
 
+/* 
+1. Page view with screen
+*/
 class IntroductionScreen extends StatefulWidget {
   const IntroductionScreen({Key? key}) : super(key: key);
 
@@ -22,158 +25,186 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: CustomPaint(
-          painter: OrangeLines(),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 200,
-              ),
-              Text(
-                'Find a Stick',
-                style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+        body: Container(
+      padding: const EdgeInsets.only(bottom: 80),
+      child: PageView(
+        children: [
+          SignIn(emailController: _emailController),
+          Container(
+            child: Text('Another page'),
+          ),
+          Container(
+            child: Text('Another 2'),
+          ),
+        ],
+      ),
+    ));
+  }
+}
+
+class SignIn extends StatelessWidget {
+  const SignIn({
+    Key? key,
+    required TextEditingController emailController,
+  })  : _emailController = emailController,
+        super(key: key);
+
+  final TextEditingController _emailController;
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: CustomPaint(
+        painter: OrangeLines(),
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 200,
+            ),
+            Text(
+              'Find a Stick',
+              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Padding(
+              padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+              child: Text(
+                'The only app to find manual transmission vehicles',
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
-              const SizedBox(
-                height: 25,
-              ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),
-                child: Text(
-                  'The only app to find manual transmission vehicles',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                  textAlign: TextAlign.center,
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              SizedBox(
-                width: 300,
-                child: TextFormField(
-                  textInputAction: TextInputAction.next,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(20),
-                  ],
-                  controller: _emailController,
-                  keyboardAppearance: Brightness.dark,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: HexColor('EE815A'), width: 2.0),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    hintText: 'Email',
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: 300,
+              child: TextFormField(
+                textInputAction: TextInputAction.next,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
+                controller: _emailController,
+                keyboardAppearance: Brightness.dark,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: HexColor('EE815A'), width: 2.0),
+                    borderRadius: BorderRadius.circular(25.0),
                   ),
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Please enter an email';
-                    }
-                    return null;
-                  },
+                  hintText: 'Email',
                 ),
+                validator: (value) {
+                  if (value!.isEmpty) {
+                    return 'Please enter an email';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                width: 300,
-                child: TextFormField(
-                  textInputAction: TextInputAction.next,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(20),
-                  ],
-                  controller: _emailController,
-                  keyboardAppearance: Brightness.dark,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: HexColor('EE815A'), width: 2.0),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    hintText: 'Password',
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            SizedBox(
+              width: 300,
+              child: TextFormField(
+                textInputAction: TextInputAction.next,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
+                controller: _emailController,
+                keyboardAppearance: Brightness.dark,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: HexColor('EE815A'), width: 2.0),
+                    borderRadius: BorderRadius.circular(25.0),
                   ),
-                  validator: (value) {
-                    // TODO put proper validation for password
-                    if (value!.isEmpty) {
-                      return 'Please enter a password';
-                    }
-                    return null;
-                  },
+                  hintText: 'Password',
                 ),
+                validator: (value) {
+                  // TODO put proper validation for password
+                  if (value!.isEmpty) {
+                    return 'Please enter a password';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(
-                height: 20,
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            const SizedBox(
+              width: 250,
+              child: ElevatedButton(
+                // TODO do something after they click sign in sign up
+                onPressed: null,
+                child: Text('Sign in / up'),
               ),
-              const SizedBox(
-                width: 250,
-                child: ElevatedButton(
-                  onPressed: null,
-                  child: Text('Sign in / up'),
+            ),
+            SizedBox(
+              width: 250,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.transparent,
                 ),
+                onPressed: () {
+                  Navigator.pop;
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const EnterZipCode()));
+                },
+                child: const Text('Skip this step'),
               ),
-              SizedBox(
-                width: 250,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    primary: Colors.transparent,
-                  ),
-                  onPressed: () {
-                    Navigator.pop;
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const EnterZipCode()));
-                  },
-                  child: const Text('Skip this step'),
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: 100,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.transparent,
-                        ),
-                        child: const Image(
-                            image: AssetImage('graphics/icons8-google-48.png')),
-                        onPressed: () {
-                          final provider = Provider.of<GoogleSignInProvider>(
-                              context,
-                              listen: false);
-                          provider.googleLogin();
-                        }),
-                  ),
-                  SizedBox(
-                    width: 100,
-                    child: ElevatedButton(
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
-                        primary: Colors.transparent,
+                        backgroundColor: Colors.transparent,
                       ),
+                      child: const Image(
+                          image: AssetImage('graphics/icons8-google-48.png')),
                       onPressed: () {
-                        final appleProvider = Provider.of<AppleSignInProvider>(
+                        final provider = Provider.of<GoogleSignInProvider>(
                             context,
                             listen: false);
-                        appleProvider.appleLogin();
-                      },
-                      child: const Image(
-                        image: AssetImage('graphics/icons8-apple-logo-50.png'),
-                      ),
+                        provider.googleLogin();
+                      }),
+                ),
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                    ),
+                    onPressed: () {
+                      final appleProvider = Provider.of<AppleSignInProvider>(
+                          context,
+                          listen: false);
+                      appleProvider.appleLogin();
+                    },
+                    child: const Image(
+                      image: AssetImage('graphics/icons8-apple-logo-50.png'),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
         ),
       ),
     );
