@@ -1,4 +1,5 @@
 import 'package:find_a_stick/screens/enter_zip.dart';
+import 'package:find_a_stick/screens/home.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,6 +7,7 @@ import 'package:flutter_signin_button/button_view.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../signin_controller.dart';
@@ -151,12 +153,12 @@ class SignIn extends StatelessWidget {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.transparent,
                 ),
-                onPressed: () {
-                  Navigator.pop;
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const EnterZipCode()));
+                onPressed: () async {
+                  final prefs = await SharedPreferences.getInstance();
+                  prefs.setBool('showHome', true);
+
+                  Navigator.of(context).pushReplacement(
+                      MaterialPageRoute(builder: (context) => const Home()));
                 },
                 child: const Text('Skip this step'),
               ),
