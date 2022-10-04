@@ -1,20 +1,26 @@
+import 'package:find_a_stick/screens/intro.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const MyApp());
+  final prefs = await SharedPreferences.getInstance();
+  final showHome = prefs.getBool('showHome') ?? false;
+
+  runApp(MyApp(showHome: showHome));
 }
 
 class MyApp extends StatelessWidget {
   static final ValueNotifier<ThemeMode> themeNotifier =
       ValueNotifier(ThemeMode.light);
-  const MyApp({Key? key}) : super(key: key);
+  final bool showHome;
+  const MyApp({Key? key, required this.showHome}) : super(key: key);
 
   // This widget is the root of your application.
   @override
@@ -39,7 +45,7 @@ class MyApp extends StatelessWidget {
             theme: darkTheme(),
             darkTheme: darkTheme(),
             themeMode: currentMode,
-            home: const BottomBar(),
+            home: showHome ? const BottomBar() : const IntroductionScreen(),
           ),
         );
       },
