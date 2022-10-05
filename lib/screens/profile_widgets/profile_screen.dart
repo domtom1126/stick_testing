@@ -257,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 10,
                 ),
                 ElevatedButton(
-                    style: ButtonStyle(
+                    style: const ButtonStyle(
                         // backgroundColor: MaterialStateProperty.all(EE6C4F),
                         ),
                     onPressed: () {},
