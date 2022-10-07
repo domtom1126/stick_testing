@@ -1,5 +1,5 @@
 import 'package:find_a_stick/screens/profile_widgets/profile_screen.dart';
-import 'package:find_a_stick/screens/profile_widgets/sign_in.dart';
+import 'package:find_a_stick/screens/profile_widgets/profile_sign_in.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
