@@ -24,6 +24,7 @@ class IntroductionScreen extends StatefulWidget {
 
 class _IntroductionScreenState extends State<IntroductionScreen> {
   final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -31,13 +32,16 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
       padding: const EdgeInsets.only(bottom: 80),
       child: PageView(
         children: [
-          SignIn(emailController: _emailController),
-          Container(
-            child: Text('Another page'),
+          SignIn(
+            emailController: _emailController,
+            passwordController: _passwordController,
           ),
-          Container(
-            child: Text('Another 2'),
-          ),
+          // Container(
+          //   child: Text('Another page'),
+          // ),
+          // Container(
+          //   child: Text('Another 2'),
+          // ),
         ],
       ),
     ));
@@ -48,10 +52,13 @@ class SignIn extends StatelessWidget {
   const SignIn({
     Key? key,
     required TextEditingController emailController,
+    required TextEditingController passwordController,
   })  : _emailController = emailController,
+        _passwordController = passwordController,
         super(key: key);
 
   final TextEditingController _emailController;
+  final TextEditingController _passwordController;
 
   @override
   Widget build(BuildContext context) {
@@ -117,7 +124,7 @@ class SignIn extends StatelessWidget {
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(20),
                 ],
-                controller: _emailController,
+                controller: _passwordController,
                 keyboardAppearance: Brightness.dark,
                 decoration: InputDecoration(
                   focusedBorder: OutlineInputBorder(
