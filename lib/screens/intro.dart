@@ -1,5 +1,7 @@
 import 'package:find_a_stick/screens/enter_zip.dart';
 import 'package:find_a_stick/screens/home.dart';
+import 'package:find_a_stick/widgets/bottom_bar.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -23,46 +25,14 @@ class IntroductionScreen extends StatefulWidget {
 }
 
 class _IntroductionScreenState extends State<IntroductionScreen> {
+  final navigatorKey = GlobalKey<NavigatorState>();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        body: Container(
-      padding: const EdgeInsets.only(bottom: 80),
-      child: PageView(
-        children: [
-          SignIn(
-            emailController: _emailController,
-            passwordController: _passwordController,
-          ),
-          // Container(
-          //   child: Text('Another page'),
-          // ),
-          // Container(
-          //   child: Text('Another 2'),
-          // ),
-        ],
-      ),
-    ));
-  }
-}
-
-class SignIn extends StatelessWidget {
-  const SignIn({
-    Key? key,
-    required TextEditingController emailController,
-    required TextEditingController passwordController,
-  })  : _emailController = emailController,
-        _passwordController = passwordController,
-        super(key: key);
-
-  final TextEditingController _emailController;
-  final TextEditingController _passwordController;
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
+        body: Center(
       child: CustomPaint(
         painter: OrangeLines(),
         child: Column(
@@ -146,12 +116,17 @@ class SignIn extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            const SizedBox(
+            SizedBox(
               width: 250,
               child: ElevatedButton(
                 // TODO do something after they click sign in sign up
-                onPressed: null,
-                child: Text('Sign in / up'),
+                onPressed: () async {
+                  await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                    email: _emailController.text,
+                    password: _passwordController.text,
+                  );
+                },
+                child: const Text('Sign in / up'),
               ),
             ),
             SizedBox(
@@ -164,8 +139,8 @@ class SignIn extends StatelessWidget {
                   final prefs = await SharedPreferences.getInstance();
                   prefs.setBool('showHome', true);
 
-                  Navigator.of(context).pushReplacement(
-                      MaterialPageRoute(builder: (context) => const Home()));
+                  Navigator.of(context).pushReplacement(MaterialPageRoute(
+                      builder: (context) => const BottomBar()));
                 },
                 child: const Text('Skip this step'),
               ),
@@ -216,7 +191,7 @@ class SignIn extends StatelessWidget {
           ],
         ),
       ),
-    );
+    ));
   }
 }
 
