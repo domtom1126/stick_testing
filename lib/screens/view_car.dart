@@ -34,6 +34,9 @@ class ViewCar extends StatefulWidget {
 }
 
 class _ViewCarState extends State<ViewCar> {
+  bool onLiked = false;
+  final user = FirebaseAuth.instance.currentUser;
+
   Future sendReportedEmail() async {
     final userInfo = await GoogleAuthApi.signIn();
     if (userInfo == null) return;
@@ -69,9 +72,6 @@ class _ViewCarState extends State<ViewCar> {
       print(e);
     }
   }
-
-  bool onLiked = false;
-  final user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -136,7 +136,7 @@ class _ViewCarState extends State<ViewCar> {
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               // TODO report vehicle for not being stick shift
-              if (widget.receiverEmail != null)
+              if (user?.uid != null)
                 IconButton(
                   onPressed: () {
                     sendReportedEmail();
