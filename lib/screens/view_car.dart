@@ -39,7 +39,6 @@ class _ViewCarState extends State<ViewCar> {
     if (userInfo == null) return;
     final auth = await userInfo.authentication;
     final token = auth.accessToken!;
-    print(userInfo.email);
     final smtpServer = gmailSaslXoauth2(userInfo.email, token);
     final message = Message()
       ..from = Address(userInfo.email, 'Find a Stick')
@@ -72,7 +71,7 @@ class _ViewCarState extends State<ViewCar> {
   }
 
   bool onLiked = false;
-  final user = FirebaseAuth.instance.currentUser!;
+  final user = FirebaseAuth.instance.currentUser;
 
   @override
   void initState() {
@@ -133,7 +132,7 @@ class _ViewCarState extends State<ViewCar> {
           Row(
             children: [
               Text(
-                '${widget.year} ${widget.make} ${widget.model}',
+                '${widget.year} ${widget.make}${widget.model}',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               // TODO report vehicle for not being stick shift
