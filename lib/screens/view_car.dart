@@ -11,6 +11,7 @@ import 'package:mailer/smtp_server.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:http/http.dart' as http;
 
 final String uid = FirebaseAuth.instance.currentUser!.uid;
 
@@ -33,6 +34,43 @@ class ViewCar extends StatefulWidget {
 }
 
 class _ViewCarState extends State<ViewCar> {
+  Future sendReportedEmail() async {
+    final userInfo = await GoogleAuthApi.signIn();
+    if (userInfo == null) return;
+    final auth = await userInfo.authentication;
+    final token = auth.accessToken!;
+    print(userInfo.email);
+    final smtpServer = gmailSaslXoauth2(userInfo.email, token);
+    final message = Message()
+      ..from = Address(userInfo.email, 'Find a Stick')
+      ..recipients = ['domtom1126@gmail.com']
+      ..subject = 'Car Reported'
+      ..text = 'Car Reported';
+    try {
+      await send(message, smtpServer);
+      // show dialog to confirm for 2 seconds
+      // showDialog(
+      //   context: context,
+      //   builder: (context) {
+      //     return AlertDialog(
+      //       title: const Text('Car Reported'),
+      //       content: const Text('Thank you for reporting this car'),
+      //       actions: <Widget>[
+      //         ElevatedButton(
+      //           child: const Text('Ok'),
+      //           onPressed: () {
+      //             Navigator.of(context).pop();
+      //           },
+      //         ),
+      //       ],
+      //     );
+      //   },
+      // );
+    } on MailerException catch (e) {
+      print(e);
+    }
+  }
+
   bool onLiked = false;
   final user = FirebaseAuth.instance.currentUser!;
 
@@ -102,32 +140,33 @@ class _ViewCarState extends State<ViewCar> {
               if (widget.receiverEmail != null)
                 IconButton(
                   onPressed: () {
+                    sendReportedEmail();
                     // open alert dialog
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: const Text('Report vehicle'),
-                          content: const Text(
-                              'Are you sure you want to report this vehicle?'),
-                          actions: [
-                            ElevatedButton(
-                              child: const Text('Yes'),
-                              onPressed: () {
-                                sendReportedEmail();
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                            ElevatedButton(
-                              child: const Text('No'),
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                            ),
-                          ],
-                        );
-                      },
-                    );
+                    // showDialog(
+                    //   context: context,
+                    //   builder: (context) {
+                    //     return AlertDialog(
+                    //       backgroundColor: Colors.black45,
+                    //       title: const Text('Report vehicle'),
+                    //       content: const Text(
+                    //           'Are you sure you want to report this vehicle?'),
+                    //       actions: [
+                    //         ElevatedButton(
+                    //           child: const Text('Yes'),
+                    //           onPressed: () {
+                    //             // sendReportedEmail();
+                    //           },
+                    //         ),
+                    //         ElevatedButton(
+                    //           child: const Text('No'),
+                    //           onPressed: () {
+                    //             Navigator.of(context).pop();
+                    //           },
+                    //         ),
+                    //       ],
+                    //     );
+                    //   },
+                    // );
                   },
                   icon: const Icon(Icons.error),
                 )
@@ -288,8 +327,8 @@ class _ViewCarState extends State<ViewCar> {
                           },
                         );
                       } else {
-                        sendEmail(widget.receiverEmail, widget.year,
-                            widget.make, widget.model, widget.price);
+                        // sendEmail(widget.receiverEmail, widget.year,
+                        //     widget.make, widget.model, widget.price);
                       }
                     },
                   ),
@@ -301,62 +340,28 @@ class _ViewCarState extends State<ViewCar> {
       ),
     );
   }
-
-  Future sendReportedEmail() async {
-    final userInfo = await GoogleAuthApi.signIn();
-    if (userInfo == null) return;
-    final auth = await userInfo.authentication;
-    final token = auth.accessToken!;
-
-    final smtpServer = gmailSaslXoauth2(userInfo.email, token);
-    final message = Message()
-      ..from = Address(userInfo.email, 'Find a Stick')
-      ..recipients = ['domtom1126@gmail.com']
-      ..subject = 'Car Reported'
-      ..text = 'Car Reported';
-
-    await send(message, smtpServer);
-    // show dialog to confirm for 2 seconds
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: const Text('Car Reported'),
-          content: const Text('Thank you for reporting this car'),
-          actions: <Widget>[
-            ElevatedButton(
-              child: const Text('Ok'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
 }
 
-sendEmail(
-    String? email, String? year, String? make, String? model, String? price) {
-  String? encodeQueryParameters(Map<String, String> params) {
-    return params.entries
-        .map((e) =>
-            '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
-        .join('&');
-  }
+// sendEmail(
+//     String? email, String? year, String? make, String? model, String? price) {
+//   String? encodeQueryParameters(Map<String, String> params) {
+//     return params.entries
+//         .map((e) =>
+//             '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}')
+//         .join('&');
+//   }
 
-  final emailLaunchUri = Uri(
-    scheme: 'mailto',
-    path: email,
-    query: encodeQueryParameters(<String, String>{
-      'subject': 'Hi! Is your $year $make $model still available?',
-      'body':
-          'I found your car for sale on Find a Stick. Is it still available at the price of $price',
-    }),
-  );
-  launch(emailLaunchUri.toString());
-}
+//   final emailLaunchUri = Uri(
+//     scheme: 'mailto',
+//     path: email,
+//     query: encodeQueryParameters(<String, String>{
+//       'subject': 'Hi! Is your $year $make $model still available?',
+//       'body':
+//           'I found your car for sale on Find a Stick. Is it still available at the price of $price',
+//     }),
+//   );
+//   launch(emailLaunchUri.toString());
+// }
 
 class ExpandImage extends StatefulWidget {
   final String image;
