@@ -33,7 +33,8 @@ class GoogleSignInProvider extends ChangeNotifier {
 }
 
 class GoogleAuthApi {
-  static final _googleSignIn = GoogleSignIn();
+  static final _googleSignIn =
+      GoogleSignIn(scopes: ['https://mail.google.com/']);
   static Future<GoogleSignInAccount?> signIn() async {
     if (await _googleSignIn.isSignedIn()) {
       return _googleSignIn.currentUser;
@@ -51,7 +52,6 @@ class AppleSignInProvider extends ChangeNotifier {
         AppleIDAuthorizationScopes.fullName,
       ],
     );
-    print(appleCredential.email);
     final oauthCredential = OAuthProvider("apple.com").credential(
       idToken: appleCredential.identityToken,
       accessToken: appleCredential.authorizationCode,
