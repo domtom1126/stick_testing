@@ -21,24 +21,7 @@ class Home extends StatefulWidget {
   _HomeState createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> with AfterLayoutMixin<Home> {
-  Future checkFirstSeen() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool _seen = (prefs.getBool('seen') ?? false);
-
-    if (_seen) {
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const Home()));
-    } else {
-      await prefs.setBool('seen', true);
-      Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => const IntroductionScreen()));
-    }
-  }
-
-  @override
-  void afterFirstLayout(BuildContext context) => checkFirstSeen();
-
+class _HomeState extends State<Home> {
   final cars = FirebaseFirestore.instance
       .collection('posts')
       .orderBy('date_added', descending: true)
@@ -134,7 +117,7 @@ class _HomeState extends State<Home> with AfterLayoutMixin<Home> {
             Row(
               children: [
                 Text(
-                  '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+                  '${publicList['year']} ${publicList['make']}${publicList['model']}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 if (FirebaseAuth.instance.currentUser?.uid == null)
