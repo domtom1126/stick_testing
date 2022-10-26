@@ -116,8 +116,13 @@ class _HomeState extends State<Home> {
 
             Row(
               children: [
+                Text('${publicList['year']}',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 25,
+                    )),
                 Text(
-                  '${publicList['year']} ${publicList['make']}${publicList['model']}',
+                  ' ${publicList['make']}${publicList['model']}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 if (FirebaseAuth.instance.currentUser?.uid == null)
@@ -157,7 +162,7 @@ class _HomeState extends State<Home> {
             ),
             Text(
               '${publicList['price']}',
-              style: Theme.of(context).textTheme.titleMedium,
+              style: Theme.of(context).textTheme.bodyMedium,
               textAlign: TextAlign.start,
             ),
             const SizedBox(
@@ -177,7 +182,7 @@ class _HomeState extends State<Home> {
       BuildContext context, QueryDocumentSnapshot<Object?> publicList) {
     return showModalBottomSheet(
       isScrollControlled: true,
-      backgroundColor: HexColor('40434E'),
+      backgroundColor: HexColor('2B2E34'),
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(20),
