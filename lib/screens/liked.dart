@@ -100,8 +100,13 @@ class _LikedState extends State<Liked> {
 
                     Row(
                       children: [
+                        Text('${publicList['year']}',
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 25,
+                            )),
                         Text(
-                          '${publicList['year']} ${publicList['make']} ${publicList['model']}',
+                          ' ${publicList['make']}${publicList['model']}',
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         if (FirebaseAuth.instance.currentUser?.uid == null)
@@ -133,7 +138,10 @@ class _LikedState extends State<Liked> {
                                                 .doc(publicList.id)
                                                 .update({
                                               'likedIds':
-                                                  FieldValue.arrayRemove([uid])
+                                                  FieldValue.arrayRemove([
+                                                FirebaseAuth
+                                                    .instance.currentUser?.uid
+                                              ])
                                             });
                                             Navigator.of(context).pop();
                                           },
@@ -298,12 +306,24 @@ class _LikedState extends State<Liked> {
             SizedBox(
               width: 250,
               child: ElevatedButton(
-                onPressed: () {
-                  signInUp(
-                    _emailController.toString(),
-                    _passwordController.toString(),
-                  );
-                  // TODO Update to the signed in page
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Liked()),
+                    );
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'email-already-in-use') {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text);
+                      if (e.code == 'wrong-password') {}
+                    }
+                  }
                 },
                 child: const Text('Sign in / up'),
               ),
@@ -490,7 +510,7 @@ class OrangeLines extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = HexColor('EE6C4D')
+      ..color = HexColor('DF7212')
       ..strokeWidth = 15
       ..strokeCap = StrokeCap.round;
 
