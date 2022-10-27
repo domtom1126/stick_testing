@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
@@ -26,13 +28,23 @@ class _PostFormState extends State<PostForm> {
   final TextEditingController _priceController = TextEditingController();
   final TextEditingController _descriptionController = TextEditingController();
   final TextEditingController _zipCodeController = TextEditingController();
-  List<XFile>? userPickedImages;
-  late PageController _pageController;
+  // * This is for single image
+  File? pickedImage;
   Future pickImage() async {
     final _imagePicker = ImagePicker();
-    userPickedImages = await _imagePicker.pickMultiImage();
-    List<XFile>? imagePaths = userPickedImages;
+    final pickedImage =
+        await _imagePicker.pickImage(source: ImageSource.gallery);
+    final imageTemp = File(pickedImage!.path);
+    setState(() => this.pickedImage = imageTemp);
   }
+  // * This is for multi image
+  // List<XFile>? userPickedImages;
+  // late PageController _pageController;
+  // Future pickImage() async {
+  //   final _imagePicker = ImagePicker();
+  //   userPickedImages = await _imagePicker.pickMultiImage();
+  //   List<XFile>? imagePaths = userPickedImages;
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +52,10 @@ class _PostFormState extends State<PostForm> {
   }
 
   Form postForm(BuildContext context) {
-    var years =
-        List<String>.generate(2024 - 1900, (i) => (1900 + i).toString());
-    String? selectedValue;
+    Iterable<String> years =
+        List<String>.generate(2024 - 1900, (i) => (1900 + i).toString())
+            .reversed;
+    String selectedValue = years.first;
     return Form(
       key: _formKey,
       child: ListView(
@@ -96,55 +109,8 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          DropdownButtonHideUnderline(
-            child: DropdownButton2(
-              hint: const Text(
-                'Select Year',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.white,
-                ),
-              ),
-              items: years
-                  .map((item) => DropdownMenuItem<String>(
-                        value: years[1],
-                        child: Text(
-                          item,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 16,
-                          ),
-                        ),
-                      ))
-                  .toList()
-                  .reversed
-                  .toList(),
-              value: selectedValue,
-              onChanged: (value) {
-                setState(() {
-                  selectedValue = value.toString();
-                });
-              },
-              buttonHeight: 63,
-              buttonWidth: 100,
-              itemHeight: 40,
-              dropdownMaxHeight: 300,
-              buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-              buttonDecoration: BoxDecoration(
-                color: Colors.transparent,
-                borderRadius: BorderRadius.circular(25),
-                border: Border.all(
-                  color: Colors.black54,
-                ),
-              ),
-              dropdownDecoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(25),
-                color: HexColor('23262F'),
-              ),
-            ),
-          ),
+          const DropdownButtonExample(),
           const SizedBox(height: 20),
-
           // dropdown list for miles
           TextFormField(
             textInputAction: TextInputAction.next,
@@ -231,30 +197,33 @@ class _PostFormState extends State<PostForm> {
             },
           ),
           const SizedBox(height: 20),
-          userPickedImages != null
-              ? PageView.builder(
-                  itemCount: userPickedImages?.length,
-                  itemBuilder: (context, pagePostion) {
-                    return Container(
-                      margin: const EdgeInsets.all(10),
-                      child: Image.network(
-                          userPickedImages![pagePostion].toString()),
-                    );
-                  },
+          // * This is for multi image
+          // userPickedImage != null
+          // ? PageView.builder(
+          //     itemCount: userPickedImages?.length,
+          //     itemBuilder: (context, pagePostion) {
+          //       return Container(
+          //         margin: const EdgeInsets.all(10),
+          //         child: Image.network(
+          //             userPickedImages![pagePostion].toString()),
+          //       );
+          //     },
+          //   )
+          // * This is for single image
+          pickedImage != null
+              ? Column(
+                  children: [
+                    ElevatedButton(
+                      onPressed: pickImage,
+                      child: const Text('Add Another Image'),
+                    ),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child:
+                            Image.file(pickedImage!, height: 200, width: 200)),
+                  ],
                 )
-              // pickedImage != null
-              //     ? Column(
-              //         children: [
-              //           ElevatedButton(
-              //             onPressed: pickImage,
-              //             child: const Text('Add Another Image'),
-              //           ),
-              //           ClipRRect(
-              //               borderRadius: BorderRadius.circular(10),
-              //               child:
-              //                   Image.file(pickedImage!, height: 200, width: 200)),
-              //         ],
-              //       )
+              // * Shows add image button
               : SizedBox(
                   height: 200,
                   child: ElevatedButton(
@@ -353,13 +322,13 @@ class _PostFormState extends State<PostForm> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // ClipRRect(
-          //   borderRadius: BorderRadius.circular(10),
-          //   child: Image.asset(
-          //     pickedImage!.path,
-          //     fit: BoxFit.fitWidth,
-          //   ),
-          // ),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(10),
+            child: Image.asset(
+              pickedImage!.path,
+              fit: BoxFit.fitWidth,
+            ),
+          ),
           Row(
             children: [
               Text(
@@ -417,62 +386,101 @@ class _PostFormState extends State<PostForm> {
           const SizedBox(
             height: 20,
           ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          //   children: [
-          //     isLoading
-          //         ? const CircularProgressIndicator()
-          //         : SizedBox(
-          //             width: 100,
-          //             child: ElevatedButton(
-          //                 onPressed: () async {
-          //                   setState(() {
-          //                     isLoading = true;
-          //                   });
-          //                   final _postListing = PostListing(
-          //                     make: _makeController.text,
-          //                     model: _modelController.text,
-          //                     year: _yearController.text,
-          //                     odometer: _odometerController.text,
-          //                     price: _priceController.text,
-          //                     // TODO Replace with email
-          //                     zipCode: _zipCodeController.text,
-          //                     description: _descriptionController.text,
-          //                     image: pickedImages!,
-          //                     dateAdded: DateTime.now().toString(),
-          //                   );
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: [
+              isLoading
+                  ? const CircularProgressIndicator()
+                  : SizedBox(
+                      width: 100,
+                      child: ElevatedButton(
+                          onPressed: () async {
+                            setState(() {
+                              isLoading = true;
+                            });
+                            final _postListing = PostListing(
+                              make: _makeController.text,
+                              model: _modelController.text,
+                              year: _yearController.text,
+                              odometer: _odometerController.text,
+                              price: _priceController.text,
+                              // TODO Replace with email
+                              zipCode: _zipCodeController.text,
+                              description: _descriptionController.text,
+                              image: pickedImage!,
+                              dateAdded: DateTime.now().toString(),
+                            );
 
-          //                   await _postListing.addPost(
-          //                     _makeController.text,
-          //                     _modelController.text,
-          //                     _yearController.text,
-          //                     _odometerController.text,
-          //                     _priceController.text,
-          //                     _zipCodeController.text,
-          //                     _descriptionController.text,
-          //                     pickedImage!,
-          //                   );
-          //                   await _postListing
-          //                       .addMake(_makeController.text.toTitleCase());
-          //                   setState(() {
-          //                     isLoading = false;
-          //                   });
-          //                   Navigator.pushNamedAndRemoveUntil(
-          //                       context, '/home', (_) => false);
-          //                 },
-          //                 child: const Text('Yes')),
-          //           ),
-          //     SizedBox(
-          //       width: 100,
-          //       child: ElevatedButton(
-          //           onPressed: Navigator.of(context).pop,
-          //           child: const Center(child: Text('Edit'))),
-          //     ),
-          //   ],
-          // ),
+                            await _postListing.addPost(
+                              _makeController.text,
+                              _modelController.text,
+                              _yearController.text,
+                              _odometerController.text,
+                              _priceController.text,
+                              _zipCodeController.text,
+                              _descriptionController.text,
+                              pickedImage!,
+                            );
+                            await _postListing
+                                .addMake(_makeController.text.toTitleCase());
+                            setState(() {
+                              isLoading = false;
+                            });
+                            Navigator.pushNamedAndRemoveUntil(
+                                context, '/home', (_) => false);
+                          },
+                          child: const Text('Yes')),
+                    ),
+              SizedBox(
+                width: 100,
+                child: ElevatedButton(
+                    onPressed: Navigator.of(context).pop,
+                    child: const Center(child: Text('Edit'))),
+              ),
+            ],
+          ),
           const SizedBox(height: 20),
         ],
       ),
+    );
+  }
+}
+
+// const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+Iterable<String> list =
+    List<String>.generate(2024 - 1900, (i) => (1900 + i).toString()).reversed;
+
+class DropdownButtonExample extends StatefulWidget {
+  const DropdownButtonExample({super.key});
+
+  @override
+  State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
+}
+
+class _DropdownButtonExampleState extends State<DropdownButtonExample> {
+  String dropdownValue = list.first;
+
+  @override
+  Widget build(BuildContext context) {
+    return DropdownButton<String>(
+      menuMaxHeight: 200,
+      value: dropdownValue,
+      icon: const Icon(Icons.arrow_downward),
+      elevation: 0,
+      borderRadius: BorderRadius.circular(25),
+      style: const TextStyle(color: Colors.deepPurple),
+      onChanged: (String? value) {
+        // This is called when the user selects an item.
+        setState(() {
+          dropdownValue = value!;
+        });
+      },
+      items: list.map<DropdownMenuItem<String>>((String value) {
+        return DropdownMenuItem<String>(
+          value: value,
+          child: Text(value),
+        );
+      }).toList(),
     );
   }
 }
