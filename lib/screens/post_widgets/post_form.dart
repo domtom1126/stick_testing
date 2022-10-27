@@ -446,7 +446,6 @@ class _PostFormState extends State<PostForm> {
   }
 }
 
-// const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
 Iterable<String> list =
     List<String>.generate(2024 - 1900, (i) => (1900 + i).toString()).reversed;
 
@@ -459,28 +458,57 @@ class DropdownButtonExample extends StatefulWidget {
 
 class _DropdownButtonExampleState extends State<DropdownButtonExample> {
   String dropdownValue = list.first;
+  // decoration: InputDecoration(
+  //             focusedBorder: OutlineInputBorder(
+  //               borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+  //               borderRadius: BorderRadius.circular(25.0),
+  //             ),
+  //             hintText: 'Model',
+  //           ),
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButton<String>(
-      menuMaxHeight: 200,
-      value: dropdownValue,
-      icon: const Icon(Icons.arrow_downward),
-      elevation: 0,
-      borderRadius: BorderRadius.circular(25),
-      style: const TextStyle(color: Colors.deepPurple),
-      onChanged: (String? value) {
-        // This is called when the user selects an item.
-        setState(() {
-          dropdownValue = value!;
-        });
-      },
-      items: list.map<DropdownMenuItem<String>>((String value) {
-        return DropdownMenuItem<String>(
-          value: value,
-          child: Text(value),
-        );
-      }).toList(),
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: HexColor('111111'),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(25))),
+      child: SizedBox(
+        height: 55,
+        width: 500,
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            alignment: AlignmentDirectional.center,
+            hint: const Text('Year'),
+            focusColor: HexColor('EE815A'),
+            dropdownColor: HexColor('2B2E34'),
+            menuMaxHeight: 250,
+            value: dropdownValue,
+            elevation: 0,
+            borderRadius: BorderRadius.circular(25),
+            style: TextStyle(
+                color: HexColor('FFFFFF'),
+                fontWeight: FontWeight.w300,
+                fontSize: 16),
+            onChanged: (String? value) {
+              // This is called when the user selects an item.
+              setState(() {
+                dropdownValue = value!;
+              });
+            },
+            items: list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
+                  child: Text(value),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
+      ),
     );
   }
 }
