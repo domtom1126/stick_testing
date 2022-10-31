@@ -2,6 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class Search extends SearchDelegate {
+  List<String> searchResults = [
+    'Ford',
+    'Chevy',
+    'Bubba',
+  ];
   @override
   PreferredSizeWidget? buildBottom(BuildContext context) {
     return const PreferredSize(
@@ -51,7 +56,9 @@ class Search extends SearchDelegate {
 
   @override
   Widget buildResults(BuildContext context) {
-    return Container();
+    return Center(
+      child: Text(query),
+    );
   }
 
   @override
@@ -60,10 +67,24 @@ class Search extends SearchDelegate {
     final cars = FirebaseFirestore.instance
         .collection('makes')
         .orderBy('date_added', descending: true)
-        .snapshots();
-    return Center(
-        child: Column(
-      children: const [],
-    ));
+        .snapshots()
+        .toList;
+    List<String> suggestions = searchResults.where((searchResult) {
+      final result = searchResult.toLowerCase();
+      final input = query.toLowerCase();
+      return result.contains(input);
+    }).toList();
+    return ListView.builder(
+        itemCount: suggestions.length,
+        itemBuilder: (context, index) {
+          final suggestion = suggestions[index];
+          return ListTile(
+            title: Text(suggestion),
+            onTap: () {
+              query = suggestion;
+              showResults(context);
+            },
+          );
+        });
   }
 }
