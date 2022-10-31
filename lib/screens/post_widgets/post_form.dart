@@ -4,12 +4,23 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:find_a_stick/firebase_functions/post_listing.dart';
+import 'package:find_a_stick/screens/home.dart';
+import 'package:find_a_stick/screens/view_car.dart';
+import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:readmore/readmore.dart';
+
+final TextEditingController _makeController = TextEditingController();
+final TextEditingController _modelController = TextEditingController();
+final TextEditingController _yearController = TextEditingController();
+final TextEditingController _odometerController = TextEditingController();
+final TextEditingController _priceController = TextEditingController();
+final TextEditingController _descriptionController = TextEditingController();
+final TextEditingController _zipCodeController = TextEditingController();
 
 class PostForm extends StatefulWidget {
   const PostForm({Key? key}) : super(key: key);
@@ -21,19 +32,16 @@ class PostForm extends StatefulWidget {
 class _PostFormState extends State<PostForm> {
   bool isLoading = false;
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController _makeController = TextEditingController();
-  final TextEditingController _modelController = TextEditingController();
-  final TextEditingController _yearController = TextEditingController();
-  final TextEditingController _odometerController = TextEditingController();
-  final TextEditingController _priceController = TextEditingController();
-  final TextEditingController _descriptionController = TextEditingController();
-  final TextEditingController _zipCodeController = TextEditingController();
+
   // * This is for single image
   File? pickedImage;
   Future pickImage() async {
     final _imagePicker = ImagePicker();
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
+    final pickedImage = await _imagePicker.pickImage(
+        source: ImageSource.gallery,
+        maxHeight: 200,
+        maxWidth: 200,
+        imageQuality: 75);
     final imageTemp = File(pickedImage!.path);
     setState(() => this.pickedImage = imageTemp);
   }
@@ -52,10 +60,6 @@ class _PostFormState extends State<PostForm> {
   }
 
   Form postForm(BuildContext context) {
-    Iterable<String> years =
-        List<String>.generate(2024 - 1900, (i) => (1900 + i).toString())
-            .reversed;
-    String selectedValue = years.first;
     return Form(
       key: _formKey,
       child: ListView(
@@ -217,10 +221,20 @@ class _PostFormState extends State<PostForm> {
                       onPressed: pickImage,
                       child: const Text('Add Another Image'),
                     ),
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child:
-                            Image.file(pickedImage!, height: 200, width: 200)),
+                    SizedBox(
+                      height: 200,
+                      width: double.infinity,
+                      child: GestureDetector(
+                        onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                                builder: (context) => ExpandImage(
+                                    image: pickedImage.toString()))),
+                        child: ClipRRect(
+                            borderRadius: BorderRadius.circular(10),
+                            child: Image.file(pickedImage!,
+                                height: 200, width: 200)),
+                      ),
+                    ),
                   ],
                 )
               // * Shows add image button
@@ -401,7 +415,7 @@ class _PostFormState extends State<PostForm> {
                             final _postListing = PostListing(
                               make: _makeController.text,
                               model: _modelController.text,
-                              year: _yearController.text,
+                              year: _dropdownValue,
                               odometer: _odometerController.text,
                               price: _priceController.text,
                               // TODO Replace with email
@@ -414,7 +428,7 @@ class _PostFormState extends State<PostForm> {
                             await _postListing.addPost(
                               _makeController.text,
                               _modelController.text,
-                              _yearController.text,
+                              _dropdownValue,
                               _odometerController.text,
                               _priceController.text,
                               _zipCodeController.text,
@@ -423,14 +437,16 @@ class _PostFormState extends State<PostForm> {
                             );
                             await _postListing
                                 .addMake(_makeController.text.toTitleCase());
-                            setState(() {
-                              isLoading = false;
-                            });
-                            Navigator.pushNamedAndRemoveUntil(
-                                context, '/home', (_) => false);
+                            Navigator.pop(context);
+                            const CircularProgressIndicator();
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const BottomBar()));
                           },
                           child: const Text('Yes')),
                     ),
+              // TODO Fix this so there is a loading circle after you post
               SizedBox(
                 width: 100,
                 child: ElevatedButton(
@@ -446,8 +462,9 @@ class _PostFormState extends State<PostForm> {
   }
 }
 
-Iterable<String> list =
+Iterable<String> _list =
     List<String>.generate(2024 - 1900, (i) => (1900 + i).toString()).reversed;
+String _dropdownValue = _list.first;
 
 class DropdownButtonExample extends StatefulWidget {
   const DropdownButtonExample({super.key});
@@ -457,7 +474,6 @@ class DropdownButtonExample extends StatefulWidget {
 }
 
 class _DropdownButtonExampleState extends State<DropdownButtonExample> {
-  String dropdownValue = list.first;
   // decoration: InputDecoration(
   //             focusedBorder: OutlineInputBorder(
   //               borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
@@ -484,7 +500,7 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
             focusColor: HexColor('EE815A'),
             dropdownColor: HexColor('2B2E34'),
             menuMaxHeight: 250,
-            value: dropdownValue,
+            value: _dropdownValue,
             elevation: 0,
             borderRadius: BorderRadius.circular(25),
             style: TextStyle(
@@ -494,10 +510,10 @@ class _DropdownButtonExampleState extends State<DropdownButtonExample> {
             onChanged: (String? value) {
               // This is called when the user selects an item.
               setState(() {
-                dropdownValue = value!;
+                _dropdownValue = value!;
               });
             },
-            items: list.map<DropdownMenuItem<String>>((String value) {
+            items: _list.map<DropdownMenuItem<String>>((String value) {
               return DropdownMenuItem<String>(
                 value: value,
                 child: Padding(
