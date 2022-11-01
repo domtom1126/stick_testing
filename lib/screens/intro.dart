@@ -95,7 +95,7 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                   child: TextFormField(
                     obscureText: true,
                     keyboardType: TextInputType.visiblePassword,
-                    textInputAction: TextInputAction.next,
+                    textInputAction: TextInputAction.done,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(20),
                     ],
@@ -144,7 +144,15 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                                   email: _emailController.text,
                                   password: _passwordController.text);
                           // TODO Add validation
-                          if (e.code == 'wrong-password') {}
+                          if (e.code == 'wrong-password') {
+                            showDialog(
+                                context: context,
+                                builder: (context) {
+                                  return Container(
+                                    child: Text('Wrong password'),
+                                  );
+                                });
+                          }
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
@@ -188,11 +196,11 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                           child: const Image(
                               image:
                                   AssetImage('graphics/icons8-google-48.png')),
-                          onPressed: () {
+                          onPressed: () async {
                             final provider = Provider.of<GoogleSignInProvider>(
                                 context,
                                 listen: false);
-                            provider.googleLogin();
+                            await provider.googleLogin();
                             Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
@@ -237,7 +245,7 @@ class OrangeLines extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = HexColor('EE6C4D')
+      ..color = HexColor('DF7212')
       ..strokeWidth = 15
       ..strokeCap = StrokeCap.round;
 
