@@ -41,7 +41,9 @@ class _HomeState extends State<Home> {
                     color: HexColor('EE6C4D'),
                   ),
                   onPressed: () {
-                    showSearch(context: context, delegate: Search());
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SearchPage()));
+                    // showSearch(context: context, delegate: Search());
                   },
                 ),
               ],
@@ -122,7 +124,7 @@ class _HomeState extends State<Home> {
                       fontSize: 25,
                     )),
                 Text(
-                  ' ${publicList['make']}${publicList['model']}',
+                  ' ${publicList['make']} ${publicList['model']}',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 if (FirebaseAuth.instance.currentUser?.uid == null)
