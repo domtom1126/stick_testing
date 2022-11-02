@@ -54,6 +54,12 @@ class MyApp extends StatelessWidget {
 
   ThemeData darkTheme() {
     return ThemeData(
+      // * Circular Progress Indicator Color
+      primarySwatch: Colors.blue,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: HexColor('DF7212'),
+        primary: HexColor('DF7212'),
+      ),
       // * AppBar Theme
       appBarTheme: AppBarTheme(
         backgroundColor: Colors.transparent,
@@ -95,14 +101,15 @@ class MyApp extends StatelessWidget {
           elevation: MaterialStateProperty.all<double>(0),
           minimumSize: MaterialStateProperty.all<Size>(const Size(500, 40)),
           backgroundColor: MaterialStateProperty.all<Color>(
-            HexColor('EE6C4D'),
-          ),
+              // HexColor('EE6C4D'),
+              // * Try it out
+              HexColor('DF7212')),
           foregroundColor: MaterialStateProperty.all<Color>(
             HexColor('ffffff'),
           ),
           shape: MaterialStateProperty.all<OutlinedBorder>(
             RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(25),
             ),
           ),
         ),
