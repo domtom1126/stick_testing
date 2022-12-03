@@ -22,6 +22,15 @@ final TextEditingController _priceController = TextEditingController();
 final TextEditingController _descriptionController = TextEditingController();
 final TextEditingController _zipCodeController = TextEditingController();
 
+final List<String> imgList = [
+  'https://images.unsplash.com/photo-1520342868574-5fa3804e551c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=6ff92caffcdd63681a35134a6770ed3b&auto=format&fit=crop&w=1951&q=80',
+  'https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80',
+  'https://images.unsplash.com/photo-1523205771623-e0faa4d2813d?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=89719a0d55dd05e2deae4120227e6efc&auto=format&fit=crop&w=1953&q=80',
+  'https://images.unsplash.com/photo-1508704019882-f9cf40e475b4?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=8c6e5e3aba713b17aa1fe71ab4f0ae5b&auto=format&fit=crop&w=1352&q=80',
+  'https://images.unsplash.com/photo-1519985176271-adb1088fa94c?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=a0c8d632e977f94e5d312d9893258f59&auto=format&fit=crop&w=1355&q=80'
+];
+
 class PostForm extends StatefulWidget {
   const PostForm({Key? key}) : super(key: key);
 
@@ -35,24 +44,29 @@ class _PostFormState extends State<PostForm> {
 
   // * This is for single image
   File? pickedImage;
-  Future pickImage() async {
-    final _imagePicker = ImagePicker();
-    final pickedImage = await _imagePicker.pickImage(
-        source: ImageSource.gallery,
-        maxHeight: 200,
-        maxWidth: 200,
-        imageQuality: 75);
-    final imageTemp = File(pickedImage!.path);
-    setState(() => this.pickedImage = imageTemp);
-  }
-  // * This is for multi image
-  // List<XFile>? userPickedImages;
-  // late PageController _pageController;
   // Future pickImage() async {
   //   final _imagePicker = ImagePicker();
-  //   userPickedImages = await _imagePicker.pickMultiImage();
-  //   List<XFile>? imagePaths = userPickedImages;
+  //   final pickedImage = await _imagePicker.pickImage(
+  //       source: ImageSource.gallery,
+  //       maxHeight: 200,
+  //       maxWidth: 200,
+  //       imageQuality: 75);
+  //   final imageTemp = File(pickedImage!.path);
+  //   setState(() => this.pickedImage = imageTemp);
   // }
+  // * This is for multi image
+  // List<XFile>? userPickedImages;
+  List<String> pickedImageList = [];
+
+  final imagePicker = ImagePicker();
+  Future pickImage() async {
+    final userPickedImages = await imagePicker.pickMultiImage();
+    for (var image in userPickedImages!) {
+      pickedImageList.add(image.path);
+      print(image.path);
+    }
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -69,138 +83,89 @@ class _PostFormState extends State<PostForm> {
           const SizedBox(
             height: 20,
           ),
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(20),
-            ],
-            controller: _makeController,
-            keyboardAppearance: Brightness.dark,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: 'Make',
-            ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter a make';
-              }
-              return null;
-            },
+          MyTextField(
+              inputType: TextInputType.text,
+              textController: _makeController,
+              inputFormatLength: 20,
+              inputAction: TextInputAction.next,
+              hintText: 'Make'),
+          const SizedBox(height: 20),
+          MyTextField(
+            inputType: TextInputType.text,
+            textController: _modelController,
+            inputFormatLength: 20,
+            inputAction: TextInputAction.next,
+            hintText: 'Model',
           ),
           const SizedBox(height: 20),
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(20),
-            ],
-            controller: _modelController,
-            keyboardAppearance: Brightness.dark,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: 'Model',
-            ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter a make';
-              }
-              return null;
-            },
+          yearDropDown(),
+          const SizedBox(height: 20),
+          MyTextField(
+              inputType: TextInputType.number,
+              textController: _odometerController,
+              inputFormatLength: 10,
+              inputAction: TextInputAction.next,
+              hintText: 'Odometer'),
+          const SizedBox(
+            height: 20,
           ),
+          MyTextField(
+              inputType: TextInputType.number,
+              textController: _priceController,
+              inputFormatLength: 15,
+              inputAction: TextInputAction.next,
+              hintText: 'Price'),
           const SizedBox(height: 20),
-          const DropdownButtonExample(),
+          MyTextField(
+              inputType: TextInputType.number,
+              textController: _zipCodeController,
+              inputFormatLength: 7,
+              inputAction: TextInputAction.next,
+              hintText: 'Zip Code (Optional)'),
           const SizedBox(height: 20),
-          // dropdown list for miles
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(10),
-            ],
-            controller: _odometerController,
-            keyboardAppearance: Brightness.dark,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: 'Miles',
-            ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter a miles';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(10),
-              CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
-            ],
-            controller: _priceController,
-            keyboardAppearance: Brightness.dark,
-            keyboardType: const TextInputType.numberWithOptions(
-                decimal: true, signed: true),
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: 'Price',
-            ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter a price';
-              }
-              return null;
-            },
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            textInputAction: TextInputAction.next,
-            inputFormatters: [
-              LengthLimitingTextInputFormatter(5),
-            ],
-            controller: _zipCodeController,
-            keyboardAppearance: Brightness.dark,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: 'Zip Code (optional)',
-            ),
-          ),
-          const SizedBox(height: 20),
-          TextFormField(
-            textInputAction: TextInputAction.done,
-            controller: _descriptionController,
-            keyboardAppearance: Brightness.dark,
+          MyTextField(
+            inputType: TextInputType.text,
+            textController: _descriptionController,
+            inputAction: TextInputAction.next,
+            hintText: 'Description',
             maxLines: 5,
-            decoration: InputDecoration(
-              focusedBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                borderRadius: BorderRadius.circular(25.0),
-              ),
-              hintText: 'Description',
-            ),
-            validator: (value) {
-              if (value!.isEmpty) {
-                return 'Please enter a description';
-              }
-              return null;
-            },
           ),
           const SizedBox(height: 20),
+          // pickedImageList == null
+          //     ? SizedBox(
+          //         height: 200,
+          //         child: ElevatedButton(
+          //           style: ElevatedButton.styleFrom(
+          //               backgroundColor: HexColor('23262F'), elevation: 15),
+          //           onPressed: pickImage,
+          //           child: Column(
+          //             children: const [
+          //               SizedBox(
+          //                 height: 65,
+          //               ),
+          //               Icon(
+          //                 Icons.add_circle_sharp,
+          //                 color: Colors.white,
+          //               ),
+          //               SizedBox(
+          //                 height: 5,
+          //               ),
+          //               Text('Add Image'),
+          //             ],
+          //           ),
+          //         ),
+          //       )
+          //     :
+          ElevatedButton(onPressed: pickImage, child: Text('sdgsd')),
+          CarouselSlider(
+            options: CarouselOptions(),
+            items: pickedImageList
+                .map((item) => Container(
+                      child: Center(child: Image.asset(item)),
+                      color: Colors.green,
+                    ))
+                .toList(),
+          ),
           // * This is for multi image
           // userPickedImage != null
           // ? PageView.builder(
@@ -214,74 +179,73 @@ class _PostFormState extends State<PostForm> {
           //     },
           //   )
           // * This is for single image
-          pickedImage != null
-              ? Column(
-                  children: [
-                    ElevatedButton(
-                      onPressed: pickImage,
-                      child: const Text('Add Another Image'),
-                    ),
-                    SizedBox(
-                      height: 200,
-                      width: double.infinity,
-                      child: GestureDetector(
-                        onTap: () => Navigator.of(context).push(
-                            MaterialPageRoute(
-                                builder: (context) => ExpandImage(
-                                    image: pickedImage.toString()))),
-                        child: ClipRRect(
-                            borderRadius: BorderRadius.circular(10),
-                            child: Image.file(pickedImage!,
-                                height: 200, width: 200)),
-                      ),
-                    ),
-                  ],
-                )
-              // * Shows add image button
-              : SizedBox(
-                  height: 200,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: HexColor('23262F'), elevation: 15),
-                    onPressed: pickImage,
-                    child: Column(
-                      children: const [
-                        SizedBox(
-                          height: 65,
-                        ),
-                        Icon(
-                          Icons.add_circle_sharp,
-                          color: Colors.white,
-                        ),
-                        SizedBox(
-                          height: 5,
-                        ),
-                        Text('Add Image'),
-                      ],
-                    ),
-                  ),
-                ),
+          // userPickedImages == null
+          // ? Column(
+          //     children: [
+          //       ElevatedButton(
+          //         onPressed: pickImage,
+          //         child: const Text('Add Another Image'),
+          //       ),
+          //       SizedBox(
+          //         height: 200,
+          //         width: double.infinity,
+          //         child: GestureDetector(
+          //           onTap: () => Navigator.of(context).push(
+          //               MaterialPageRoute(
+          //                   builder: (context) => ExpandImage(
+          //                       image: pickedImage.toString()))),
+          //           child: ClipRRect(
+          //               borderRadius: BorderRadius.circular(10),
+          //               child: Image.file(pickedImage!,
+          //                   height: 200, width: 200)),
+          //         ),
+          //       ),
+          //     ],
+          //  )
+          // * Shows add image button
+          // ? SizedBox(
+          //     height: 200,
+          //     child: ElevatedButton(
+          //       style: ElevatedButton.styleFrom(
+          //           backgroundColor: HexColor('23262F'), elevation: 15),
+          //       onPressed: pickImage,
+          //       child: Column(
+          //         children: const [
+          //           SizedBox(
+          //             height: 65,
+          //           ),
+          //           Icon(
+          //             Icons.add_circle_sharp,
+          //             color: Colors.white,
+          //           ),
+          //           SizedBox(
+          //             height: 5,
+          //           ),
+          //           Text('Add Image'),
+          //         ],
+          //       ),
+          //     ),
+          //   )
           // * This actually works! but for now just do single image
           // : CarouselSlider.builder(
-          // options: CarouselOptions(height: 200),
-          // itemCount: pickedImage.length,
-          // itemBuilder: (context, index, realIndex) {
-          // final singleImage = pickedImage[index];
+          //     options: CarouselOptions(height: 200),
+          //     itemCount: userPickedImages!.length,
+          //     itemBuilder: (context, index, realIndex) {
+          //       final singleImage = userPickedImages![index];
+          //       final imageToFile = File(singleImage.path);
 
-          // return Container(
-          // margin: const EdgeInsets.all(5.0),
-          // child: ClipRRect(
-          // borderRadius: const BorderRadius.all(Radius.circular(5.0)),
-          // child: Image.file(
-          // singleImage!,
-          // fit: BoxFit.cover,
-          // ),
-          // ),
-          // );
-          // },
-          // ),
+          //       return Container(
+          //         margin: const EdgeInsets.all(5.0),
+          //         child: ClipRRect(
+          //           borderRadius:
+          //               const BorderRadius.all(Radius.circular(5.0)),
+          //           child: user
+          //         ),
+          //       );
+          //     },
+          //   ),
           const SizedBox(height: 20),
-          // Confirm BUtton
+          // * Confirm BUtton
           ElevatedButton(
               onPressed: () {
                 if (_formKey.currentState!.validate()) {
@@ -326,6 +290,51 @@ class _PostFormState extends State<PostForm> {
               },
               child: const Text('Post Car')),
         ],
+      ),
+    );
+  }
+
+  Container yearDropDown() {
+    return Container(
+      decoration: BoxDecoration(
+          border: Border.all(
+            color: HexColor('111111'),
+          ),
+          borderRadius: const BorderRadius.all(Radius.circular(25))),
+      child: SizedBox(
+        height: 55,
+        width: 500,
+        child: DropdownButtonHideUnderline(
+          child: DropdownButton<String>(
+            alignment: AlignmentDirectional.center,
+            hint: const Text('Year'),
+            focusColor: HexColor('EE815A'),
+            dropdownColor: HexColor('2B2E34'),
+            menuMaxHeight: 250,
+            value: dropdownValue,
+            elevation: 0,
+            borderRadius: BorderRadius.circular(25),
+            style: TextStyle(
+                color: HexColor('FFFFFF'),
+                fontWeight: FontWeight.w300,
+                fontSize: 16),
+            onChanged: (String? value) {
+              // This is called when the user selects an item.
+              setState(() {
+                dropdownValue = value!;
+              });
+            },
+            items: list.map<DropdownMenuItem<String>>((String value) {
+              return DropdownMenuItem<String>(
+                value: value,
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
+                  child: Text(value),
+                ),
+              );
+            }).toList(),
+          ),
+        ),
       ),
     );
   }
@@ -415,7 +424,7 @@ class _PostFormState extends State<PostForm> {
                             final _postListing = PostListing(
                               make: _makeController.text,
                               model: _modelController.text,
-                              year: _dropdownValue,
+                              year: dropdownValue,
                               odometer: _odometerController.text,
                               price: _priceController.text,
                               // TODO Replace with email
@@ -428,7 +437,7 @@ class _PostFormState extends State<PostForm> {
                             await _postListing.addPost(
                               _makeController.text,
                               _modelController.text,
-                              _dropdownValue,
+                              dropdownValue,
                               _odometerController.text,
                               _priceController.text,
                               _zipCodeController.text,
@@ -462,69 +471,50 @@ class _PostFormState extends State<PostForm> {
   }
 }
 
-Iterable<String> _list =
-    List<String>.generate(2024 - 1900, (i) => (1900 + i).toString()).reversed;
-String _dropdownValue = _list.first;
-
-class DropdownButtonExample extends StatefulWidget {
-  const DropdownButtonExample({super.key});
+class MyTextField extends StatefulWidget {
+  const MyTextField(
+      {super.key,
+      required this.inputType,
+      required this.textController,
+      this.inputFormatLength,
+      required this.inputAction,
+      required this.hintText,
+      this.maxLines});
+  final TextInputType inputType;
+  final TextEditingController textController;
+  final int? inputFormatLength;
+  final TextInputAction inputAction;
+  final String hintText;
+  final int? maxLines;
 
   @override
-  State<DropdownButtonExample> createState() => _DropdownButtonExampleState();
+  State<MyTextField> createState() => _MyTextFieldState();
 }
 
-class _DropdownButtonExampleState extends State<DropdownButtonExample> {
-  // decoration: InputDecoration(
-  //             focusedBorder: OutlineInputBorder(
-  //               borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-  //               borderRadius: BorderRadius.circular(25.0),
-  //             ),
-  //             hintText: 'Model',
-  //           ),
-
+class _MyTextFieldState extends State<MyTextField> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          border: Border.all(
-            color: HexColor('111111'),
-          ),
-          borderRadius: const BorderRadius.all(Radius.circular(25))),
-      child: SizedBox(
-        height: 55,
-        width: 500,
-        child: DropdownButtonHideUnderline(
-          child: DropdownButton<String>(
-            alignment: AlignmentDirectional.center,
-            hint: const Text('Year'),
-            focusColor: HexColor('EE815A'),
-            dropdownColor: HexColor('2B2E34'),
-            menuMaxHeight: 250,
-            value: _dropdownValue,
-            elevation: 0,
-            borderRadius: BorderRadius.circular(25),
-            style: TextStyle(
-                color: HexColor('FFFFFF'),
-                fontWeight: FontWeight.w300,
-                fontSize: 16),
-            onChanged: (String? value) {
-              // This is called when the user selects an item.
-              setState(() {
-                _dropdownValue = value!;
-              });
-            },
-            items: _list.map<DropdownMenuItem<String>>((String value) {
-              return DropdownMenuItem<String>(
-                value: value,
-                child: Padding(
-                  padding: const EdgeInsets.fromLTRB(10, 8, 8, 8),
-                  child: Text(value),
-                ),
-              );
-            }).toList(),
-          ),
+    return TextFormField(
+      maxLines: widget.maxLines,
+      textInputAction: TextInputAction.next,
+      inputFormatters: [
+        LengthLimitingTextInputFormatter(20),
+      ],
+      controller: widget.textController,
+      keyboardAppearance: Brightness.dark,
+      decoration: InputDecoration(
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+          borderRadius: BorderRadius.circular(25.0),
         ),
+        hintText: widget.hintText,
       ),
+      validator: (value) {
+        if (value!.isEmpty) {
+          return 'Please enter a make';
+        }
+        return null;
+      },
     );
   }
 }
