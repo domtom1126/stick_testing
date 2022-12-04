@@ -56,16 +56,20 @@ class _PostFormState extends State<PostForm> {
   // }
   // * This is for multi image
   // List<XFile>? userPickedImages;
+  int _currentIndex = 0;
   List<String> pickedImageList = [];
-
   final imagePicker = ImagePicker();
+
   Future pickImage() async {
     final userPickedImages = await imagePicker.pickMultiImage();
     for (var image in userPickedImages!) {
       pickedImageList.add(image.path);
-      print(image.path);
     }
     setState(() {});
+  }
+
+  removeImage() {
+    pickedImageList.removeAt(0);
   }
 
   @override
@@ -131,119 +135,72 @@ class _PostFormState extends State<PostForm> {
             maxLines: 5,
           ),
           const SizedBox(height: 20),
-          // pickedImageList == null
-          //     ? SizedBox(
-          //         height: 200,
-          //         child: ElevatedButton(
-          //           style: ElevatedButton.styleFrom(
-          //               backgroundColor: HexColor('23262F'), elevation: 15),
-          //           onPressed: pickImage,
-          //           child: Column(
-          //             children: const [
-          //               SizedBox(
-          //                 height: 65,
-          //               ),
-          //               Icon(
-          //                 Icons.add_circle_sharp,
-          //                 color: Colors.white,
-          //               ),
-          //               SizedBox(
-          //                 height: 5,
-          //               ),
-          //               Text('Add Image'),
-          //             ],
-          //           ),
-          //         ),
-          //       )
-          //     :
-          ElevatedButton(onPressed: pickImage, child: Text('sdgsd')),
-          CarouselSlider(
-            options: CarouselOptions(),
-            items: pickedImageList
-                .map((item) => Container(
-                      child: Center(child: Image.asset(item)),
-                      color: Colors.green,
-                    ))
-                .toList(),
-          ),
-          // * This is for multi image
-          // userPickedImage != null
-          // ? PageView.builder(
-          //     itemCount: userPickedImages?.length,
-          //     itemBuilder: (context, pagePostion) {
-          //       return Container(
-          //         margin: const EdgeInsets.all(10),
-          //         child: Image.network(
-          //             userPickedImages![pagePostion].toString()),
-          //       );
-          //     },
-          //   )
-          // * This is for single image
-          // userPickedImages == null
-          // ? Column(
-          //     children: [
-          //       ElevatedButton(
-          //         onPressed: pickImage,
-          //         child: const Text('Add Another Image'),
-          //       ),
-          //       SizedBox(
-          //         height: 200,
-          //         width: double.infinity,
-          //         child: GestureDetector(
-          //           onTap: () => Navigator.of(context).push(
-          //               MaterialPageRoute(
-          //                   builder: (context) => ExpandImage(
-          //                       image: pickedImage.toString()))),
-          //           child: ClipRRect(
-          //               borderRadius: BorderRadius.circular(10),
-          //               child: Image.file(pickedImage!,
-          //                   height: 200, width: 200)),
-          //         ),
-          //       ),
-          //     ],
-          //  )
-          // * Shows add image button
-          // ? SizedBox(
-          //     height: 200,
-          //     child: ElevatedButton(
-          //       style: ElevatedButton.styleFrom(
-          //           backgroundColor: HexColor('23262F'), elevation: 15),
-          //       onPressed: pickImage,
-          //       child: Column(
-          //         children: const [
-          //           SizedBox(
-          //             height: 65,
-          //           ),
-          //           Icon(
-          //             Icons.add_circle_sharp,
-          //             color: Colors.white,
-          //           ),
-          //           SizedBox(
-          //             height: 5,
-          //           ),
-          //           Text('Add Image'),
-          //         ],
-          //       ),
-          //     ),
-          //   )
-          // * This actually works! but for now just do single image
-          // : CarouselSlider.builder(
-          //     options: CarouselOptions(height: 200),
-          //     itemCount: userPickedImages!.length,
-          //     itemBuilder: (context, index, realIndex) {
-          //       final singleImage = userPickedImages![index];
-          //       final imageToFile = File(singleImage.path);
-
-          //       return Container(
-          //         margin: const EdgeInsets.all(5.0),
-          //         child: ClipRRect(
-          //           borderRadius:
-          //               const BorderRadius.all(Radius.circular(5.0)),
-          //           child: user
-          //         ),
-          //       );
-          //     },
-          //   ),
+          pickedImageList.isEmpty
+              ? SizedBox(
+                  height: 200,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                        backgroundColor: HexColor('23262F'), elevation: 15),
+                    onPressed: pickImage,
+                    child: Column(
+                      children: const [
+                        SizedBox(
+                          height: 65,
+                        ),
+                        Icon(
+                          Icons.add_circle_sharp,
+                          color: Colors.white,
+                        ),
+                        SizedBox(
+                          height: 5,
+                        ),
+                        Text('Add Image'),
+                      ],
+                    ),
+                  ),
+                )
+              : Column(
+                  children: [
+                    ElevatedButton(
+                        onPressed: pickImage,
+                        child: const Text('Add another image')),
+                    CarouselSlider(
+                      options: CarouselOptions(
+                        onPageChanged: ((index, reason) {
+                          setState(() {
+                            _currentIndex = index;
+                          });
+                        }),
+                        // height: 200,
+                        viewportFraction: .9,
+                        enlargeCenterPage: true,
+                      ),
+                      items: pickedImageList
+                          .map(
+                            (item) => SizedBox(
+                              width: 200,
+                              height: 200,
+                              child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(10),
+                                  child: Image.asset(
+                                    item,
+                                    height: 200,
+                                    width: 200,
+                                  )),
+                            ),
+                            // color: Colors.green,
+                          )
+                          .toList(),
+                    ),
+                    ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            pickedImageList.removeAt(_currentIndex);
+                          });
+                        },
+                        child: const Text('Remove'))
+                  ],
+                ),
           const SizedBox(height: 20),
           // * Confirm BUtton
           ElevatedButton(
