@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -13,21 +14,21 @@ import 'package:readmore/readmore.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:http/http.dart' as http;
 
-final String uid = FirebaseAuth.instance.currentUser!.uid;
-
 class ViewCar extends StatefulWidget {
   final String make;
   final String model;
   final String year;
   final String price;
   final String odometer;
-  final String image;
+  final List image;
   final String description;
   final String? receiverEmail;
   final String? docId;
 
-  ViewCar(this.make, this.model, this.year, this.price, this.odometer,
-      this.image, this.description, this.receiverEmail, this.docId);
+  const ViewCar(this.make, this.model, this.year, this.price, this.odometer,
+      this.image, this.description, this.receiverEmail, this.docId,
+      {Key? key})
+      : super(key: key);
 
   @override
   _ViewCarState createState() => _ViewCarState();
@@ -38,11 +39,14 @@ class _ViewCarState extends State<ViewCar> {
   final user = FirebaseAuth.instance.currentUser;
 
   Future sendReportedEmail() async {
+    // Dont need to sign in
+    // Need to get auth token
+    final provider = Provider.of<GoogleSignInProvider>(context, listen: false);
     final userInfo = await GoogleAuthApi.signIn();
     if (userInfo == null) return;
     final auth = await userInfo.authentication;
     final token = auth.accessToken!;
-    final smtpServer = gmailSaslXoauth2(userInfo.email, token);
+    final smtpServer = gmailSaslXoauth2(user!.email.toString(), token);
     final message = Message()
       ..from = Address(userInfo.email, 'Find a Stick')
       ..recipients = ['domtom1126@gmail.com']
@@ -82,7 +86,7 @@ class _ViewCarState extends State<ViewCar> {
         .get()
         .then((value) {
       if (value['likedIds'] != null) {
-        if (value['likedIds'].contains(uid)) {
+        if (value['likedIds'].contains(user?.uid)) {
           setState(() {
             onLiked = true;
           });
@@ -97,6 +101,7 @@ class _ViewCarState extends State<ViewCar> {
   }
 
   SingleChildScrollView carModal() {
+    int _currentIndex = 0;
     return SingleChildScrollView(
       padding: const EdgeInsets.all(8.0),
       child: Column(
@@ -104,25 +109,56 @@ class _ViewCarState extends State<ViewCar> {
         children: [
           GestureDetector(
             onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => ExpandImage(image: widget.image)));
+              // Navigator.of(context).push(MaterialPageRoute(
+              //     builder: (context) => ExpandImage(image: widget.image)));
             },
             child: Hero(
               tag: 'carImage',
               child: SizedBox(
                 height: 200,
                 width: double.infinity,
-                child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: CachedNetworkImage(
-                    imageUrl: widget.image,
-                    fit: BoxFit.fitWidth,
-                    placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    onPageChanged: ((index, reason) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    }),
+                    // height: 200,
+                    viewportFraction: .9,
+                    enlargeCenterPage: true,
                   ),
+                  items: widget.image
+                      .map(
+                        (item) => ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            width: 400,
+                            child: CachedNetworkImage(
+                              imageUrl: item,
+                              fit: BoxFit.fitWidth,
+                              placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
+                            ),
+                          ),
+                        ),
+                        // color: Colors.green,
+                      )
+                      .toList(),
                 ),
+                // child: ClipRRect(
+                //   borderRadius: BorderRadius.circular(10),
+                //   child: CachedNetworkImage(
+                //     imageUrl: widget.image,
+                //     fit: BoxFit.fitWidth,
+                //     placeholder: (context, url) =>
+                //         const Center(child: CircularProgressIndicator()),
+                //     errorWidget: (context, url, error) =>
+                //         const Icon(Icons.error),
+                //   ),
+                // ),
               ),
             ),
           ),
@@ -246,7 +282,7 @@ class _ViewCarState extends State<ViewCar> {
                                           .doc(widget.docId)
                                           .update({
                                         'likedIds':
-                                            FieldValue.arrayRemove([uid])
+                                            FieldValue.arrayRemove([user?.uid])
                                       }).then((value) {
                                         setState(() {
                                           onLiked = false;
@@ -281,7 +317,7 @@ class _ViewCarState extends State<ViewCar> {
                             .collection('posts')
                             .doc(widget.docId)
                             .update({
-                          'likedIds': FieldValue.arrayUnion([uid])
+                          'likedIds': FieldValue.arrayUnion([user?.uid])
                         });
                         setState(() {
                           onLiked = true;
