@@ -8,6 +8,7 @@ import 'package:find_a_stick/screens/home.dart';
 import 'package:find_a_stick/screens/view_car.dart';
 import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:find_a_stick/widgets/global_widgets.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -57,13 +58,13 @@ class _PostFormState extends State<PostForm> {
   // * This is for multi image
   // List<XFile>? userPickedImages;
   int _currentIndex = 0;
-  List<String> pickedImageList = [];
+  List<File> pickedImageList = [];
   final imagePicker = ImagePicker();
 
   Future pickImage() async {
     final userPickedImages = await imagePicker.pickMultiImage();
     for (var image in userPickedImages!) {
-      pickedImageList.add(image.path);
+      pickedImageList.add(File(image.path));
     }
     setState(() {});
   }
@@ -164,6 +165,9 @@ class _PostFormState extends State<PostForm> {
                     ElevatedButton(
                         onPressed: pickImage,
                         child: const Text('Add another image')),
+                    const SizedBox(
+                      height: 10,
+                    ),
                     CarouselSlider(
                       options: CarouselOptions(
                         onPageChanged: ((index, reason) {
@@ -177,28 +181,35 @@ class _PostFormState extends State<PostForm> {
                       ),
                       items: pickedImageList
                           .map(
-                            (item) => SizedBox(
-                              width: 200,
-                              height: 200,
-                              child: ClipRRect(
+                            (item) => Stack(
+                              children: [
+                                ClipRRect(
                                   borderRadius: BorderRadius.circular(10),
-                                  child: Image.asset(
-                                    item,
-                                    height: 200,
-                                    width: 200,
-                                  )),
+                                  child: SizedBox(
+                                    width: 400,
+                                    child: Image.asset(item.path,
+                                        fit: BoxFit.fitWidth),
+                                  ),
+                                ),
+                                IconButton(
+                                    onPressed: () {
+                                      setState(() {
+                                        pickedImageList.removeAt(_currentIndex);
+                                      });
+                                    },
+                                    icon: const Icon(
+                                        color: Colors.white,
+                                        size: 35,
+                                        Icons.delete_forever))
+                              ],
                             ),
                             // color: Colors.green,
                           )
                           .toList(),
                     ),
-                    ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            pickedImageList.removeAt(_currentIndex);
-                          });
-                        },
-                        child: const Text('Remove'))
+                    const SizedBox(
+                      height: 10,
+                    ),
                   ],
                 ),
           const SizedBox(height: 20),
@@ -304,9 +315,43 @@ class _PostFormState extends State<PostForm> {
         children: [
           ClipRRect(
             borderRadius: BorderRadius.circular(10),
-            child: Image.asset(
-              pickedImage!.path,
-              fit: BoxFit.fitWidth,
+            child: CarouselSlider(
+              options: CarouselOptions(
+                onPageChanged: ((index, reason) {
+                  setState(() {
+                    _currentIndex = index;
+                  });
+                }),
+                // height: 200,
+                viewportFraction: .9,
+                enlargeCenterPage: true,
+              ),
+              items: pickedImageList
+                  .map(
+                    (item) => Stack(
+                      children: [
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            width: 400,
+                            child: Image.asset(item.path, fit: BoxFit.fitWidth),
+                          ),
+                        ),
+                        IconButton(
+                            onPressed: () {
+                              setState(() {
+                                pickedImageList.removeAt(_currentIndex);
+                              });
+                            },
+                            icon: const Icon(
+                                color: Colors.white,
+                                size: 35,
+                                Icons.delete_forever))
+                      ],
+                    ),
+                    // color: Colors.green,
+                  )
+                  .toList(),
             ),
           ),
           Row(
@@ -387,7 +432,7 @@ class _PostFormState extends State<PostForm> {
                               // TODO Replace with email
                               zipCode: _zipCodeController.text,
                               description: _descriptionController.text,
-                              image: pickedImage!,
+                              images: pickedImageList,
                               dateAdded: DateTime.now().toString(),
                             );
 
@@ -399,7 +444,7 @@ class _PostFormState extends State<PostForm> {
                               _priceController.text,
                               _zipCodeController.text,
                               _descriptionController.text,
-                              pickedImage!,
+                              pickedImageList,
                             );
                             await _postListing
                                 .addMake(_makeController.text.toTitleCase());
