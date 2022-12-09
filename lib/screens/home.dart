@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/screens/intro.dart';
 import 'package:find_a_stick/screens/search.dart';
@@ -70,10 +71,8 @@ class _HomeState extends State<Home> {
                 return buildCar(publicList, context);
               }).toList());
             } else {
-              return Center(
-                child: CircularProgressIndicator(
-                  color: HexColor('4C6273'),
-                ),
+              return const Center(
+                child: CircularProgressIndicator(),
               );
             }
           },
@@ -84,6 +83,7 @@ class _HomeState extends State<Home> {
 
   SliverToBoxAdapter buildCar(
       QueryDocumentSnapshot<Object?> publicList, BuildContext context) {
+    int _currentIndex = 0;
     return SliverToBoxAdapter(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
@@ -102,14 +102,45 @@ class _HomeState extends State<Home> {
                     onTap: () => {
                       showCarModal(context, publicList),
                     },
-                    child: CachedNetworkImage(
-                      imageUrl: publicList['image'],
-                      fit: BoxFit.fitWidth,
-                      placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                    child: CarouselSlider(
+                      options: CarouselOptions(
+                        onPageChanged: ((index, reason) {
+                          setState(() {
+                            _currentIndex = index;
+                          });
+                        }),
+                        // height: 200,
+                        viewportFraction: .9,
+                        enlargeCenterPage: true,
+                      ),
+                      items: publicList['images']
+                          .map<Widget>(
+                            (item) => ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: SizedBox(
+                                width: 400,
+                                child: CachedNetworkImage(
+                                  imageUrl: item,
+                                  fit: BoxFit.fitWidth,
+                                  placeholder: (context, url) => const Center(
+                                      child: CircularProgressIndicator()),
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                ),
+                              ),
+                            ),
+                            // color: Colors.green,
+                          )
+                          .toList(),
                     ),
+                    // child: CachedNetworkImage(
+                    //   imageUrl: publicList['images'],
+                    //   fit: BoxFit.fitWidth,
+                    //   placeholder: (context, url) =>
+                    //       const Center(child: CircularProgressIndicator()),
+                    //   errorWidget: (context, url, error) =>
+                    //       const Icon(Icons.error),
+                    // ),
                   )),
             ),
             // const SizedBox(
@@ -204,11 +235,5 @@ class _HomeState extends State<Home> {
         publicList.id,
       ),
     );
-  }
-
-  //dispose
-  @override
-  void dispose() {
-    super.dispose();
   }
 }
