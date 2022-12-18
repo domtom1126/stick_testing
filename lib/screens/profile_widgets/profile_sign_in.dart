@@ -1,6 +1,8 @@
 import 'package:find_a_stick/screens/profile.dart';
 import 'package:find_a_stick/screens/profile_widgets/profile_screen.dart';
 import 'package:find_a_stick/signin_controller.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_signin_button/flutter_signin_button.dart';
@@ -19,6 +21,10 @@ class ProfileSignIn extends StatefulWidget {
 class _ProfileSignInState extends State<ProfileSignIn> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+
+  final emailRegex = RegExp(
+      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
+
   @override
   Widget build(BuildContext context) {
     return buildSignIn(context);
@@ -62,10 +68,10 @@ class _ProfileSignInState extends State<ProfileSignIn> {
                   hintText: 'Email',
                 ),
                 validator: (value) {
-                  final emailRegex = RegExp(
-                      r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
-                  if (value!.isEmpty || !emailRegex.hasMatch(value)) {
-                    return 'Please enter an email';
+                  if (value == null || value.isEmpty) {
+                    return 'Email can\'t be blank';
+                  } else if (!emailRegex.hasMatch(value)) {
+                    return 'Enter valid email';
                   }
                   return null;
                 },
@@ -77,6 +83,7 @@ class _ProfileSignInState extends State<ProfileSignIn> {
             SizedBox(
               width: 300,
               child: TextFormField(
+                obscureText: true,
                 textInputAction: TextInputAction.next,
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(20),
@@ -108,17 +115,25 @@ class _ProfileSignInState extends State<ProfileSignIn> {
             SizedBox(
               width: 250,
               child: ElevatedButton(
-                onPressed: () {
-                  signInUp(
-                    _emailController.toString(),
-                    _passwordController.toString(),
-                  );
-
-                  Navigator.push(
+                onPressed: () async {
+                  try {
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    Navigator.pushReplacement(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => const ProfilePage()));
-                  // TODO Update to the signed in page
+                          builder: (context) => const ProfilePage()),
+                    );
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'email-already-in-use') {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text);
+                      if (e.code == 'wrong-password') {}
+                    }
+                  }
                 },
                 child: const Text('Sign in / up'),
               ),
@@ -305,7 +320,7 @@ class OrangeLines extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     var paint = Paint()
-      ..color = HexColor('EE6C4D')
+      ..color = HexColor('DF7212')
       ..strokeWidth = 15
       ..strokeCap = StrokeCap.round;
 
