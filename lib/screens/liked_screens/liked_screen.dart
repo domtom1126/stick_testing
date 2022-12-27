@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:find_a_stick/screens/view_car.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 class LikedScreen extends StatefulWidget {
   const LikedScreen({
@@ -48,10 +50,8 @@ class _LikedScreenState extends State<LikedScreen> {
                       child: ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: GestureDetector(
-                            onTap: () => {
-                              // showCarModal(context, publicList),
-                              null
-                            },
+                            onTap: () =>
+                                {showCarModal(context, publicList), null},
                             child: CarouselSlider(
                               options: CarouselOptions(
                                 onPageChanged: ((index, reason) {
@@ -163,5 +163,31 @@ class _LikedScreenState extends State<LikedScreen> {
             );
           }).toList());
         });
+  }
+
+  Future showCarModal(
+      BuildContext context, QueryDocumentSnapshot<Object?> publicList) {
+    return showModalBottomSheet(
+      isScrollControlled: true,
+      backgroundColor: HexColor('2B2E34'),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
+        ),
+      ),
+      context: context,
+      builder: (context) => ViewCar(
+        publicList['make'],
+        publicList['model'],
+        publicList['year'],
+        publicList['price'],
+        publicList['odometer'],
+        publicList['images'],
+        publicList['description'],
+        publicList['email'],
+        publicList.id,
+      ),
+    );
   }
 }
