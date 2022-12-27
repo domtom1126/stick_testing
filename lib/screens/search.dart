@@ -1,9 +1,11 @@
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:find_a_stick/screens/post_widgets/post_form.dart';
-// import 'package:find_a_stick/search_screens/select_make_screen.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter/services.dart';
-// import 'package:hexcolor/hexcolor.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:find_a_stick/screens/post_widgets/post_form.dart';
+import 'package:find_a_stick/search_model.dart';
+import 'package:find_a_stick/search_screens/select_make_screen.dart';
+import 'package:firestore_search/firestore_search.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:hexcolor/hexcolor.dart';
 
 // class SearchPage extends StatefulWidget {
 //   const SearchPage({super.key});
@@ -303,94 +305,92 @@
 //     );
 //   }
 // }
+// * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ * //
+// * THIS IS A BASIC SEARCH NOTHING MORE THAN A SEARCH BAR FOR MAKE, MODEL AND YEAR * //
+// * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ * //
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-class Search extends SearchDelegate {
-  List<String> searchResults = [
-    'Ford',
-    'Chevy',
-    'Bubba',
-  ];
-  @override
-  PreferredSizeWidget? buildBottom(BuildContext context) {
-    return const PreferredSize(
-      preferredSize: Size.fromHeight(20),
-      child: Text('Search make or model'),
-    );
-  }
+class SearchCars extends StatefulWidget {
+  const SearchCars({super.key});
 
   @override
-  ThemeData appBarTheme(BuildContext context) {
-    final ThemeData theme = Theme.of(context);
-    final ColorScheme colorScheme = theme.colorScheme;
-    return theme.copyWith(
-      appBarTheme: AppBarTheme(
-        backgroundColor: Colors.transparent,
-        iconTheme: theme.primaryIconTheme.copyWith(color: Colors.grey),
-      ),
-      inputDecorationTheme: searchFieldDecorationTheme ??
-          InputDecorationTheme(
-            hintStyle: searchFieldStyle ?? theme.inputDecorationTheme.hintStyle,
-            border: InputBorder.none,
-          ),
-    );
-  }
+  State<SearchCars> createState() => _SearchCarsState();
+}
 
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return [
-      IconButton(
-        icon: const Icon(Icons.clear),
-        onPressed: () {
-          query = '';
-        },
-      )
-    ];
-  }
+class _SearchCarsState extends State<SearchCars> {
+  Future<QuerySnapshot>? postDocumentList;
+  String carSearchText = '';
 
-  @override
-  Widget buildLeading(BuildContext context) {
-    return IconButton(
-      icon: const Icon(Icons.arrow_back),
-      onPressed: () {
-        close(context, null);
-      },
-    );
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return Center(
-      child: Text(query),
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    // firebase instance
-    final cars = FirebaseFirestore.instance
+  initSearchingCars(String textEntered) {
+    postDocumentList = FirebaseFirestore.instance
         .collection('makes')
-        .orderBy('date_added', descending: true)
-        .snapshots()
-        .toList;
-    List<String> suggestions = searchResults.where((searchResult) {
-      final result = searchResult.toLowerCase();
-      final input = query.toLowerCase();
-      return result.contains(input);
-    }).toList();
-    return ListView.builder(
-        itemCount: suggestions.length,
-        itemBuilder: (context, index) {
-          final suggestion = suggestions[index];
-          return ListTile(
-            title: Text(suggestion),
-            onTap: () {
-              query = suggestion;
-              showResults(context);
-            },
-          );
-        });
+        .orderBy('name', descending: true)
+        .get();
+
+    setState(() {
+      postDocumentList;
+    });
+    initSearchingCars(textEntered);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        body: FirestoreSearchScaffold(
+      searchBackgroundColor: Colors.black,
+      firestoreCollectionName: 'makes',
+      searchBy: 'tool',
+      scaffoldBody: Center(),
+      dataListFromSnapshot: SearchModel().dataListFromSnapshot,
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final List<SearchModel>? dataList = snapshot.data;
+          if (dataList!.isEmpty) {
+            return const Center(
+              child: Text('No Results Returned'),
+            );
+          }
+          return ListView.builder(
+              itemCount: dataList.length,
+              itemBuilder: (context, index) {
+                final SearchModel data = dataList[index];
+
+                return Column(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        '${data.make}',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                    ),
+                    // Padding(
+                    //   padding: const EdgeInsets.only(
+                    //       bottom: 8.0, left: 8.0, right: 8.0),
+                    //   child: Text('${data.developer}',
+                    //       style: Theme.of(context).textTheme.bodyText1),
+                    // )
+                  ],
+                );
+              });
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (!snapshot.hasData) {
+            return const Center(
+              child: Text('No Results Returned'),
+            );
+          }
+        }
+        return const Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+    ));
   }
 }
