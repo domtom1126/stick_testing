@@ -1,9 +1,25 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/screens/edit_user_car.dart';
+import 'package:find_a_stick/screens/messages_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:image_picker/image_picker.dart';
+
+File? pickedImage;
+final user = FirebaseAuth.instance.currentUser!;
+Future pickImage() async {
+  final _imagePicker = ImagePicker();
+  final userPickedImage =
+      await _imagePicker.pickImage(source: ImageSource.gallery);
+  pickedImage = File(userPickedImage!.path);
+
+  // * Trying to get the profile pic to show
+}
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -21,8 +37,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Widget buildProfilePage(BuildContext context) {
-    bool isSold = false;
-    final user = FirebaseAuth.instance.currentUser!;
+    bool isSold;
+
     final userCars = FirebaseFirestore.instance
         .collection('posts')
         .where('id', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
@@ -30,15 +46,53 @@ class _ProfilePageState extends State<ProfilePage> {
     return Container(
       padding: const EdgeInsets.all(20),
       child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        const SizedBox(
-          height: 20,
-        ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage(user.photoURL ?? ''),
-              radius: 60,
+            Stack(
+              children: [
+                CircleAvatar(
+                  backgroundImage: NetworkImage(user.photoURL ?? ''),
+                  radius: 60,
+                ),
+                Positioned(
+                  bottom: 1,
+                  right: 1,
+                  child: Container(
+                    height: 40,
+                    width: 40,
+                    child: IconButton(
+                      iconSize: 20,
+                      icon: const Icon(Icons.add_a_photo),
+                      color: HexColor('DF7212'),
+                      onPressed: () {
+                        // TODO Firebase needs to update once the photo is picked
+                        pickImage();
+                      },
+                    ),
+                    decoration: BoxDecoration(
+                        border: Border.all(
+                          width: 1,
+                          color: HexColor('2B303A'),
+                        ),
+                        borderRadius: const BorderRadius.all(
+                          Radius.circular(
+                            50,
+                          ),
+                        ),
+                        color: HexColor('2B303A'),
+                        boxShadow: [
+                          BoxShadow(
+                            offset: const Offset(2, 4),
+                            color: Colors.black.withOpacity(
+                              0.2,
+                            ),
+                            blurRadius: 1,
+                          ),
+                        ]),
+                  ),
+                ),
+              ],
             ),
             // const SizedBox(
             //   width: 50,
@@ -76,6 +130,22 @@ class _ProfilePageState extends State<ProfilePage> {
                         enterZipCodeDialog(context);
                       }),
                 ),
+                const SizedBox(
+                  height: 10,
+                ),
+                SizedBox(
+                  height: 45,
+                  width: 200,
+                  child: ElevatedButton(
+                    child: const Text('Messages'),
+                    onPressed: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: ((context) => const Messages())));
+                    },
+                  ),
+                )
               ],
             ),
           ],
@@ -83,12 +153,28 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(
           height: 25,
         ),
-        // You have not posted any cars yet works but it disappears
+        const Center(
+          child: Text(
+            'Your Cars',
+            style: TextStyle(fontSize: 24),
+          ),
+        ),
+        const Center(
+          child: Text(
+            'Click to edit listing',
+            style: TextStyle(fontSize: 14),
+          ),
+        ),
+        const SizedBox(
+          height: 15,
+        ),
+        // TODO You have not posted any cars yet works but it disappears
         Container(
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(25),
-              color: HexColor('2B2E34')),
-          height: 300,
+              color: HexColor('41454E')),
+          height: 250,
           width: 400,
           child: StreamBuilder(
             stream: userCars,
@@ -116,7 +202,7 @@ class _ProfilePageState extends State<ProfilePage> {
                               year: userCars['year'],
                               price: userCars['price'],
                               odometer: userCars['odometer'],
-                              image: userCars['image'],
+                              images: userCars['images'],
                               description: userCars['description'],
                               id: userCars.id,
                             ),
@@ -127,43 +213,48 @@ class _ProfilePageState extends State<ProfilePage> {
                         '${userCars['year']} ${userCars['make']} ${userCars['model']}',
                         style: Theme.of(context).textTheme.titleLarge,
                       ),
-                      subtitle: (isSold)
-                          ? TextButton(
-                              // TODO add mark as sold button
-                              onPressed: () {
-                                FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .doc(userCars.id)
-                                    .update({
-                                  'sold': false,
-                                });
-                                setState(() {
-                                  isSold = false;
-                                });
-                              },
-                              child: Text(
-                                'Mark as not sold',
-                                style: TextStyle(color: HexColor('FFFFFF')),
-                                textAlign: TextAlign.left,
-                              ))
-                          : TextButton(
-                              // TODO add mark as sold button
-                              onPressed: () {
-                                FirebaseFirestore.instance
-                                    .collection('posts')
-                                    .doc(userCars.id)
-                                    .update({
-                                  'sold': true,
-                                });
-                                setState(() {
-                                  isSold = true;
-                                });
-                              },
-                              child: Text(
-                                'Mark as Sold',
-                                style: TextStyle(color: HexColor('FFFFFF')),
-                                textAlign: TextAlign.left,
-                              )),
+                      subtitle: Row(
+                        children: [
+                          if (userCars['sold'] == true)
+                            TextButton(
+                                // TODO add mark as sold button
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(userCars.id)
+                                      .update({
+                                    'sold': false,
+                                  });
+                                  setState(() {
+                                    isSold = false;
+                                  });
+                                },
+                                child: Text(
+                                  'Mark as not sold',
+                                  style: TextStyle(color: HexColor('FFFFFF')),
+                                  textAlign: TextAlign.left,
+                                ))
+                          else
+                            TextButton(
+                                // TODO add mark as sold button
+                                onPressed: () {
+                                  FirebaseFirestore.instance
+                                      .collection('posts')
+                                      .doc(userCars.id)
+                                      .update({
+                                    'sold': true,
+                                  });
+                                  setState(() {
+                                    isSold = true;
+                                  });
+                                },
+                                child: Text(
+                                  'Mark as sold',
+                                  style: TextStyle(color: HexColor('FFFFFF')),
+                                  textAlign: TextAlign.left,
+                                )),
+                        ],
+                      ),
                       // Delete post button
                       trailing: IconButton(
                         icon: Icon(Icons.delete, color: HexColor('EE6C4F')),
