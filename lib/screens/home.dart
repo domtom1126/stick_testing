@@ -1,16 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:find_a_stick/screens/intro.dart';
 import 'package:find_a_stick/screens/search.dart';
 import 'package:find_a_stick/screens/view_car.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:is_first_run/is_first_run.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:after_layout/after_layout.dart';
 
 // TODO Add explain page for first time runners
 // TODO * Add package is_first_run
@@ -42,9 +38,10 @@ class _HomeState extends State<Home> {
                     color: HexColor('EE6C4D'),
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SearchPage()));
-                    // showSearch(context: context, delegate: Search());
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const SearchCars()));
                   },
                 ),
               ],
@@ -54,9 +51,8 @@ class _HomeState extends State<Home> {
               floating: true,
               pinned: false,
               snap: false,
-              title: Text(
+              title: const Text(
                 'Find A Stick',
-                style: Theme.of(context).textTheme.headline6,
               ),
             ),
           ];
@@ -93,23 +89,22 @@ class _HomeState extends State<Home> {
             const SizedBox(
               height: 10,
             ),
-            SizedBox(
-              height: 200,
-              width: double.infinity,
-              child: ClipRRect(
-                  borderRadius: BorderRadius.circular(10),
-                  child: GestureDetector(
-                    onTap: () => {
-                      showCarModal(context, publicList),
-                    },
-                    child: CarouselSlider(
+            GestureDetector(
+              onTap: () => {
+                showCarModal(context, publicList),
+              },
+              child: SizedBox(
+                height: 200,
+                child: Stack(
+                  children: [
+                    CarouselSlider(
                       options: CarouselOptions(
                         onPageChanged: ((index, reason) {
                           setState(() {
                             _currentIndex = index;
                           });
                         }),
-                        // height: 200,
+                        // height: 250,
                         viewportFraction: .9,
                         enlargeCenterPage: true,
                       ),
@@ -118,6 +113,7 @@ class _HomeState extends State<Home> {
                             (item) => ClipRRect(
                               borderRadius: BorderRadius.circular(10),
                               child: SizedBox(
+                                // height: 100,
                                 width: 400,
                                 child: CachedNetworkImage(
                                   imageUrl: item,
@@ -133,15 +129,9 @@ class _HomeState extends State<Home> {
                           )
                           .toList(),
                     ),
-                    // child: CachedNetworkImage(
-                    //   imageUrl: publicList['images'],
-                    //   fit: BoxFit.fitWidth,
-                    //   placeholder: (context, url) =>
-                    //       const Center(child: CircularProgressIndicator()),
-                    //   errorWidget: (context, url, error) =>
-                    //       const Icon(Icons.error),
-                    // ),
-                  )),
+                  ],
+                ),
+              ),
             ),
             // const SizedBox(
             //   height: 10,
@@ -193,17 +183,37 @@ class _HomeState extends State<Home> {
                   ),
               ],
             ),
-            Text(
-              '${publicList['price']}',
-              style: Theme.of(context).textTheme.bodyMedium,
-              textAlign: TextAlign.start,
+            Row(
+              children: [
+                Text(
+                  '\$${publicList['price']}',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                  textAlign: TextAlign.start,
+                ),
+                // if (publicList['previous_price'] == 0)
+                //   Container()
+                // else
+                //   Text(publicList['previous_price'])
+              ],
             ),
             const SizedBox(
               height: 5,
             ),
-            Text(
-              '${publicList['odometer']} Miles',
-              style: Theme.of(context).textTheme.bodySmall,
+            Row(
+              children: [
+                Text(
+                  '${publicList['odometer']} Miles',
+                  style: Theme.of(context).textTheme.bodySmall,
+                ),
+                const Spacer(),
+                if (publicList['sold'])
+                  const Text(
+                    'Sold!',
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  )
+                else
+                  Container(),
+              ],
             ),
           ],
         ),
@@ -229,7 +239,7 @@ class _HomeState extends State<Home> {
         publicList['year'],
         publicList['price'],
         publicList['odometer'],
-        publicList['image'],
+        publicList['images'],
         publicList['description'],
         publicList['email'],
         publicList.id,
