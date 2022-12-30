@@ -153,9 +153,21 @@ class _LikedScreenState extends State<LikedScreen> {
                     const SizedBox(
                       height: 5,
                     ),
-                    Text(
-                      '${publicList['odometer']} Miles',
-                      style: Theme.of(context).textTheme.bodySmall,
+                    Row(
+                      children: [
+                        Text(
+                          '${publicList['odometer']} Miles',
+                          style: Theme.of(context).textTheme.bodySmall,
+                        ),
+                        const Spacer(),
+                        if (publicList['sold'])
+                          const Text(
+                            'Sold!',
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          )
+                        else
+                          Container(),
+                      ],
                     ),
                   ],
                 ),
