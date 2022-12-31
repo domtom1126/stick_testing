@@ -95,41 +95,36 @@ class _HomeState extends State<Home> {
               },
               child: SizedBox(
                 height: 200,
-                child: Stack(
-                  children: [
-                    CarouselSlider(
-                      options: CarouselOptions(
-                        onPageChanged: ((index, reason) {
-                          setState(() {
-                            _currentIndex = index;
-                          });
-                        }),
-                        // height: 250,
-                        viewportFraction: .9,
-                        enlargeCenterPage: true,
-                      ),
-                      items: publicList['images']
-                          .map<Widget>(
-                            (item) => ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              child: SizedBox(
-                                // height: 100,
-                                width: 400,
-                                child: CachedNetworkImage(
-                                  imageUrl: item,
-                                  fit: BoxFit.fitWidth,
-                                  placeholder: (context, url) => const Center(
-                                      child: CircularProgressIndicator()),
-                                  errorWidget: (context, url, error) =>
-                                      const Icon(Icons.error),
-                                ),
-                              ),
+                child: CarouselSlider(
+                  options: CarouselOptions(
+                    onPageChanged: ((index, reason) {
+                      setState(() {
+                        _currentIndex = index;
+                      });
+                    }),
+                    // height: 250,
+                    viewportFraction: .9,
+                    enlargeCenterPage: true,
+                  ),
+                  items: publicList['images']
+                      .map<Widget>(
+                        (item) => ClipRRect(
+                          borderRadius: BorderRadius.circular(10),
+                          child: SizedBox(
+                            // height: 100,
+                            width: 400,
+                            child: CachedNetworkImage(
+                              imageUrl: item,
+                              fit: BoxFit.fitWidth,
+                              placeholder: (context, url) => const Center(
+                                  child: CircularProgressIndicator()),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
-                            // color: Colors.green,
-                          )
-                          .toList(),
-                    ),
-                  ],
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ),
             ),
@@ -190,10 +185,16 @@ class _HomeState extends State<Home> {
                   style: Theme.of(context).textTheme.bodyMedium,
                   textAlign: TextAlign.start,
                 ),
-                // if (publicList['previous_price'] == 0)
-                //   Container()
-                // else
-                //   Text(publicList['previous_price'])
+                const SizedBox(
+                  width: 10,
+                ),
+                if (publicList['previous_price'] == 0)
+                  Container()
+                else
+                  Text(
+                    publicList['previous_price'],
+                    style: TextStyle(decoration: TextDecoration.lineThrough),
+                  )
               ],
             ),
             const SizedBox(
