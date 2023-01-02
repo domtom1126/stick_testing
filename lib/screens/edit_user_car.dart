@@ -1,7 +1,7 @@
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:currency_text_input_formatter/currency_text_input_formatter.dart';
+import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -13,7 +13,7 @@ class EditUserCar extends StatefulWidget {
   final String year;
   final String price;
   final String odometer;
-  final String image;
+  final List<dynamic> images;
   final String description;
   final String id;
   const EditUserCar(
@@ -23,7 +23,7 @@ class EditUserCar extends StatefulWidget {
       required this.year,
       required this.price,
       required this.odometer,
-      required this.image,
+      required this.images,
       required this.description,
       required this.id})
       : super(key: key);
@@ -36,16 +36,29 @@ class _EditUserCarState extends State<EditUserCar> {
   final _formKey = GlobalKey<FormState>();
 
   File? pickedImage;
+  int _currentIndex = 0;
+  List<dynamic> pickedImageList = [];
+  final imagePicker = ImagePicker();
   Future pickImage() async {
-    final _imagePicker = ImagePicker();
-    final pickedImage =
-        await _imagePicker.pickImage(source: ImageSource.gallery);
-    final imageTemp = File(pickedImage!.path);
-    setState(() => this.pickedImage = imageTemp);
+    final userPickedImages = await imagePicker.pickMultiImage();
+    for (var images in userPickedImages!) {
+      pickedImageList.add(File(images.path));
+    }
+    setState(() {});
+  }
+
+  removeImage() {
+    pickedImageList.removeAt(0);
   }
 
   @override
   Widget build(BuildContext context) {
+    // When saving, it would set the images to the pickedimageList w
+    pickedImageList.add(widget.images);
+    Iterable<String> _list =
+        List<String>.generate(2024 - 1900, (i) => (1900 + i).toString())
+            .reversed;
+    String _dropdownValue = _list.first;
     final TextEditingController _makeController =
         TextEditingController(text: widget.make);
     final TextEditingController _modelController =
@@ -117,38 +130,40 @@ class _EditUserCarState extends State<EditUserCar> {
               },
             ),
             const SizedBox(height: 20),
-            TextFormField(
-              textInputAction: TextInputAction.next,
-              inputFormatters: [
-                LengthLimitingTextInputFormatter(4),
-              ],
-              keyboardType: TextInputType.number,
-              keyboardAppearance: Brightness.dark,
-              controller: _yearController,
-              decoration: InputDecoration(
-                labelText: 'Year',
-                focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
-                  borderRadius: BorderRadius.circular(25.0),
-                ),
-                hintText: 'Year',
-              ),
-              validator: (value) {
-                if (value!.length != 4) {
-                  return 'Please enter a valid year';
-                } else if (value[0] == '0' ||
-                    value[0] == '3' ||
-                    value[0] == '4' ||
-                    value[0] == '5' ||
-                    value[0] == '6' ||
-                    value[0] == '7' ||
-                    value[0] == '8' ||
-                    value[0] == '9') {
-                  return 'Enter 2 digit valid year';
-                }
-                return null;
-              },
-            ),
+            // TextFormField(
+            //   textInputAction: TextInputAction.next,
+            //   inputFormatters: [
+            //     LengthLimitingTextInputFormatter(4),
+            //   ],
+            //   keyboardType: TextInputType.number,
+            //   keyboardAppearance: Brightness.dark,
+            //   controller: _yearController,
+            //   decoration: InputDecoration(
+            //     labelText: 'Year',
+            //     focusedBorder: OutlineInputBorder(
+            //       borderSide: BorderSide(color: HexColor('EE815A'), width: 2.0),
+            //       borderRadius: BorderRadius.circular(25.0),
+            //     ),
+            //     hintText: 'Year',
+            //   ),
+            //   validator: (value) {
+            //     if (value!.length != 4) {
+            //       return 'Please enter a valid year';
+            //     } else if (value[0] == '0' ||
+            //         value[0] == '3' ||
+            //         value[0] == '4' ||
+            //         value[0] == '5' ||
+            //         value[0] == '6' ||
+            //         value[0] == '7' ||
+            //         value[0] == '8' ||
+            //         value[0] == '9') {
+            //       return 'Enter 2 digit valid year';
+            //     }
+            //     return null;
+            //   },
+            // ),
+
+            const DropdownButtonExample(),
             const SizedBox(height: 20),
             TextFormField(
               textInputAction: TextInputAction.next,
@@ -179,7 +194,7 @@ class _EditUserCarState extends State<EditUserCar> {
               textInputAction: TextInputAction.next,
               inputFormatters: [
                 LengthLimitingTextInputFormatter(10),
-                CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
+                // CurrencyTextInputFormatter(symbol: '\$', decimalDigits: 0),
               ],
               controller: _priceController,
               keyboardAppearance: Brightness.dark,
@@ -222,43 +237,54 @@ class _EditUserCarState extends State<EditUserCar> {
             const SizedBox(height: 20),
             // Show Image
             // pickedImage != null
-            ElevatedButton(
-              onPressed: () => pickImage(),
-              child: const Text('Change Image'),
-            ),
-            const SizedBox(height: 20),
-            ClipRRect(
-              borderRadius: BorderRadius.circular(10),
-              child: Image.network(
-                widget.image,
-                fit: BoxFit.cover,
-                height: 200,
-              ),
-            ),
-            Container(),
-
-            // * This actually works! but for now just do single image
-            // CarouselSlider.builder(
-            //   options: CarouselOptions(height: 200),
-            //   itemCount: pickedImage.length,
-            //   itemBuilder: (context, index, realIndex) {
-            //     final singleImage = pickedImage[index];
-
-            //     return Container(
-            //       margin: EdgeInsets.all(5.0),
-            //       child: ClipRRect(
-            //         borderRadius: BorderRadius.all(Radius.circular(5.0)),
-            //         child: Image.file(
-            //           singleImage!,
-            //           fit: BoxFit.cover,
+            // ElevatedButton(
+            //   onPressed: () => pickImage(),
+            //   child: const Text('Change Image'),
+            // ),
+            // const SizedBox(height: 20),
+            // CarouselSlider(
+            //   options: CarouselOptions(
+            //     onPageChanged: ((index, reason) {
+            //       setState(() {
+            //         _currentIndex = index;
+            //       });
+            //     }),
+            //     // height: 200,
+            //     viewportFraction: .9,
+            //     enlargeCenterPage: true,
+            //   ),
+            //   items: widget.images
+            //       .map(
+            //         (item) => Stack(
+            //           children: [
+            //             ClipRRect(
+            //               borderRadius: BorderRadius.circular(10),
+            //               child: SizedBox(
+            //                 width: 400,
+            //                 child: Image.network(item, fit: BoxFit.fitWidth),
+            //               ),
+            //             ),
+            //             IconButton(
+            //                 onPressed: () {
+            //                   setState(() {
+            //                     widget.images.removeAt(_currentIndex);
+            //                   });
+            //                 },
+            //                 icon: const Icon(
+            //                     color: Colors.white,
+            //                     size: 35,
+            //                     Icons.delete_forever))
+            //           ],
             //         ),
-            //       ),
-            //     );
-            //   },
+            //         // color: Colors.green,
+            //       )
+            //       .toList(),
             // ),
             const SizedBox(height: 20),
             ElevatedButton(
                 onPressed: () {
+                  var previousPrice = widget.price;
+
                   if (_formKey.currentState!.validate()) {
                     // save data to post
                     FirebaseFirestore.instance
@@ -270,8 +296,12 @@ class _EditUserCarState extends State<EditUserCar> {
                       'year': _yearController.text,
                       'odometer': _odometerController.text,
                       'price': _priceController.text,
+                      'previous_price': previousPrice,
                       'description': _descriptionController.text,
-                      'image': widget.image,
+                      // ! Firebase is saying that you cant use double brackets
+                      // ! happens when you hit the save button.
+                      // * I guess just skip this for now and we will add it later
+                      // 'images': pickedImageList,
                     }).whenComplete(() {
                       const snackBar = SnackBar(
                         content: Text('Your post has been updated'),
@@ -280,6 +310,35 @@ class _EditUserCarState extends State<EditUserCar> {
                       // navigate to profile page
                     });
                   }
+
+                  // // TODO ! This Keeps crashing on button push
+                  // if (_formKey.currentState!.validate()) {
+                  //   // * Trying this for formatting to int when updating firebase
+                  //   // var _priceControllerFormatted = _priceController.text
+                  //   //     .replaceAll(RegExp(r'[^0-9]'), ''); // '23'
+                  //   // *
+                  //   print(_priceController.text);
+                  //   print(widget.price);
+                  //   // save data to post
+                  //   FirebaseFirestore.instance
+                  //       .collection('posts')
+                  //       .doc(widget.id)
+                  //       .update({
+                  //     'make': _makeController.text,
+                  //     'model': _modelController.text,
+                  //     'year': dropdownValue,
+                  //     'odometer': _odometerController.text,
+                  //     // 'previous_price': widget.price,
+                  //     'price': _priceController.text,
+                  //     'description': _descriptionController.text,
+                  //     'images': pickedImageList,
+                  //   }).whenComplete(() {
+                  //     const snackBar =
+                  //         SnackBar(content: Text('Your post has been updated'));
+                  //     ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                  //     // navigate to profile page
+                  //   });
+                  // }
                 },
                 child: const Text('Save')),
           ],
