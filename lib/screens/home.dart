@@ -103,7 +103,7 @@ class _HomeState extends State<Home> {
                       });
                     }),
                     // height: 250,
-                    viewportFraction: .9,
+                    viewportFraction: 1.0,
                     enlargeCenterPage: true,
                   ),
                   items: publicList['images']
@@ -111,15 +111,17 @@ class _HomeState extends State<Home> {
                         (item) => ClipRRect(
                           borderRadius: BorderRadius.circular(10),
                           child: SizedBox(
-                            // height: 100,
                             width: 400,
-                            child: CachedNetworkImage(
-                              imageUrl: item,
-                              fit: BoxFit.fitWidth,
-                              placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator()),
-                              errorWidget: (context, url, error) =>
-                                  const Icon(Icons.error),
+                            child: FittedBox(
+                              fit: BoxFit.cover,
+                              child: CachedNetworkImage(
+                                imageUrl: item,
+                                fit: BoxFit.fitWidth,
+                                placeholder: (context, url) => const Center(
+                                    child: CircularProgressIndicator()),
+                                errorWidget: (context, url, error) =>
+                                    const Icon(Icons.error),
+                              ),
                             ),
                           ),
                         ),
@@ -192,8 +194,10 @@ class _HomeState extends State<Home> {
                   Container()
                 else
                   Text(
-                    publicList['previous_price'],
-                    style: TextStyle(decoration: TextDecoration.lineThrough),
+                    '\$${publicList['previous_price']}',
+                    style: const TextStyle(
+                        color: Colors.grey,
+                        decoration: TextDecoration.lineThrough),
                   )
               ],
             ),
