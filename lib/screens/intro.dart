@@ -1,16 +1,10 @@
-import 'package:find_a_stick/screens/enter_zip.dart';
-import 'package:find_a_stick/screens/home.dart';
 import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_signin_button/button_view.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../signin_controller.dart';
 
@@ -79,12 +73,8 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                       ),
                       hintText: 'Email',
                     ),
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'Please enter an email';
-                      }
-                      return null;
-                    },
+                    validator: (value) =>
+                        value != null && value.isEmpty ? 'Enter email' : null,
                   ),
                 ),
                 const SizedBox(
@@ -94,7 +84,8 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                   width: 300,
                   child: TextFormField(
                     obscureText: true,
-                    keyboardType: TextInputType.visiblePassword,
+                    autocorrect: false,
+                    // keyboardType: TextInputType.visiblePassword,
                     textInputAction: TextInputAction.done,
                     inputFormatters: [
                       LengthLimitingTextInputFormatter(20),
@@ -109,13 +100,9 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                       ),
                       hintText: 'Password',
                     ),
-                    validator: (value) {
-                      // TODO put proper validation for password
-                      if (value!.isEmpty) {
-                        return 'Please enter a password';
-                      }
-                      return null;
-                    },
+                    validator: (value) => value != null && value.isEmpty
+                        ? 'Enter password'
+                        : null,
                   ),
                 ),
                 const SizedBox(
@@ -145,13 +132,13 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
                                   password: _passwordController.text);
                           // TODO Add validation
                           if (e.code == 'wrong-password') {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return Container(
-                                    child: Text('Wrong password'),
-                                  );
-                                });
+                            setState(() {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return const Text('Hello');
+                                  });
+                            });
                           }
                           Navigator.pushReplacement(
                               context,
