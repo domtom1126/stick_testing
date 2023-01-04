@@ -4,12 +4,22 @@ import 'package:find_a_stick/widgets/bottom_bar.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
+  //Remove this method to stop OneSignal Debugging
+  OneSignal.shared.setLogLevel(OSLogLevel.verbose, OSLogLevel.none);
+
+  OneSignal.shared.setAppId("3880da7a-2f7c-4c2f-9a08-ade57d9ccb0f");
+
+// The promptForPushNotificationsWithUserResponse function will show the iOS or Android push notification prompt. We recommend removing the following code and instead using an In-App Message to prompt for notification permission
+  OneSignal.shared.promptUserForPushNotificationPermission().then((accepted) {
+    print("Accepted permission: $accepted");
+  });
   final prefs = await SharedPreferences.getInstance();
   final showHome = prefs.getBool('showHome') ?? false;
 
@@ -54,6 +64,9 @@ class MyApp extends StatelessWidget {
 
   ThemeData darkTheme() {
     return ThemeData(
+      sliderTheme: const SliderThemeData(
+        showValueIndicator: ShowValueIndicator.always,
+      ),
       // * Circular Progress Indicator Color
       primarySwatch: Colors.blue,
       colorScheme: ColorScheme.fromSeed(
