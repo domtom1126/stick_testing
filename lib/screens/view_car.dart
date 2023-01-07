@@ -3,7 +3,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
@@ -11,8 +10,6 @@ import 'package:mailer/mailer.dart';
 import 'package:mailer/smtp_server.dart';
 import 'package:provider/provider.dart';
 import 'package:readmore/readmore.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:http/http.dart' as http;
 
 class ViewCar extends StatefulWidget {
   final String make;
@@ -103,7 +100,7 @@ class _ViewCarState extends State<ViewCar> {
   SingleChildScrollView carModal() {
     int _currentIndex = 0;
     return SingleChildScrollView(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.fromLTRB(20, 15, 20, 10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -112,28 +109,27 @@ class _ViewCarState extends State<ViewCar> {
               // Navigator.of(context).push(MaterialPageRoute(
               //     builder: (context) => ExpandImage(image: widget.image)));
             },
-            child: Hero(
-              tag: 'carImage',
-              child: SizedBox(
-                height: 200,
-                width: double.infinity,
-                child: CarouselSlider(
-                  options: CarouselOptions(
-                    onPageChanged: ((index, reason) {
-                      setState(() {
-                        _currentIndex = index;
-                      });
-                    }),
-                    // height: 200,
-                    viewportFraction: .9,
-                    enlargeCenterPage: true,
-                  ),
-                  items: widget.image
-                      .map(
-                        (item) => ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: SizedBox(
-                            width: 400,
+            child: SizedBox(
+              height: 200,
+              child: CarouselSlider(
+                options: CarouselOptions(
+                  onPageChanged: ((index, reason) {
+                    setState(() {
+                      _currentIndex = index;
+                    });
+                  }),
+                  // height: 200,
+                  viewportFraction: 1.0,
+                  enlargeCenterPage: true,
+                ),
+                items: widget.image
+                    .map(
+                      (item) => ClipRRect(
+                        borderRadius: BorderRadius.circular(10),
+                        child: SizedBox(
+                          width: 400,
+                          child: FittedBox(
+                            fit: BoxFit.cover,
                             child: CachedNetworkImage(
                               imageUrl: item,
                               fit: BoxFit.fitWidth,
@@ -144,21 +140,10 @@ class _ViewCarState extends State<ViewCar> {
                             ),
                           ),
                         ),
-                        // color: Colors.green,
-                      )
-                      .toList(),
-                ),
-                // child: ClipRRect(
-                //   borderRadius: BorderRadius.circular(10),
-                //   child: CachedNetworkImage(
-                //     imageUrl: widget.image,
-                //     fit: BoxFit.fitWidth,
-                //     placeholder: (context, url) =>
-                //         const Center(child: CircularProgressIndicator()),
-                //     errorWidget: (context, url, error) =>
-                //         const Icon(Icons.error),
-                //   ),
-                // ),
+                      ),
+                      // color: Colors.green,
+                    )
+                    .toList(),
               ),
             ),
           ),
@@ -168,7 +153,7 @@ class _ViewCarState extends State<ViewCar> {
           Row(
             children: [
               Text(
-                '${widget.year} ${widget.make}${widget.model}',
+                '${widget.year} ${widget.make} ${widget.model}',
                 style: Theme.of(context).textTheme.bodyLarge,
               ),
               // TODO report vehicle for not being stick shift
@@ -288,7 +273,7 @@ class _ViewCarState extends State<ViewCar> {
                                           onLiked = false;
                                         });
                                       });
-                                      Navigator.of(context).pop();
+                                      // Navigator.of(context).pop();
                                     },
                                   ),
                                   ElevatedButton(
@@ -296,7 +281,7 @@ class _ViewCarState extends State<ViewCar> {
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
-                                  )
+                                  ),
                                 ],
                               );
                             });
