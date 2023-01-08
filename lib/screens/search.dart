@@ -1,11 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:find_a_stick/screens/post_widgets/post_form.dart';
 import 'package:find_a_stick/search_model.dart';
-import 'package:find_a_stick/search_screens/select_make_screen.dart';
 import 'package:firestore_search/firestore_search.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hexcolor/hexcolor.dart';
 
 // class SearchPage extends StatefulWidget {
 //   const SearchPage({super.key});
@@ -335,62 +331,44 @@ class _SearchCarsState extends State<SearchCars> {
     initSearchingCars(textEntered);
   }
 
+  TextEditingController _searchController = TextEditingController();
+  String _searchText = '';
+  List _searchResults = [];
+
   @override
   Widget build(BuildContext context) {
+    QuerySnapshot snapshot;
     return Scaffold(
-        body: FirestoreSearchScaffold(
-      searchBackgroundColor: Colors.black,
-      firestoreCollectionName: 'makes',
-      searchBy: 'tool',
-      scaffoldBody: Center(),
-      dataListFromSnapshot: SearchModel().dataListFromSnapshot,
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final List<SearchModel>? dataList = snapshot.data;
-          if (dataList!.isEmpty) {
-            return const Center(
-              child: Text('No Results Returned'),
+        appBar: AppBar(
+          title: TextField(
+              controller: _searchController,
+              decoration: const InputDecoration(
+                hintText: "Search...",
+              ),
+              onChanged: (value) {
+                search();
+              }),
+        ),
+        body: ListView.builder(
+          itemCount: snapshot.documents.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              title: Text(snapshot.documents[index].data['title']),
             );
-          }
-          return ListView.builder(
-              itemCount: dataList.length,
-              itemBuilder: (context, index) {
-                final SearchModel data = dataList[index];
+          },
+        ));
+  }
 
-                return Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        '${data.make}',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                    ),
-                    // Padding(
-                    //   padding: const EdgeInsets.only(
-                    //       bottom: 8.0, left: 8.0, right: 8.0),
-                    //   child: Text('${data.developer}',
-                    //       style: Theme.of(context).textTheme.bodyText1),
-                    // )
-                  ],
-                );
-              });
-        }
+  void search() async {
+    String query = _searchController.text;
+    CollectionReference collection =
+        FirebaseFirestore.instance.collection('makes');
+    QuerySnapshot snapshot =
+        await collection.where('field', isEqualTo: query).get();
 
-        if (snapshot.connectionState == ConnectionState.done) {
-          if (!snapshot.hasData) {
-            return const Center(
-              child: Text('No Results Returned'),
-            );
-          }
-        }
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    ));
+    // Output the search results
+    snapshot.docs.forEach((document) {
+      print(document.data);
+    });
   }
 }
