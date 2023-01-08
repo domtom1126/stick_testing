@@ -159,34 +159,10 @@ class _ViewCarState extends State<ViewCar> {
               // TODO report vehicle for not being stick shift
               if (user?.uid != null)
                 IconButton(
-                  onPressed: () {
-                    sendReportedEmail();
-                    // open alert dialog
-                    // showDialog(
-                    //   context: context,
-                    //   builder: (context) {
-                    //     return AlertDialog(
-                    //       backgroundColor: Colors.black45,
-                    //       title: const Text('Report vehicle'),
-                    //       content: const Text(
-                    //           'Are you sure you want to report this vehicle?'),
-                    //       actions: [
-                    //         ElevatedButton(
-                    //           child: const Text('Yes'),
-                    //           onPressed: () {
-                    //             // sendReportedEmail();
-                    //           },
-                    //         ),
-                    //         ElevatedButton(
-                    //           child: const Text('No'),
-                    //           onPressed: () {
-                    //             Navigator.of(context).pop();
-                    //           },
-                    //         ),
-                    //       ],
-                    //     );
-                    //   },
-                    // );
+                  onPressed: () async {
+                    CollectionReference reportCarToFirebase =
+                        FirebaseFirestore.instance.collection('reported_cars');
+                    reportCarToFirebase.add({'car_id': widget.docId});
                   },
                   icon: const Icon(Icons.error),
                 )
