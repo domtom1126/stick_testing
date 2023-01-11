@@ -422,13 +422,18 @@ class _ExpandImageState extends State<ExpandImage> {
                       width: 400,
                       child: FittedBox(
                         fit: BoxFit.cover,
-                        child: CachedNetworkImage(
-                          imageUrl: item,
-                          fit: BoxFit.fitWidth,
-                          placeholder: (context, url) =>
-                              const Center(child: CircularProgressIndicator()),
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.error),
+                        child: InteractiveViewer(
+                          panEnabled: true,
+                          minScale: 0.5,
+                          maxScale: 2,
+                          child: CachedNetworkImage(
+                            imageUrl: item,
+                            fit: BoxFit.fitWidth,
+                            placeholder: (context, url) => const Center(
+                                child: CircularProgressIndicator()),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
+                          ),
                         ),
                       ),
                     ),
