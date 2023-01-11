@@ -20,10 +20,20 @@ class ViewCar extends StatefulWidget {
   final List image;
   final String description;
   final String? receiverEmail;
+  final bool reported;
   final String? docId;
 
-  const ViewCar(this.make, this.model, this.year, this.price, this.odometer,
-      this.image, this.description, this.receiverEmail, this.docId,
+  const ViewCar(
+      this.make,
+      this.model,
+      this.year,
+      this.price,
+      this.odometer,
+      this.image,
+      this.description,
+      this.receiverEmail,
+      this.reported,
+      this.docId,
       {Key? key})
       : super(key: key);
 
@@ -106,8 +116,8 @@ class _ViewCarState extends State<ViewCar> {
         children: [
           GestureDetector(
             onTap: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) => ExpandImage(image: widget.image)));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ExpandImage(image: widget.image)));
             },
             child: SizedBox(
               height: 200,
@@ -159,12 +169,25 @@ class _ViewCarState extends State<ViewCar> {
               // TODO report vehicle for not being stick shift
               if (user?.uid != null)
                 IconButton(
+                  // TODO Make some sort of questionaire about why they are reporting and then send that in the report as well
                   onPressed: () async {
                     CollectionReference reportCarToFirebase =
                         FirebaseFirestore.instance.collection('reported_cars');
                     reportCarToFirebase.add({'car_id': widget.docId});
+                    // Update the original post and change the 'reported' bool to true
+                    FirebaseFirestore.instance
+                        .collection('posts')
+                        .doc(widget.docId)
+                        .update({'reported': true});
                   },
                   icon: const Icon(Icons.error),
+                ),
+              if (widget.reported == true)
+                Flexible(
+                  child: Text(
+                    'Vehicle has already been reported',
+                    style: TextStyle(color: HexColor('000000'), fontSize: 14),
+                  ),
                 )
               else
                 Container(),
@@ -360,7 +383,7 @@ class _ViewCarState extends State<ViewCar> {
 // }
 
 class ExpandImage extends StatefulWidget {
-  final String image;
+  final List image;
   const ExpandImage({Key? key, required this.image}) : super(key: key);
 
   @override
@@ -368,6 +391,7 @@ class ExpandImage extends StatefulWidget {
 }
 
 class _ExpandImageState extends State<ExpandImage> {
+  int _currentIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -379,15 +403,39 @@ class _ExpandImageState extends State<ExpandImage> {
         minScale: 0.5,
         maxScale: 2,
         child: Center(
-          child: Hero(
-            tag: 'carImage',
-            child: CachedNetworkImage(
-              imageUrl: widget.image,
-              // fit: BoxFit.fitWidth,
-              placeholder: (context, url) =>
-                  const Center(child: CircularProgressIndicator()),
-              errorWidget: (context, url, error) => const Icon(Icons.error),
+          child: CarouselSlider(
+            options: CarouselOptions(
+              onPageChanged: ((index, reason) {
+                setState(() {
+                  _currentIndex = index;
+                });
+              }),
+              // height: 200,
+              viewportFraction: 1.0,
+              enlargeCenterPage: true,
             ),
+            items: widget.image
+                .map(
+                  (item) => ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: SizedBox(
+                      width: 400,
+                      child: FittedBox(
+                        fit: BoxFit.cover,
+                        child: CachedNetworkImage(
+                          imageUrl: item,
+                          fit: BoxFit.fitWidth,
+                          placeholder: (context, url) =>
+                              const Center(child: CircularProgressIndicator()),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
+                        ),
+                      ),
+                    ),
+                  ),
+                  // color: Colors.green,
+                )
+                .toList(),
           ),
         ),
       ),
