@@ -305,70 +305,122 @@ import 'package:flutter/material.dart';
 // * THIS IS A BASIC SEARCH NOTHING MORE THAN A SEARCH BAR FOR MAKE, MODEL AND YEAR * //
 // * ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ * //
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/material.dart';
+// class SearchCars extends StatefulWidget {
+//   const SearchCars({super.key});
 
-class SearchCars extends StatefulWidget {
-  const SearchCars({super.key});
+//   @override
+//   State<SearchCars> createState() => _SearchCarsState();
+// }
 
+// class _SearchCarsState extends State<SearchCars> {
+//   Future<QuerySnapshot>? postDocumentList;
+//   String carSearchText = '';
+
+//   initSearchingCars(String textEntered) {
+//     postDocumentList = FirebaseFirestore.instance
+//         .collection('makes')
+//         .orderBy('name', descending: true)
+//         .get();
+
+//     setState(() {
+//       postDocumentList;
+//     });
+//     initSearchingCars(textEntered);
+//   }
+
+//   TextEditingController _searchController = TextEditingController();
+//   String _searchText = '';
+//   List _searchResults = [];
+
+//   @override
+//   Widget build(BuildContext context) {
+//     QuerySnapshot snapshot;
+//     return Scaffold(
+//         appBar: AppBar(
+//           title: TextField(
+//               controller: _searchController,
+//               decoration: const InputDecoration(
+//                 hintText: "Search...",
+//               ),
+//               onChanged: (value) {
+//                 search();
+//               }),
+//         ),
+//         body: Container());
+//   }
+
+//   void search() async {
+//     String query = _searchController.text;
+//     CollectionReference collection =
+//         FirebaseFirestore.instance.collection('makes');
+//     QuerySnapshot snapshot =
+//         await collection.where('field', isEqualTo: query).get();
+
+//     // Output the search results
+//     snapshot.docs.forEach((document) {
+//       print(document.data);
+//     });
+//   }
+// }
+
+// * ChatGPT liveserach question
+
+class LiveSearch extends StatefulWidget {
   @override
-  State<SearchCars> createState() => _SearchCarsState();
+  _LiveSearchState createState() => _LiveSearchState();
 }
 
-class _SearchCarsState extends State<SearchCars> {
-  Future<QuerySnapshot>? postDocumentList;
-  String carSearchText = '';
-
-  initSearchingCars(String textEntered) {
-    postDocumentList = FirebaseFirestore.instance
-        .collection('makes')
-        .orderBy('name', descending: true)
-        .get();
-
-    setState(() {
-      postDocumentList;
-    });
-    initSearchingCars(textEntered);
-  }
-
-  TextEditingController _searchController = TextEditingController();
-  String _searchText = '';
-  List _searchResults = [];
-
+class _LiveSearchState extends State<LiveSearch> {
+  final TextEditingController _searchController = TextEditingController();
+  String _searchText = "";
+  Stream<QuerySnapshot<Map<String, dynamic>>>? streamQuery;
   @override
   Widget build(BuildContext context) {
-    QuerySnapshot snapshot;
     return Scaffold(
         appBar: AppBar(
-          title: TextField(
+          title: Text('Search'),
+        ),
+        body: Column(
+          children: <Widget>[
+            TextField(
               controller: _searchController,
               decoration: const InputDecoration(
                 hintText: "Search...",
+                prefixIcon: Icon(Icons.search),
               ),
-              onChanged: (value) {
-                search();
-              }),
-        ),
-        body: ListView.builder(
-          itemCount: snapshot.documents.length,
-          itemBuilder: (context, index) {
-            return ListTile(
-              title: Text(snapshot.documents[index].data['title']),
-            );
-          },
+              onChanged: (text) {
+                setState(() {
+                  _searchText = text;
+                  streamQuery = FirebaseFirestore.instance
+                      .collection("makes")
+                      .where("make", isGreaterThanOrEqualTo: _searchText)
+                      .where('make', isLessThan: _searchText + 'z')
+                      .snapshots();
+                });
+              },
+            ),
+            Expanded(
+              child: StreamBuilder(
+                stream: streamQuery,
+                builder: (BuildContext context,
+                    AsyncSnapshot<QuerySnapshot> snapshot) {
+                  if (!snapshot.hasData) {
+                    return Center(child: CircularProgressIndicator());
+                  } else {
+                    return ListView.builder(
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        print(index);
+                        return ListTile(
+                          title: Text(snapshot.data!.docs[index]["make"]),
+                        );
+                      },
+                    );
+                  }
+                },
+              ),
+            ),
+          ],
         ));
-  }
-
-  void search() async {
-    String query = _searchController.text;
-    CollectionReference collection =
-        FirebaseFirestore.instance.collection('makes');
-    QuerySnapshot snapshot =
-        await collection.where('field', isEqualTo: query).get();
-
-    // Output the search results
-    snapshot.docs.forEach((document) {
-      print(document.data);
-    });
   }
 }
