@@ -64,6 +64,7 @@ class MyApp extends StatelessWidget {
 
   ThemeData darkTheme() {
     return ThemeData(
+      useMaterial3: true,
       sliderTheme: const SliderThemeData(
         showValueIndicator: ShowValueIndicator.always,
       ),
@@ -79,9 +80,10 @@ class MyApp extends StatelessWidget {
         foregroundColor: HexColor('FFFFFF'),
         elevation: 0,
       ),
-      // * Scaffold Theme
+      // * Scaffold Theme(Main background color)
       // scaffoldBackgroundColor: HexColor('7E8987'),
       scaffoldBackgroundColor: HexColor('2B303A'),
+      // * Theme of text
       textTheme: TextTheme(
         bodyLarge: TextStyle(
             fontSize: 25,
@@ -136,8 +138,8 @@ class MyApp extends StatelessWidget {
             color: HexColor('FFFFFF'),
             fontWeight: FontWeight.w300,
             fontSize: 16),
-        border: OutlineInputBorder(borderRadius: BorderRadius.circular(25)),
-        isCollapsed: true,
+        border: OutlineInputBorder(borderRadius: BorderRadius.circular(15)),
+        isCollapsed: false,
         filled: true,
       ),
       // * END text form field theme
