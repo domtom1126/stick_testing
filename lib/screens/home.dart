@@ -7,6 +7,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:onesignal_flutter/onesignal_flutter.dart';
 
 // TODO Add explain page for first time runners
 // TODO * Add package is_first_run
@@ -38,10 +39,8 @@ class _HomeState extends State<Home> {
                     color: HexColor('EE6C4D'),
                   ),
                   onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const SearchCars()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => LiveSearch()));
                   },
                 ),
               ],
@@ -51,8 +50,19 @@ class _HomeState extends State<Home> {
               floating: true,
               pinned: false,
               snap: false,
-              title: const Text(
-                'Find A Stick',
+              title: Column(
+                children: const [
+                  Text(
+                    'Find A Stick',
+                  ),
+                  Text(
+                    'Location: Not set',
+                    style: TextStyle(
+                      fontSize: 12,
+                      color: Colors.grey,
+                    ),
+                  ),
+                ],
               ),
             ),
           ];
@@ -90,9 +100,7 @@ class _HomeState extends State<Home> {
               height: 10,
             ),
             GestureDetector(
-              onTap: () => {
-                showCarModal(context, publicList),
-              },
+              onTap: () => showCarModal(context, publicList),
               child: SizedBox(
                 height: 200,
                 child: CarouselSlider(
@@ -108,23 +116,7 @@ class _HomeState extends State<Home> {
                   ),
                   items: publicList['images']
                       .map<Widget>(
-                        (item) => ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: SizedBox(
-                            width: 400,
-                            child: FittedBox(
-                              fit: BoxFit.cover,
-                              child: CachedNetworkImage(
-                                imageUrl: item,
-                                fit: BoxFit.fitWidth,
-                                placeholder: (context, url) => const Center(
-                                    child: CircularProgressIndicator()),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
-                              ),
-                            ),
-                          ),
-                        ),
+                        (item) => buildImageBox(item),
                       )
                       .toList(),
                 ),
@@ -168,6 +160,10 @@ class _HomeState extends State<Home> {
                     icon:
                         const Icon(Icons.favorite_border, color: Colors.white),
                     onPressed: () {
+                      OneSignal.shared.setExternalUserId(publicList['id']);
+                      OneSignal.shared.postNotification(OSCreateNotification(
+                          content: 'This is a test notification',
+                          playerIds: [publicList['id']]));
                       HapticFeedback.mediumImpact();
                       FirebaseFirestore.instance
                           .collection('posts')
@@ -226,6 +222,25 @@ class _HomeState extends State<Home> {
     );
   }
 
+  ClipRRect buildImageBox(item) {
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(10),
+      child: SizedBox(
+        width: 400,
+        child: FittedBox(
+          fit: BoxFit.cover,
+          child: CachedNetworkImage(
+            imageUrl: item,
+            fit: BoxFit.fitWidth,
+            placeholder: (context, url) =>
+                const Center(child: CircularProgressIndicator()),
+            errorWidget: (context, url, error) => const Icon(Icons.error),
+          ),
+        ),
+      ),
+    );
+  }
+
   Future<dynamic> showCarModal(
       BuildContext context, QueryDocumentSnapshot<Object?> publicList) {
     return showModalBottomSheet(
@@ -247,6 +262,7 @@ class _HomeState extends State<Home> {
         publicList['images'],
         publicList['description'],
         publicList['email'],
+        publicList['reported'],
         publicList.id,
       ),
     );
