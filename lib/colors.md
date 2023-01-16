@@ -11,3 +11,4 @@ HexColor('424C55')
 ## Orange things
 
 HexColor('EE6C4D')
+HexColor('DF7212')

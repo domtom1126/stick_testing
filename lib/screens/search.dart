@@ -1,6 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:find_a_stick/search_model.dart';
-import 'package:firestore_search/firestore_search.dart';
 import 'package:flutter/material.dart';
 
 // class SearchPage extends StatefulWidget {
@@ -405,12 +403,11 @@ class _LiveSearchState extends State<LiveSearch> {
                 builder: (BuildContext context,
                     AsyncSnapshot<QuerySnapshot> snapshot) {
                   if (!snapshot.hasData) {
-                    return Center(child: CircularProgressIndicator());
+                    return Center(child: Text('Search Make, model or year'));
                   } else {
                     return ListView.builder(
                       itemCount: snapshot.data!.docs.length,
                       itemBuilder: (context, index) {
-                        print(index);
                         return ListTile(
                           title: Text(snapshot.data!.docs[index]["make"]),
                         );

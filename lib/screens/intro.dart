@@ -40,23 +40,23 @@ class _IntroductionScreenState extends State<IntroductionScreen> {
               child: Column(
                 children: [
                   const SizedBox(
-                    height: 125,
-                  ),
-                  Text(
-                    'Find a Stick',
-                    style: TextStyle(color: HexColor('FFFFFF'), fontSize: 20),
-                    textAlign: TextAlign.center,
+                    height: 110,
                   ),
                   SizedBox(
-                    height: 25,
-                  ),
-                  SizedBox(
-                    height: 150,
+                    height: 170,
                     child: Image.asset(
-                        '/Users/dominic./dev/stick_testing/images/logo_original-trimmy.png'),
+                        '/Users/dominic./dev/stick_testing/images/appstore_logo.png'),
                   ),
                   const SizedBox(
                     height: 25,
+                  ),
+                  Text(
+                    'Find a Stick',
+                    style: TextStyle(color: HexColor('FFFFFF'), fontSize: 24),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: 15,
                   ),
                   Padding(
                     padding: const EdgeInsets.fromLTRB(50, 0, 50, 0),

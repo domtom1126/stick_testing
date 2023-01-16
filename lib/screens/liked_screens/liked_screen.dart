@@ -198,6 +198,7 @@ class _LikedScreenState extends State<LikedScreen> {
         publicList['images'],
         publicList['description'],
         publicList['email'],
+        publicList['reported'],
         publicList.id,
       ),
     );

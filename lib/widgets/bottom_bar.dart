@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import '../screens/home.dart';
-import '../screens/liked.dart';
-import '../screens/post.dart';
-import '../screens/profile.dart';
+import '../screens/liked_screens/liked.dart';
+import '../screens/post_widgets/post.dart';
+import '../screens/profile_widgets/profile.dart';
 
 class BottomBar extends StatefulWidget {
   const BottomBar({Key? key}) : super(key: key);

@@ -2,7 +2,6 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart' as firebase_storage;
-import 'package:firebase_storage/firebase_storage.dart';
 
 class PostListing {
   String make = '';
@@ -49,6 +48,7 @@ class PostListing {
       'year': year,
       'odometer': odometer,
       'price': price,
+      'previous_price': 0,
       'zipCode': zipCode,
       'description': description,
       'email': email,
@@ -63,8 +63,20 @@ class PostListing {
 
   // * Puts the make of each post in db for search purposes
   addMake(String make) async {
+    // Before adding make to make collection, check if it already exists
+    // in the collection
+    QuerySnapshot makeQuery = await FirebaseFirestore.instance
+        .collection('makes')
+        .where('make', isEqualTo: make)
+        .get();
+    // If make already exists, don't add it
+    if (makeQuery.docs.isNotEmpty) {
+      return;
+    }
+
     CollectionReference addMake =
         FirebaseFirestore.instance.collection('makes');
+    // * Adds make to firebase
     addMake.add({
       'make': make,
     });

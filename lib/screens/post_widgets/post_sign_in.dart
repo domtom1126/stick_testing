@@ -1,14 +1,10 @@
 import 'package:find_a_stick/screens/post_widgets/post_form.dart';
 import 'package:find_a_stick/signin_controller.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_signin_button/flutter_signin_button.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:provider/provider.dart';
-
-import '../../widgets/global_widgets.dart';
 
 class PostSignIn extends StatefulWidget {
   const PostSignIn({Key? key}) : super(key: key);
