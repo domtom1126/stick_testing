@@ -303,9 +303,9 @@ class _PostFormState extends State<PostForm> {
           border: Border.all(
             color: HexColor('111111'),
           ),
-          borderRadius: const BorderRadius.all(Radius.circular(25))),
+          borderRadius: const BorderRadius.all(Radius.circular(15))),
       child: SizedBox(
-        height: 55,
+        height: 60,
         width: 500,
         child: DropdownButtonHideUnderline(
           child: DropdownButton<String>(
@@ -316,7 +316,7 @@ class _PostFormState extends State<PostForm> {
             menuMaxHeight: 250,
             value: dropdownValue,
             elevation: 0,
-            borderRadius: BorderRadius.circular(25),
+            borderRadius: BorderRadius.circular(5),
             style: TextStyle(
                 color: HexColor('FFFFFF'),
                 fontWeight: FontWeight.w300,
@@ -373,15 +373,16 @@ class _PostFormState extends State<PostForm> {
                           ),
                         ),
                         IconButton(
-                            onPressed: () {
-                              setState(() {
-                                pickedImageList.removeAt(_currentIndex);
-                              });
-                            },
-                            icon: const Icon(
-                                color: Colors.white,
-                                size: 35,
-                                Icons.delete_forever))
+                          onPressed: () {
+                            setState(() {
+                              pickedImageList.removeAt(_currentIndex);
+                            });
+                          },
+                          icon: const Icon(
+                              color: Colors.white,
+                              size: 35,
+                              Icons.delete_forever),
+                        )
                       ],
                     ),
                     // color: Colors.green,
