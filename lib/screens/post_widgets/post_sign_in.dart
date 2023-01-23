@@ -20,6 +20,8 @@ class _PostSignInState extends State<PostSignIn> {
       r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
   final _formKey = GlobalKey<FormState>();
 
+  bool _passwordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return buildSignIn(context);
@@ -80,8 +82,8 @@ class _PostSignInState extends State<PostSignIn> {
               SizedBox(
                 width: 300,
                 child: TextFormField(
-                  obscureText: true,
-                  textInputAction: TextInputAction.done,
+                  obscureText: !_passwordVisible,
+                  textInputAction: TextInputAction.next,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(20),
                   ],
@@ -94,13 +96,22 @@ class _PostSignInState extends State<PostSignIn> {
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     hintText: 'Password',
+                    suffixIcon: IconButton(
+                        icon: Icon(_passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        }),
                   ),
                   validator: (value) {
+                    final passwordRegex = RegExp(
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
                     // TODO put proper validation for password
-                    if (value == null || value.isEmpty) {
-                      return 'Password can\'t be blank';
-                    } else if (value.length < 8) {
-                      return 'Password must be at least 8 characters long';
+                    if (value!.isEmpty || !passwordRegex.hasMatch(value)) {
+                      return 'Please enter a password';
                     }
                     return null;
                   },

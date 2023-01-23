@@ -20,6 +20,8 @@ class _ProfileSignInState extends State<ProfileSignIn> {
   final emailRegex = RegExp(
       r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
+  bool _passwordVisible = false;
+
   @override
   Widget build(BuildContext context) {
     return buildSignIn(context);
@@ -29,162 +31,175 @@ class _ProfileSignInState extends State<ProfileSignIn> {
     return Center(
       child: CustomPaint(
         painter: OrangeLines(),
-        child: Container(
-          decoration: BoxDecoration(
-              gradient: LinearGradient(
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
-                  colors: [Colors.blue, Colors.orange])),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 100,
-              ),
-              Text(
-                'Log in to view profile',
-                style: TextStyle(color: HexColor('FFFFFF'), fontSize: 24),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              SizedBox(
-                width: 300,
-                child: TextFormField(
-                  textInputAction: TextInputAction.next,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(20),
-                  ],
-                  controller: _emailController,
-                  keyboardAppearance: Brightness.dark,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: HexColor('EE815A'), width: 2.0),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    hintText: 'Email',
+        child: Column(
+          children: [
+            const SizedBox(
+              height: 100,
+            ),
+            Text(
+              'Log in to view profile',
+              style: TextStyle(color: HexColor('FFFFFF'), fontSize: 24),
+              textAlign: TextAlign.center,
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            SizedBox(
+              width: 300,
+              child: TextFormField(
+                textInputAction: TextInputAction.next,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
+                controller: _emailController,
+                keyboardAppearance: Brightness.dark,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: HexColor('EE815A'), width: 2.0),
+                    borderRadius: BorderRadius.circular(25.0),
                   ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Email can\'t be blank';
-                    } else if (!emailRegex.hasMatch(value)) {
-                      return 'Enter valid email';
-                    }
-                    return null;
-                  },
+                  hintText: 'Email',
                 ),
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Email can\'t be blank';
+                  } else if (!emailRegex.hasMatch(value)) {
+                    return 'Enter valid email';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(
-                height: 15,
-              ),
-              SizedBox(
-                width: 300,
-                child: TextFormField(
-                  obscureText: true,
-                  textInputAction: TextInputAction.next,
-                  inputFormatters: [
-                    LengthLimitingTextInputFormatter(20),
-                  ],
-                  controller: _passwordController,
-                  keyboardAppearance: Brightness.dark,
-                  decoration: InputDecoration(
-                    focusedBorder: OutlineInputBorder(
-                      borderSide:
-                          BorderSide(color: HexColor('EE815A'), width: 2.0),
-                      borderRadius: BorderRadius.circular(25.0),
-                    ),
-                    hintText: 'Password',
+            ),
+            const SizedBox(
+              height: 15,
+            ),
+            SizedBox(
+              width: 300,
+              child: TextFormField(
+                obscureText: !_passwordVisible,
+                textInputAction: TextInputAction.next,
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
+                controller: _passwordController,
+                keyboardAppearance: Brightness.dark,
+                decoration: InputDecoration(
+                  focusedBorder: OutlineInputBorder(
+                    borderSide:
+                        BorderSide(color: HexColor('EE815A'), width: 2.0),
+                    borderRadius: BorderRadius.circular(25.0),
                   ),
-                  validator: (value) {
-                    final passwordRegex = RegExp(
-                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
-                    // TODO put proper validation for password
-                    if (value!.isEmpty || !passwordRegex.hasMatch(value)) {
-                      return 'Please enter a password';
-                    }
-                    return null;
-                  },
+                  hintText: 'Password',
+                  suffixIcon: IconButton(
+                      icon: Icon(_passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off),
+                      onPressed: () {
+                        setState(() {
+                          _passwordVisible = !_passwordVisible;
+                        });
+                      }),
                 ),
+                validator: (value) {
+                  final passwordRegex = RegExp(
+                      r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
+                  // TODO put proper validation for password
+                  if (value!.isEmpty || !passwordRegex.hasMatch(value)) {
+                    return 'Please enter a password';
+                  }
+                  return null;
+                },
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              SizedBox(
-                width: 250,
-                child: ElevatedButton(
-                  onPressed: () async {
-                    try {
-                      await FirebaseAuth.instance
-                          .createUserWithEmailAndPassword(
-                        email: _emailController.text,
-                        password: _passwordController.text,
-                      );
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => const ProfilePage()),
-                      );
-                    } on FirebaseAuthException catch (e) {
-                      if (e.code == 'email-already-in-use') {
-                        await FirebaseAuth.instance.signInWithEmailAndPassword(
-                            email: _emailController.text,
-                            password: _passwordController.text);
-                        if (e.code == 'wrong-password') {}
-                      }
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            SizedBox(
+              width: 250,
+              child: ElevatedButton(
+                onPressed: () async {
+                  var acs = ActionCodeSettings(
+                      // URL you want to redirect back to. The domain (www.example.com) for this
+                      // URL must be whitelisted in the Firebase Console.
+                      url: 'https://www.example.com/finishSignUp?cartId=1234',
+                      // This must be true
+                      handleCodeInApp: true,
+                      iOSBundleId: 'com.example.ios',
+                      androidPackageName: 'com.example.android',
+                      // installIfNotAvailable
+                      androidInstallApp: true,
+                      // minimumVersion
+                      androidMinimumVersion: '12');
+                  try {
+                    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+                      email: _emailController.text,
+                      password: _passwordController.text,
+                    );
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => const ProfilePage()),
+                    );
+                  } on FirebaseAuthException catch (e) {
+                    if (e.code == 'email-already-in-use') {
+                      await FirebaseAuth.instance.signInWithEmailAndPassword(
+                          email: _emailController.text,
+                          password: _passwordController.text);
+                      if (e.code == 'wrong-password') {}
                     }
-                  },
-                  child: const Text('Sign in / up'),
-                ),
+                  }
+                },
+                child: const Text('Sign in / up'),
               ),
-              const SizedBox(
-                height: 25,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  SizedBox(
-                    width: 100,
-                    child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.transparent,
-                        ),
-                        child: const Image(
-                            image: AssetImage('graphics/icons8-google-48.png')),
-                        onPressed: () {
-                          final provider = Provider.of<GoogleSignInProvider>(
-                              context,
-                              listen: false);
-                          provider.googleLogin();
-                        }),
-                  ),
-                  SizedBox(
-                    width: 100,
-                    child: ElevatedButton(
+            ),
+            const SizedBox(
+              height: 25,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.transparent,
                       ),
+                      child: const Image(
+                          image: AssetImage('graphics/icons8-google-48.png')),
                       onPressed: () {
-                        final appleProvider = Provider.of<AppleSignInProvider>(
+                        final provider = Provider.of<GoogleSignInProvider>(
                             context,
                             listen: false);
-                        appleProvider.appleLogin();
-                      },
-                      child: const Image(
-                        image: AssetImage('graphics/icons8-apple-logo-50.png'),
-                      ),
+                        provider.googleLogin();
+                      }),
+                ),
+                SizedBox(
+                  width: 100,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.transparent,
+                    ),
+                    onPressed: () {
+                      final appleProvider = Provider.of<AppleSignInProvider>(
+                          context,
+                          listen: false);
+                      appleProvider.appleLogin();
+                    },
+                    child: const Image(
+                      image: AssetImage('graphics/icons8-apple-logo-50.png'),
                     ),
                   ),
-                ],
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-            ],
-          ),
+                ),
+              ],
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+          ],
         ),
       ),
     );

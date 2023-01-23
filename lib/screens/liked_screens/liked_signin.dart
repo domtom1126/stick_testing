@@ -7,16 +7,27 @@ import 'package:provider/provider.dart';
 
 import '../../signin_controller.dart';
 
-class LikedSignIn extends StatelessWidget {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+class LikedSignIn extends StatefulWidget {
   LikedSignIn({
     Key? key,
   }) : super(key: key);
+
+  @override
+  State<LikedSignIn> createState() => _LikedSignInState();
+}
+
+class _LikedSignInState extends State<LikedSignIn> {
+  final TextEditingController _emailController = TextEditingController();
+
+  final TextEditingController _passwordController = TextEditingController();
+
   // For email validation
   final emailRegex = RegExp(
       r'^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$');
+
   final _formKey = GlobalKey<FormState>();
+
+  bool _passwordVisible = false;
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +59,7 @@ class LikedSignIn extends StatelessWidget {
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(20),
                   ],
-                  controller: emailController,
+                  controller: _emailController,
                   keyboardAppearance: Brightness.dark,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -74,12 +85,12 @@ class LikedSignIn extends StatelessWidget {
               SizedBox(
                 width: 300,
                 child: TextFormField(
-                  obscureText: true,
+                  obscureText: !_passwordVisible,
                   textInputAction: TextInputAction.next,
                   inputFormatters: [
                     LengthLimitingTextInputFormatter(20),
                   ],
-                  controller: passwordController,
+                  controller: _passwordController,
                   keyboardAppearance: Brightness.dark,
                   decoration: InputDecoration(
                     focusedBorder: OutlineInputBorder(
@@ -88,13 +99,22 @@ class LikedSignIn extends StatelessWidget {
                       borderRadius: BorderRadius.circular(25.0),
                     ),
                     hintText: 'Password',
+                    suffixIcon: IconButton(
+                        icon: Icon(_passwordVisible
+                            ? Icons.visibility
+                            : Icons.visibility_off),
+                        onPressed: () {
+                          setState(() {
+                            _passwordVisible = !_passwordVisible;
+                          });
+                        }),
                   ),
                   validator: (value) {
+                    final passwordRegex = RegExp(
+                        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
                     // TODO put proper validation for password
-                    if (value == null || value.isEmpty) {
-                      return 'Password can\'t be blank';
-                    } else if (value.length < 8) {
-                      return 'Password must be at least 8 characters long';
+                    if (value!.isEmpty || !passwordRegex.hasMatch(value)) {
+                      return 'Please enter a password';
                     }
                     return null;
                   },
@@ -111,8 +131,8 @@ class LikedSignIn extends StatelessWidget {
                       try {
                         await FirebaseAuth.instance
                             .createUserWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text,
+                          email: _emailController.text,
+                          password: _passwordController.text,
                         );
                         Navigator.pushReplacement(
                           context,
@@ -123,8 +143,8 @@ class LikedSignIn extends StatelessWidget {
                         if (e.code == 'email-already-in-use') {
                           await FirebaseAuth.instance
                               .signInWithEmailAndPassword(
-                                  email: emailController.text,
-                                  password: passwordController.text);
+                                  email: _emailController.text,
+                                  password: _passwordController.text);
                           if (e.code == 'wrong-password') {}
                         }
                       }
