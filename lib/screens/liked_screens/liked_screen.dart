@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/screens/view_car.dart';
+import 'package:find_a_stick/widgets/car_image_box.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -44,56 +45,34 @@ class _LikedScreenState extends State<LikedScreen> {
                     const SizedBox(
                       height: 10,
                     ),
-                    SizedBox(
-                      height: 200,
-                      width: double.infinity,
-                      child: ClipRRect(
-                          borderRadius: BorderRadius.circular(10),
-                          child: GestureDetector(
-                            onTap: () =>
-                                {showCarModal(context, publicList), null},
-                            child: CarouselSlider(
-                              options: CarouselOptions(
-                                onPageChanged: ((index, reason) {
-                                  setState(() {
-                                    _currentIndex = index;
-                                  });
-                                }),
-                                // height: 200,
-                                viewportFraction: .9,
-                                enlargeCenterPage: true,
-                              ),
-                              items: publicList['images']
-                                  .map<Widget>(
-                                    (item) => ClipRRect(
-                                      borderRadius: BorderRadius.circular(10),
-                                      child: SizedBox(
-                                        width: 400,
-                                        child: CachedNetworkImage(
-                                          imageUrl: item,
-                                          fit: BoxFit.fitWidth,
-                                          placeholder: (context, url) =>
-                                              const Center(
-                                                  child:
-                                                      CircularProgressIndicator()),
-                                          errorWidget: (context, url, error) =>
-                                              const Icon(Icons.error),
-                                        ),
-                                      ),
-                                    ),
-                                    // color: Colors.green,
-                                  )
-                                  .toList(),
-                            ),
-                            // child: CachedNetworkImage(
-                            //   imageUrl: publicList['images'],
-                            //   fit: BoxFit.fitWidth,
-                            //   placeholder: (context, url) =>
-                            //       const Center(child: CircularProgressIndicator()),
-                            //   errorWidget: (context, url, error) =>
-                            //       const Icon(Icons.error),
-                            // ),
-                          )),
+                    GestureDetector(
+                      onTap: () => {showCarModal(context, publicList), null},
+                      child: CarouselSlider(
+                        options: CarouselOptions(
+                          onPageChanged: ((index, reason) {
+                            setState(() {
+                              _currentIndex = index;
+                            });
+                          }),
+                          // height: 200,
+                          viewportFraction: 1.0,
+                          enlargeCenterPage: true,
+                        ),
+                        items: publicList['images']
+                            .map<Widget>(
+                              (item) => buildImageBox(item),
+                              // color: Colors.green,
+                            )
+                            .toList(),
+                      ),
+                      // child: CachedNetworkImage(
+                      //   imageUrl: publicList['images'],
+                      //   fit: BoxFit.fitWidth,
+                      //   placeholder: (context, url) =>
+                      //       const Center(child: CircularProgressIndicator()),
+                      //   errorWidget: (context, url, error) =>
+                      //       const Icon(Icons.error),
+                      // ),
                     ),
                     // const SizedBox(
                     //   height: 10,
@@ -199,6 +178,7 @@ class _LikedScreenState extends State<LikedScreen> {
         publicList['description'],
         publicList['email'],
         publicList['reported'],
+        publicList['sold'],
         publicList.id,
       ),
     );
