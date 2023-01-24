@@ -3,14 +3,14 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:find_a_stick/screens/search.dart';
 import 'package:find_a_stick/screens/view_car.dart';
+import 'package:find_a_stick/widgets/global_widgets.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hexcolor/hexcolor.dart';
 import 'package:onesignal_flutter/onesignal_flutter.dart';
 
-// TODO Add explain page for first time runners
-// TODO * Add package is_first_run
+import '../widgets/car_image_box.dart';
 
 class Home extends StatefulWidget {
   const Home({Key? key}) : super(key: key);
@@ -39,8 +39,8 @@ class _HomeState extends State<Home> {
                     color: HexColor('EE6C4D'),
                   ),
                   onPressed: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => LiveSearch()));
+                    NavigationService.navigate(context,
+                        destination: LiveSearch());
                   },
                 ),
               ],
@@ -51,17 +51,20 @@ class _HomeState extends State<Home> {
               pinned: false,
               snap: false,
               title: Column(
-                children: const [
+                children: [
                   Text(
                     'Find A Stick',
                   ),
-                  Text(
-                    'Location: Not set',
-                    style: TextStyle(
-                      fontSize: 12,
-                      color: Colors.grey,
+                  if (FirebaseAuth.instance.currentUser == null)
+                    SizedBox()
+                  else
+                    Text(
+                      'Location: Not set',
+                      style: TextStyle(
+                        fontSize: 12,
+                        color: Colors.grey,
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -122,10 +125,6 @@ class _HomeState extends State<Home> {
                 ),
               ),
             ),
-            // const SizedBox(
-            //   height: 10,
-            // ),
-
             Row(
               children: [
                 Text('${publicList['year']}',
@@ -197,9 +196,6 @@ class _HomeState extends State<Home> {
                   )
               ],
             ),
-            const SizedBox(
-              height: 5,
-            ),
             Row(
               children: [
                 Text(
@@ -217,25 +213,6 @@ class _HomeState extends State<Home> {
               ],
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  ClipRRect buildImageBox(item) {
-    return ClipRRect(
-      borderRadius: BorderRadius.circular(10),
-      child: SizedBox(
-        width: 400,
-        child: FittedBox(
-          fit: BoxFit.cover,
-          child: CachedNetworkImage(
-            imageUrl: item,
-            fit: BoxFit.fitWidth,
-            placeholder: (context, url) =>
-                const Center(child: CircularProgressIndicator()),
-            errorWidget: (context, url, error) => const Icon(Icons.error),
-          ),
         ),
       ),
     );
@@ -263,6 +240,7 @@ class _HomeState extends State<Home> {
         publicList['description'],
         publicList['email'],
         publicList['reported'],
+        publicList['sold'],
         publicList.id,
       ),
     );
